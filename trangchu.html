@@ -1,0 +1,506 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng hợp thí nghiệm</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #333;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: url("hoahoc2.jpg") center/cover no-repeat;
+            height: 320px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-overlay {
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(10px);
+            padding: 40px 50px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        header h1 {
+            color: #1a5dcc;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            background: #1a5dcc;
+            padding: 14px 0;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-main {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .nav-main:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .nav-arrow {
+            color: white;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .nav-dropdown {
+            display: none;
+            position: absolute;
+            top: 45px;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        }
+
+        .nav-dropdown a {
+            display: block;
+            padding: 12px 15px;
+            color: #1a5dcc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .nav-dropdown a:hover {
+            background: #f0f4ff;
+        }
+
+        /* ===== MAIN ===== */
+        main {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        main h2 {
+            font-size: 28px;
+            color: #1a5dcc;
+            margin-bottom: 15px;
+        }
+
+        main p {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #444;
+        }
+
+        /* ===== CARDS ===== */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 14px 30px rgba(0,0,0,0.3);
+        }
+
+        .card h3 {
+            color: #1a5dcc;
+            margin-bottom: 10px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #1a5dcc;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+            font-size: 14px;
+        }
+		/* ===== NAV WRAPPER (NỀN NGOÀI) ===== */
+.nav-wrapper {
+    background: #1a5dcc;
+    padding: 18px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* ===== NAV KHUNG TRẮNG ===== */
+.nav-container {
+    max-width: 1100px;
+    margin: auto;
+    background: white;
+    padding: 12px 25px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* ===== ITEM ===== */
+.nav-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* ===== LINK ===== */
+.nav-main {
+    color: #1a5dcc;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.nav-main:hover {
+    background: #f0f4ff;
+}
+
+/* ===== MŨI TÊN ===== */
+.nav-arrow {
+    margin-left: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #1a5dcc;
+}
+
+/* ===== DROPDOWN ===== */
+.nav-dropdown {
+    display: none;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    background: white;
+    min-width: 220px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.nav-dropdown a {
+    display: block;
+    padding: 12px 15px;
+    color: #1a5dcc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-dropdown a:hover {
+    background: #f0f4ff;
+}
+/* ===== NAV NỀN ===== */
+.nav-wrapper {
+    background: #1a5dcc;
+    padding: 18px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* ===== KHUNG RIÊNG TỪNG ITEM ===== */
+.nav-item {
+    position: relative;
+    background: white;
+    padding: 10px 16px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.nav-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+}
+
+/* ===== LINK ===== */
+.nav-main {
+    color: #1a5dcc;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+/* ===== MŨI TÊN ===== */
+.nav-arrow {
+    margin-left: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #1a5dcc;
+}
+
+/* ===== DROPDOWN ===== */
+.nav-dropdown {
+    display: none;
+    position: absolute;
+    top: 55px;
+    left: 0;
+    background: white;
+    min-width: 220px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.nav-dropdown a {
+    display: block;
+    padding: 12px 15px;
+    color: #1a5dcc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-dropdown a:hover {
+    background: #f0f4ff;
+}
+/* căn nav trái – phải */
+.nav-bar {
+    background: #1a5dcc;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* nhóm menu bên trái */
+.nav-left {
+    display: flex;
+    gap: 30px;
+}
+
+/* search góc phải */
+.nav-search input {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    width: 220px;
+    transition: box-shadow 0.3s;
+}
+
+.nav-search input:focus {
+    box-shadow: 0 0 10px rgba(255,255,255,0.7);
+}
+.nav-bar {
+    background: #1a5dcc;
+    padding: 18px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* menu ở giữa */
+.nav-center {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+/* search tách riêng góc phải */
+.nav-search {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nav-search input {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    width: 220px;
+}
+
+.nav-search input:focus {
+    box-shadow: 0 0 10px rgba(255,255,255,0.7);
+}
+
+    </style>
+
+    <script>
+function toggleMenu() {
+    const menu = document.getElementById("experimentMenu");
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+
+function searchExperiment() {
+    const input = removeVietnameseTones(
+        document.getElementById("searchInput").value.trim()
+    );
+
+    const container = document.querySelector(".card-container");
+    container.innerHTML = "";
+
+    if (!input) return;
+
+    SEARCH_DATA.forEach(item => {
+        const text = removeVietnameseTones(
+            item.title + " " + item.keywords
+        );
+
+        if (text.includes(input)) {
+            container.innerHTML += `
+                <a href="${item.link}" class="card experiment">
+                    <h3>${item.title}</h3>
+                    <p>Nhấn để xem nội dung chi tiết</p>
+                </a>
+            `;
+        }
+    });
+}
+
+
+document.addEventListener("click", function (e) {
+    const menu = document.getElementById("experimentMenu");
+    if (!e.target.classList.contains("nav-arrow")) {
+        menu.style.display = "none";
+    }
+});
+const SEARCH_DATA = [
+    {
+        title: "Hóa học lớp 10",
+        keywords: "hoa 10 lop 10 cau tao chat phan ung",
+        link: "lop10.html"
+    },
+    {
+        title: "Hóa học lớp 11",
+        keywords: "hoa 11 lop 11 huu co vo co nito photpho",
+        link: "lop11.html"
+    },
+    {
+        title: "Hóa học lớp 12",
+        keywords: "hoa 12 lop 12 dien hoa on thi",
+        link: "lop12.html"
+    }
+];
+
+/* ===== BỎ DẤU TIẾNG VIỆT ===== */
+function removeVietnameseTones(str) {
+    return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .toLowerCase();
+}
+</script>
+
+</head>
+
+<body>
+
+<header>
+    <div class="header-overlay">
+        <h1>Tổng hợp thí nghiệm</h1>
+    </div>
+</header>
+
+<nav class="nav-bar">
+
+    <!-- MENU Ở GIỮA -->
+    <div class="nav-center">
+        <div class="nav-item">
+            <a href="thinghiem.html" class="nav-main">Hóa học</a>
+            <span class="nav-arrow" onclick="toggleMenu()">▼</span>
+
+            <div class="nav-dropdown" id="experimentMenu">
+                <a href="lop10.html">Lớp 10</a>
+                <a href="lop11.html">Lớp 11</a>
+                <a href="lop12.html">Lớp 12</a>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <a href="#" class="nav-main">Coming soon</a>
+        </div>
+    </div>
+
+    <!-- SEARCH GÓC PHẢI -->
+    <div class="nav-search">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="🔍 Tìm thí nghiệm..."
+            onkeyup="searchExperiment()"
+        >
+    </div>
+
+</nav>
+<main>
+    <h2>Xin chào 👋</h2>
+    <p>
+        Website tổng hợp thí nghiệm Hóa học dành cho học sinh THPT, hỗ trợ học tập.
+    </p>
+</main>
+
+<footer>
+    © 2026 – Website thí nghiệm Hóa học | Sinh viên thực hiện
+</footer>
+
+</body>
+</html>

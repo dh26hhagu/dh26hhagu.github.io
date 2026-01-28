@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Tổng hợp thí nghiệm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body{
+            margin:0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:#f5f6f8;
+            color:#222;
+        }
+
+        /* ===== HEADER ===== */
+        .top{
+            padding:20px 30px;
+            background:white;
+            border-bottom:1px solid #ddd;
+        }
+
+        .top h1{
+            margin:0;
+            font-size:28px;
+        }
+
+        .tags{
+            margin-top:10px;
+        }
+
+        .tag{
+            display:inline-block;
+            border:1px solid #7a2bc2;
+            color:#7a2bc2;
+            padding:6px 12px;
+            border-radius:6px;
+            margin-right:8px;
+            font-size:14px;
+        }
+
+        /* ===== GRID ===== */
+        .container{
+            padding:30px;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap:25px;
+        }
+
+        /* ===== CARD ===== */
+        .card{
+            background:white;
+            border-radius:14px;
+            overflow:hidden;
+            box-shadow:0 4px 10px rgba(0,0,0,0.08);
+            transition:0.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+        }
+
+        .thumb{
+            position:relative;
+            height:150px;
+            background:#ddd;
+        }
+
+        .thumb img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+
+        .new{
+            position:absolute;
+            top:10px;
+            right:-30px;
+            background:#e91e63;
+            color:white;
+            padding:5px 40px;
+            transform:rotate(45deg);
+            font-size:12px;
+            font-weight:bold;
+        }
+
+        .card-content{
+            padding:15px;
+        }
+
+        .card-content h3{
+            margin:0 0 10px;
+            font-size:18px;
+        }
+
+        .icons{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .icon{
+            width:28px;
+            height:28px;
+            border-radius:6px;
+            background:#eee;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:14px;
+        }
+		.thumb{
+    position:relative;
+    height:150px;
+    background:#ddd;
+}
+
+.thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.play-btn{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    background:rgba(0,0,0,0.6);
+    color:white;
+    font-size:30px;
+    padding:12px 18px;
+    border-radius:50%;
+    text-decoration:none;
+}
+.thumb iframe{
+    width:100%;
+    height:100%;
+    border:none;
+}
+.search-box{
+    margin-top:15px;
+}
+
+.search-box input{
+    width:100%;
+    max-width:420px;
+    padding:10px 14px;
+    font-size:15px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    outline:none;
+}
+
+.search-box input:focus{
+    border-color:#7a2bc2;
+}
+.top-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.back-btn{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#7a2bc2;
+    color:white;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    transition:0.3s;
+}
+
+.back-btn:hover{
+    background:#5a1e96;
+    transform:scale(1.05);
+}
+
+    </style>
+</head>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const videos = document.querySelectorAll(".video-card");
+    document.getElementById("resultCount").textContent = videos.length;
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const videos = document.querySelectorAll(".video-card");
+    const searchInput = document.getElementById("searchInput");
+    const resultCount = document.getElementById("resultCount");
+
+    // Hàm bỏ dấu tiếng Việt
+    function removeVietnameseTones(str) {
+        return str
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/đ/g, "d")
+            .replace(/Đ/g, "D")
+            .toLowerCase();
+    }
+
+    function updateCount(){
+        const visible = Array.from(videos).filter(v => v.style.display !== "none");
+        resultCount.textContent = visible.length;
+    }
+
+    updateCount();
+
+    searchInput.addEventListener("input", function () {
+        const keyword = removeVietnameseTones(this.value);
+
+        videos.forEach(card => {
+            const text = removeVietnameseTones(card.innerText);
+
+            if (text.includes(keyword)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        updateCount();
+    });
+});
+</script>
+
+
+
+
+
+<body>
+
+    <!-- HEADER -->
+    <div class="top">
+    <div class="top-bar">
+        <h1><span id="resultCount">0</span> Kết quả</h1>
+
+        <!-- Nút trở về -->
+        <a href="thinghiem.html" class="back-btn" title="Quay lại">
+            ⬅
+        </a>
+    </div>
+
+    <!-- Ô tìm kiếm -->
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Tìm thí nghiệm, video, nội dung...">
+    </div>
+</div>
+
+
+    </div>
+<div class="card">
+   
+</div>
+
+    <!-- CONTENT -->
+    <div class="container">
+        <div class="grid">
+		
+    <div class="card video-card">
+    <div class="thumb">
+        <img src="https://img.youtube.com/vi/EmsuHe3BQrQ/hqdefault.jpg">
+        <a class="play-btn"
+           href="https://www.youtube.com/watch?v=EmsuHe3BQrQ"
+           target="_blank">▶</a>
+    </div>
+    <div class="card-content">
+        <h3>Chuỗi phản ứng lưu huỳnh</h3>
+    </div>
+    </div>
+    <div class="card video-card">
+    <div class="thumb">
+        <img src="https://img.youtube.com/vi/FwTKPvFsVaA/hqdefault.jpg">
+        <a class="play-btn"
+           href="https://www.youtube.com/watch?v=FwTKPvFsVaA"
+           target="_blank">▶</a>
+    </div>
+    <div class="card-content">
+        <h3>Tính tan của NH3</h3>
+    </div>
+    </div>
+</div>
+    </div>
+
+            
+                
+
+</body>
+</html>
