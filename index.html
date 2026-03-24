@@ -354,6 +354,73 @@
         }
     </style>
     <script src="data.js"></script>
+<script>
+// Menu Dropdown
+function toggleMenu() {
+    const menu = document.getElementById("experimentMenu");
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+// Bỏ dấu tiếng Việt
+function removeVietnameseTones(str) {
+    return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .toLowerCase();
+}
+
+// Hàm tìm kiếm tổng quát
+function searchExperiment() {
+    const input = removeVietnameseTones(
+        document.getElementById("searchInput").value.trim()
+    );
+
+    const container = document.getElementById("searchResults");
+    const welcomeText = document.getElementById("welcomeText");
+    
+    container.innerHTML = ""; // Xóa kết quả cũ
+
+    // Nếu không gõ gì, hiện lời chào
+    if (!input) {
+        welcomeText.style.display = "block";
+        return;
+    }
+
+    welcomeText.style.display = "none";
+    let hasResult = false;
+
+    // Quét qua danh sách ALL_EXPERIMENTS (lấy từ file data.js)
+    ALL_EXPERIMENTS.forEach(item => {
+        const textToSearch = removeVietnameseTones(item.title + " " + item.keywords);
+
+        if (textToSearch.includes(input)) {
+            hasResult = true;
+            // Tạo thẻ kết quả có kèm nhãn lớp (badge)
+            container.innerHTML += `
+                <a href="${item.link}" class="card experiment">
+                    <span style="background: #e91e63; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; float: right;">${item.badge}</span>
+                    <h3 style="text-align: left; margin-top: 10px;">${item.title}</h3>
+                    <p style="text-align: left; font-size: 14px;">Nhấn để xem video tại trang ${item.badge}</p>
+                </a>
+            `;
+        }
+    });
+
+    if (!hasResult) {
+        container.innerHTML = `<p style="text-align: center; width: 100%; color: #888; margin-top: 20px;">Không tìm thấy kết quả nào cho "${document.getElementById("searchInput").value}"</p>`;
+    }
+}
+
+// Ẩn menu khi click ra ngoài
+document.addEventListener("click", function (e) {
+    const menu = document.getElementById("experimentMenu");
+    if (!e.target.classList.contains("nav-arrow") && !e.target.classList.contains("nav-main")) {
+        menu.style.display = "none";
+    }
+});
+</script>
 </head>
 <body>
     <header>
