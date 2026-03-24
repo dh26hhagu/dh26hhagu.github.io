@@ -343,84 +343,8 @@
                 padding-top: 1.5rem;
             }
         }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.001ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.001ms !important;
-                scroll-behavior: auto !important;
-            }
-        }
     </style>
     <script src="data.js"></script>
-<script>
-// Menu Dropdown
-function toggleMenu() {
-    const menu = document.getElementById("experimentMenu");
-    menu.style.display = (menu.style.display === "block") ? "none" : "block";
-}
-
-// Bỏ dấu tiếng Việt
-function removeVietnameseTones(str) {
-    return str
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/đ/g, "d")
-        .replace(/Đ/g, "D")
-        .toLowerCase();
-}
-
-// Hàm tìm kiếm tổng quát
-function searchExperiment() {
-    const input = removeVietnameseTones(
-        document.getElementById("searchInput").value.trim()
-    );
-
-    const container = document.getElementById("searchResults");
-    const welcomeText = document.getElementById("welcomeText");
-    
-    container.innerHTML = ""; // Xóa kết quả cũ
-
-    // Nếu không gõ gì, hiện lời chào
-    if (!input) {
-        welcomeText.style.display = "block";
-        return;
-    }
-
-    welcomeText.style.display = "none";
-    let hasResult = false;
-
-    // Quét qua danh sách ALL_EXPERIMENTS (lấy từ file data.js)
-    ALL_EXPERIMENTS.forEach(item => {
-        const textToSearch = removeVietnameseTones(item.title + " " + item.keywords);
-
-        if (textToSearch.includes(input)) {
-            hasResult = true;
-            // Tạo thẻ kết quả có kèm nhãn lớp (badge)
-            container.innerHTML += `
-                <a href="${item.link}" class="card experiment">
-                    <span style="background: #e91e63; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; float: right;">${item.badge}</span>
-                    <h3 style="text-align: left; margin-top: 10px;">${item.title}</h3>
-                    <p style="text-align: left; font-size: 14px;">Nhấn để xem video tại trang ${item.badge}</p>
-                </a>
-            `;
-        }
-    });
-
-    if (!hasResult) {
-        container.innerHTML = `<p style="text-align: center; width: 100%; color: #888; margin-top: 20px;">Không tìm thấy kết quả nào cho "${document.getElementById("searchInput").value}"</p>`;
-    }
-}
-
-// Ẩn menu khi click ra ngoài
-document.addEventListener("click", function (e) {
-    const menu = document.getElementById("experimentMenu");
-    if (!e.target.classList.contains("nav-arrow") && !e.target.classList.contains("nav-main")) {
-        menu.style.display = "none";
-    }
-});
-</script>
 </head>
 <body>
     <header>
@@ -459,7 +383,7 @@ document.addEventListener("click", function (e) {
     </div>
 
     <main class="container">
-        <section class="intro">
+        <section class="intro" id="introSection">
             <h2>Xin chào 👋</h2>
             <p>Website tổng hợp thí nghiệm Hóa học dành cho học sinh THPT, giúp tra cứu nhanh theo lớp và từ khóa.</p>
         </section>
@@ -475,27 +399,26 @@ document.addEventListener("click", function (e) {
     </footer>
 
     <script>
-        const SEARCH_DATA = [
+        // Dữ liệu hiển thị mặc định khi chưa gõ tìm kiếm
+        const CATEGORY_DATA = [
             {
                 title: "Hóa học lớp 10",
                 description: "Cấu tạo nguyên tử, liên kết, phản ứng cơ bản.",
-                keywords: "hoa 10 lop 10 cau tao chat phan ung",
                 link: "lop10.html"
             },
             {
                 title: "Hóa học lớp 11",
                 description: "Nền tảng hữu cơ, nitơ - photpho và các chuyên đề quan trọng.",
-                keywords: "hoa 11 lop 11 huu co vo co nito photpho",
                 link: "lop11.html"
             },
             {
                 title: "Hóa học lớp 12",
                 description: "Ôn thi trọng tâm, điện hóa, este, kim loại và vật liệu.",
-                keywords: "hoa 12 lop 12 dien hoa on thi",
                 link: "lop12.html"
             }
         ];
 
+        // Hàm bỏ dấu tiếng Việt
         function removeVietnameseTones(str) {
             return str
                 .normalize("NFD")
@@ -505,13 +428,14 @@ document.addEventListener("click", function (e) {
                 .toLowerCase();
         }
 
-        function renderCards(items) {
+        // Hàm vẽ thẻ kết quả
+        function renderCards(items, type = 'category') {
             const container = document.getElementById("cardContainer");
             const emptyMessage = document.getElementById("emptyMessage");
 
             container.innerHTML = "";
 
-            if (!items.length) {
+            if (!items || !items.length) {
                 emptyMessage.style.display = "block";
                 return;
             }
@@ -522,31 +446,54 @@ document.addEventListener("click", function (e) {
                 const card = document.createElement("a");
                 card.className = "card";
                 card.href = item.link;
-                card.style.animationDelay = `${index * 70}ms`;
-                card.innerHTML = `
-                    <h3>${item.title}</h3>
-                    <p>${item.description}</p>
-                `;
+                card.style.animationDelay = `${index * 50}ms`; // Hiệu ứng load mượt mà
+                
+                if (type === 'category') {
+                    // Cấu trúc thẻ dành cho hiển thị 3 lớp mặc định
+                    card.innerHTML = `
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                    `;
+                } else {
+                    // Cấu trúc thẻ dành cho kết quả tìm kiếm video từ file data.js
+                    card.innerHTML = `
+                        <span style="background: #e91e63; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; float: right;">${item.badge}</span>
+                        <h3 style="text-align: left; margin-top: 10px; clear: both;">${item.title}</h3>
+                        <p style="text-align: left; font-size: 14px; margin-top: 5px;">Nhấn để xem video tại trang ${item.badge}</p>
+                    `;
+                }
                 container.appendChild(card);
             });
         }
 
+        // Xử lý logic tìm kiếm
         function searchExperiment(value) {
             const normalizedInput = removeVietnameseTones(value.trim());
+            const introSection = document.getElementById("introSection");
 
+            // Nếu ô tìm kiếm trống, hiện lại lời chào và 3 thẻ khối lớp
             if (!normalizedInput) {
-                renderCards(SEARCH_DATA);
+                introSection.style.display = "block";
+                renderCards(CATEGORY_DATA, 'category');
                 return;
             }
 
-            const filtered = SEARCH_DATA.filter((item) => {
-                const normalizedText = removeVietnameseTones(`${item.title} ${item.keywords}`);
-                return normalizedText.includes(normalizedInput);
-            });
+            // Nếu người dùng bắt đầu gõ, ẩn lời chào
+            introSection.style.display = "none";
 
-            renderCards(filtered);
+            // Kiểm tra xem dữ liệu ALL_EXPERIMENTS từ file data.js đã được tải chưa
+            if (typeof ALL_EXPERIMENTS !== 'undefined') {
+                const filtered = ALL_EXPERIMENTS.filter((item) => {
+                    const normalizedText = removeVietnameseTones(`${item.title} ${item.keywords} ${item.badge}`);
+                    return normalizedText.includes(normalizedInput);
+                });
+                renderCards(filtered, 'experiment');
+            } else {
+                console.error("Lỗi: Không tìm thấy dữ liệu ALL_EXPERIMENTS. Bạn hãy chắc chắn file data.js đã nằm cùng thư mục.");
+            }
         }
 
+        // Xử lý bật/tắt menu dropdown
         const menuToggle = document.getElementById("menuToggle");
         const experimentMenu = document.getElementById("experimentMenu");
 
@@ -563,11 +510,13 @@ document.addEventListener("click", function (e) {
             }
         });
 
+        // Lắng nghe thao tác gõ phím trên thanh tìm kiếm
         document.getElementById("searchInput").addEventListener("input", (event) => {
             searchExperiment(event.target.value);
         });
 
-        renderCards(SEARCH_DATA);
+        // Gọi hàm vẽ 3 thẻ Lớp 10, 11, 12 ngay khi tải trang lần đầu
+        renderCards(CATEGORY_DATA, 'category');
     </script>
 </body>
 </html>
