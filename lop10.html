@@ -2,550 +2,126 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Tổng hợp thí nghiệm</title>
+    <title>Tổng hợp thí nghiệm Hóa 10</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        body{
-            margin:0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background:#f5f6f8;
-            color:#222;
-        }
-
+        body { margin:0; font-family: "Segoe UI", Arial, sans-serif; background:#f5f6f8; color:#222; }
         /* ===== HEADER ===== */
-        .top{
-            padding:20px 30px;
-            background:white;
-            border-bottom:1px solid #ddd;
-        }
+        .top { padding:20px 30px; background:white; border-bottom:1px solid #ddd; }
+        .top h1 { margin:0; font-size:28px; }
+        .top-bar { display:flex; align-items:center; justify-content:space-between; }
+        .back-btn { width:42px; height:42px; border-radius:50%; background:#7a2bc2; color:white; text-decoration:none; display:flex; align-items:center; justify-content:center; font-size:18px; transition:0.3s; }
+        .back-btn:hover { background:#5a1e96; transform:scale(1.05); }
+        .search-box { margin-top:15px; }
+        .search-box input { width:100%; max-width:420px; padding:10px 14px; font-size:15px; border-radius:8px; border:1px solid #ccc; outline:none; }
+        .search-box input:focus { border-color:#7a2bc2; }
 
-        .top h1{
-            margin:0;
-            font-size:28px;
-        }
-
-        .tags{
-            margin-top:10px;
-        }
-
-        .tag{
-            display:inline-block;
-            border:1px solid #7a2bc2;
-            color:#7a2bc2;
-            padding:6px 12px;
-            border-radius:6px;
-            margin-right:8px;
-            font-size:14px;
-        }
-
-        /* ===== GRID ===== */
-        .container{
-            padding:30px;
-        }
-
-        .grid{
-            display:grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap:25px;
-        }
-
-        /* ===== CARD ===== */
-        .card{
-            background:white;
-            border-radius:14px;
-            overflow:hidden;
-            box-shadow:0 4px 10px rgba(0,0,0,0.08);
-            transition:0.3s;
-        }
-
-        .card:hover{
-            transform:translateY(-5px);
-        }
-
-        .thumb{
-            position:relative;
-            height:150px;
-            background:#ddd;
-        }
-
-        .thumb img{
-            width:100%;
-            height:100%;
-            object-fit:cover;
-        }
-
-        .new{
-            position:absolute;
-            top:10px;
-            right:-30px;
-            background:#e91e63;
-            color:white;
-            padding:5px 40px;
-            transform:rotate(45deg);
-            font-size:12px;
-            font-weight:bold;
-        }
-
-        .card-content{
-            padding:15px;
-        }
-
-        .card-content h3{
-            margin:0 0 10px;
-            font-size:18px;
-        }
-
-        .icons{
-            display:flex;
-            gap:10px;
-            flex-wrap:wrap;
-        }
-
-        .icon{
-            width:28px;
-            height:28px;
-            border-radius:6px;
-            background:#eee;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:14px;
-        }
-		.thumb{
-    position:relative;
-    height:150px;
-    background:#ddd;
-}
-
-.thumb img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.play-btn{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    background:rgba(0,0,0,0.6);
-    color:white;
-    font-size:30px;
-    padding:12px 18px;
-    border-radius:50%;
-    text-decoration:none;
-}
-.thumb iframe{
-    width:100%;
-    height:100%;
-    border:none;
-}
-.search-box{
-    margin-top:15px;
-}
-
-.search-box input{
-    width:100%;
-    max-width:420px;
-    padding:10px 14px;
-    font-size:15px;
-    border-radius:8px;
-    border:1px solid #ccc;
-    outline:none;
-}
-
-.search-box input:focus{
-    border-color:#7a2bc2;
-}
-.top-bar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-
-.back-btn{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#7a2bc2;
-    color:white;
-    text-decoration:none;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-    transition:0.3s;
-}
-
-.back-btn:hover{
-    background:#5a1e96;
-    transform:scale(1.05);
-}
-
+        /* ===== GRID & CARD ===== */
+        .container { padding:30px; }
+        .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:25px; }
+        .card { background:white; border-radius:14px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.08); transition:0.3s; }
+        .card:hover { transform:translateY(-5px); }
+        .thumb { position:relative; height:150px; background:#ddd; }
+        .thumb img { width:100%; height:100%; object-fit:cover; }
+        .play-btn { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:rgba(0,0,0,0.6); color:white; font-size:30px; padding:12px 18px; border-radius:50%; text-decoration:none; }
+        .card-content { padding:15px; }
+        .card-content h3 { margin:0 0 10px; font-size:18px; }
+        .channel { color: #666; font-size: 14px; margin: 0; }
     </style>
 </head>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const videos = document.querySelectorAll(".video-card");
-    document.getElementById("resultCount").textContent = videos.length;
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const videos = document.querySelectorAll(".video-card");
-    const searchInput = document.getElementById("searchInput");
-    const resultCount = document.getElementById("resultCount");
-
-    // Hàm bỏ dấu tiếng Việt
-    function removeVietnameseTones(str) {
-        return str
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/đ/g, "d")
-            .replace(/Đ/g, "D")
-            .toLowerCase();
-    }
-
-    function updateCount(){
-        const visible = Array.from(videos).filter(v => v.style.display !== "none");
-        resultCount.textContent = visible.length;
-    }
-
-    updateCount();
-
-    searchInput.addEventListener("input", function () {
-        const keyword = removeVietnameseTones(this.value);
-
-        videos.forEach(card => {
-            const text = removeVietnameseTones(card.innerText);
-
-            if (text.includes(keyword)) {
-                card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
-        });
-
-        updateCount();
-    });
-});
-</script>
-
-
-
-
-
 <body>
 
-    <!-- HEADER -->
     <div class="top">
-    <div class="top-bar">
-        <h1><span id="resultCount">0</span> Kết quả</h1>
-
-        <!-- Nút trở về -->
-        <a href="thinghiem.html" class="back-btn" title="Quay lại">
-            ⬅
-        </a>
+        <div class="top-bar">
+            <h1><span id="resultCount">0</span> Kết quả</h1>
+            <a href="index.html" class="back-btn" title="Quay lại">⬅</a>
+        </div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Tìm thí nghiệm, video, nội dung...">
+        </div>
     </div>
 
-    <!-- Ô tìm kiếm -->
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="🔍 Tìm thí nghiệm, video, nội dung...">
-    </div>
-</div>
-
-
-    </div>
-<div class="card">
-   
-</div>
-
-    <!-- CONTENT -->
     <div class="container">
-        <div class="grid">
-		  	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/Wuo8SachZYE/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=Wuo8SachZYE"
-           target="_blank">▶</a>
+        <p id="noResultMsg" style="display: none; text-align: center; color: #888; width: 100%;">Không tìm thấy video thí nghiệm nào phù hợp.</p>
+        
+        <div class="grid" id="videoGrid">
+            <div class="card video-card">
+                <div class="thumb">
+                    <img src="https://img.youtube.com/vi/Wuo8SachZYE/hqdefault.jpg" alt="Thumbnail">
+                    <a class="play-btn" href="https://www.youtube.com/watch?v=Wuo8SachZYE" target="_blank">▶</a>
+                </div>
+                <div class="card-content">
+                    <h3>Phương pháp kết tinh muối hạt</h3>
+                    <p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
+                </div>
+            </div>
+
+            <div class="card video-card">
+                <div class="thumb">
+                    <img src="https://img.youtube.com/vi/yvqW3pa8-Jw/hqdefault.jpg" alt="Thumbnail">
+                    <a class="play-btn" href="https://www.youtube.com/watch?v=yvqW3pa8-Jw" target="_blank">▶</a>
+                </div>
+                <div class="card-content">
+                    <h3>So Sánh Tính Kim Loại Của Sodium Na Và Magnesium Mg</h3>
+                    <p class="channel">Kênh: Vũ Thị Lê</p>
+                </div>
+            </div>
+            
+            </div>
     </div>
-    <div class="card-content">
-        <h3>Phương pháp kết tinh muối hạt</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-    </div>
-    </div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/JSt808aOVRM/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=JSt808aOVRM"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Mô phỏng thí nghiệm của Ernest Rutherford. Bắn tia alpha vào lá vàng mỏng. Tán xạ alpha</h3>
-		<p class="channel">Kênh: ABC Chemistry </p>
-	</div>
-	</div>
-   	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/yvqW3pa8-Jw/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=yvqW3pa8-Jw"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>So Sánh Tính Kim Loại Của Sodium Na Và Magnesium Mg | Phản Ứng Của Na, Mg Với Nước</h3>
-		<p class="channel">Kênh: Vũ Thị Lê </p>
-    </div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/IsoLGZXwV9A/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=IsoLGZXwV9A"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>SO SÁNH TÍNH PHI KIM CỦA CHLORINE VÀ IODINE</h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/qJH3nfVLypU/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=qJH3nfVLypU"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>TO SHOW THAT METALLIC OXIDES ARE BASIC IN NATURE</h3>
-		<p class="channel">Kênh: amritacreate</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/P7bI_ZoN9Kw/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=P7bI_ZoN9Kw"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>THÍ NGHIỆM PHẢN ỨNG CỦA DUNG DỊCH MUỐI NA2CO3 VỚI DUNG DỊCH AXIT HNO3</h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu</p>
-	</div>
-	</div>		
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/v8g3CK5kke0/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=v8g3CK5kke0"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Structure of Sodium Chloride (NaCl)</h3>
-		<p class="channel">Kênh: Scholarswing</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/cRMZ0HH6R0Q/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=cRMZ0HH6R0Q"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>THÍ NGHIỆM THỬ TÍNH DẪN ĐIỆN CỦA HỢP CHẤT</h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/mJqObq4xIDs/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=mJqObq4xIDs"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Mô phỏng lắp ráp mô hình phân tử Methane CH<sub>4</sub></h3>
-		<p class="channel">Kênh: EMILYCHEMIST</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/bV9ntYqngfg/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=bV9ntYqngfg"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí Nghiệm Đinh Sắt (Iron) Tác Dụng Với Dung Dịch CuSO<sub>4</sub> (Copper (II) sulfate)</h3>
-		<p class="channel">Kênh: Vũ Thị Lê</p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/RYhLr6ZD3lg/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=RYhLr6ZD3lg"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm đinh Sắt (Iron) tác dụng với dung dịch Sulfuric Acid loãng (H₂SO₄) </h3>
-		<p class="channel">Kênh: bang nhat</p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/a21Bby96Vgc/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=a21Bby96Vgc"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>THÍ NGHIỆM THEO DÕI SỰ THAY ĐỔI NHIỆT ĐỘ CỦA PHẢN ỨNG TRUNG HÒA</h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/EWb5q8Bl39A/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=EWb5q8Bl39A"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> Calorimetry: Calculate Enthalpy</h3>
-		<p class="channel">Kênh: Anne Schmidt</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/lQpC_z11_4Y/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=lQpC_z11_4Y"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> Phản ứng Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> + H₂SO₄. Thí nghiệm ảnh hưởng của nồng độ đến tốc độ phản ứng</h3>
-		<p class="channel">Kênh: WAYS OUT</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/SITu7XjGkAE/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=SITu7XjGkAE"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> Ảnh Hưởng Của Nhiệt Độ Đến Tốc Độ Phản Ứng | Mg (Magnesium) Phản Ứng Với Nước</h3>
-		<p class="channel">Kênh: Vũ Thị Lê</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/hf9eyJgqilA/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=hf9eyJgqilA"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> ẢNH HƯỞNG CỦA DIỆN TÍCH BỀ MẶT ĐẾN TỐC ĐỘ PHẢN ỨNG | CaCO<sub>3</sub> (Calcium Carbonate) Tác Dụng Với Dung Dịch HCl (Hydrochloric Acid)</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/LJXTOaeljeI/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=LJXTOaeljeI"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> Ảnh Hưởng Của Chất Xúc Tác Đến Tốc Độ Phản Ứng | Phản Ứng Của H<sub>2</sub>O<sub>2</sub> Khi Có MnO<sub>2</sub> Xúc Tác</h3>
-		<p class="channel">Kênh: Vũ Thị Lê </p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/3xV_mYC5oFQ/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=3xV_mYC5oFQ"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>CHLORINE (Cl<sub>2</sub>) TÁC DỤNG VỚI DÂY SẮT (IRON)</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/qpL4KsnbAQ4/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=qpL4KsnbAQ4"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí Nghiệm Tính Tẩy Màu của Khí Chlorine Cl<sub>2</sub> | KMnO<sub>4</sub> Tác Dụng Với HCl</h3>
-		<p class="channel">Kênh: Vũ Thị Lê </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/kksVWwZ3Y14/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=kksVWwZ3Y14"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Cl<sub>2</sub> + KBr, Cl<sub>2</sub> + NaI, Br<sub>2</sub> + NaI. Comparing the oxidizing properties of Cl<sub>2</sub>, Br<sub>2</sub>, and I<sub>2</sub></h3>
-		<p class="channel">Kênh: ABC Chemistry </p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/_XENzHwsaww/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=_XENzHwsaww"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Dung Dịch HCl Tác Dụng Zn, Cu</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/XYXcd3UMNIU/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=XYXcd3UMNIU"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>DUNG DỊCH HCl TÁC DỤNG MUỐI NaHCO3 rắn</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-				<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/GDuG2OaW0oM/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=GDuG2OaW0oM"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>NHẬN BIẾT MUỐI HALIDE</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const videos = document.querySelectorAll(".video-card");
+            const searchInput = document.getElementById("searchInput");
+            const resultCount = document.getElementById("resultCount");
+            const noResultMsg = document.getElementById("noResultMsg");
+
+            // Hàm bỏ dấu tiếng Việt để tìm kiếm dễ dàng hơn
+            function removeVietnameseTones(str) {
+                return str
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/đ/g, "d")
+                    .replace(/Đ/g, "D")
+                    .toLowerCase();
+            }
+
+            // Hàm cập nhật số lượng kết quả
+            function updateCount() {
+                const visibleVideos = Array.from(videos).filter(v => v.style.display !== "none");
+                resultCount.textContent = visibleVideos.length;
+                
+                // Hiển thị thông báo nếu không có kết quả nào
+                if (visibleVideos.length === 0) {
+                    noResultMsg.style.display = "block";
+                } else {
+                    noResultMsg.style.display = "none";
+                }
+            }
+
+            updateCount(); // Đếm số lượng video ngay khi tải trang
+
+            // Lắng nghe sự kiện người dùng gõ phím
+            searchInput.addEventListener("input", function () {
+                const keyword = removeVietnameseTones(this.value.trim());
+
+                videos.forEach(card => {
+                    // Lấy toàn bộ text trong thẻ (bao gồm tiêu đề và tên kênh)
+                    const text = removeVietnameseTones(card.innerText);
+
+                    // Nếu text chứa từ khóa -> hiện thẻ, ngược lại -> ẩn
+                    if (text.includes(keyword)) {
+                        card.style.display = "block";
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+
+                updateCount(); // Cập nhật lại số lượng sau khi lọc
+            });
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
