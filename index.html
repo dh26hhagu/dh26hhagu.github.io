@@ -136,12 +136,20 @@
             transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
         }
 
-        .nav-main:hover,
+         .nav-main:hover,
         .nav-main:focus-visible {
             background: rgba(26, 93, 204, 0.1);
             color: var(--primary);
             transform: translateY(-1px);
             outline: none;
+        }
+
+        .nav-main.is-disabled {
+            opacity: 0.58;
+            cursor: not-allowed;
+            pointer-events: none;
+            background: transparent;
+            color: #64748b;
         }
 
         .nav-arrow {
@@ -180,7 +188,6 @@
             color: #334155;
             transition: background 0.2s ease;
         }
-
         .nav-dropdown a:hover,
         .nav-dropdown a:focus-visible {
             background: #eef4ff;
@@ -188,12 +195,16 @@
             outline: none;
         }
 
-        .nav-search {
-            flex: 0 1 300px;
+       
+.nav-search {
+            flex: 0 1 340px;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
         }
 
         .nav-search input {
-            width: 100%;
+            flex: 1;
             border: 1px solid rgba(100, 116, 139, 0.35);
             border-radius: 999px;
             padding: 0.67rem 1rem;
@@ -203,6 +214,24 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
+        .clear-search {
+            border: 1px solid rgba(100, 116, 139, 0.35);
+            background: #fff;
+            color: #334155;
+            border-radius: 999px;
+            padding: 0.6rem 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+        }
+
+        .clear-search:hover,
+        .clear-search:focus-visible {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #eef4ff;
+            outline: none;
+        }
         .nav-search input:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(26, 93, 204, 0.14);
@@ -267,8 +296,15 @@
             font-size: 0.95rem;
         }
 
-        .hidden-empty {
+         .hidden-empty {
             color: var(--muted);
+            margin-top: 0.8rem;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .status-message {
+            color: #b42318;
             margin-top: 0.8rem;
             font-size: 0.95rem;
             display: none;
@@ -364,33 +400,33 @@
             </a>
 
             <div class="nav-center">
-                <div class="nav-item">
-                    <a href="thinghiem.html" class="nav-main">Hóa học</a>
-                    <button class="nav-arrow" id="menuToggle" aria-expanded="false" aria-controls="experimentMenu" aria-label="Mở menu lớp">▼</button>
-                    <div class="nav-dropdown" id="experimentMenu" role="menu" aria-label="Danh sách lớp">
+                <div class="nav-item">␊
+                    <a href="thinghiem.html" class="nav-main">Hóa học</a>␊
+                    <button class="nav-arrow" id="menuToggle" aria-expanded="false" aria-controls="experimentMenu" aria-label="Mở menu lớp">▼</button>␊
+                    <div class="nav-dropdown" id="experimentMenu" role="menu" aria-label="Danh sách lớp">␊
                         <a href="lop10.html" role="menuitem">Lớp 10</a>
                         <a href="lop11.html" role="menuitem">Lớp 11</a>
                         <a href="lop12.html" role="menuitem">Lớp 12</a>
                     </div>
                 </div>
-                <a href="#" class="nav-main" aria-disabled="true">Coming soon</a>
+                <span class="nav-main is-disabled" aria-disabled="true">Coming soon</span>
             </div>
 
             <div class="nav-search">
                 <input type="text" id="searchInput" placeholder="🔍 Tìm theo lớp, chủ đề..." autocomplete="off">
+                <button class="clear-search" id="clearSearch" type="button" aria-label="Xóa từ khóa tìm kiếm">Xóa</button>
             </div>
         </nav>
     </div>
-
     <main class="container">
         <section class="intro" id="introSection">
             <h2>Xin chào 👋</h2>
             <p>Website tổng hợp thí nghiệm Hóa học dành cho giáo viên và học sinh THPT, giúp tra cứu nhanh theo lớp và từ khóa.</p>
         </section>
-
-        <section>
+         <section>
             <div class="card-container" id="cardContainer"></div>
             <p class="hidden-empty" id="emptyMessage">Không tìm thấy nội dung phù hợp. Hãy thử từ khóa khác.</p>
+            <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
         </section>
     </main>
 
@@ -428,12 +464,24 @@
                 .toLowerCase();
         }
 
+        // Chỉ cho phép một số thẻ HTML an toàn cho công thức hóa học
+        function formatChemText(rawText = "") {
+            return rawText
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/&lt;(\/?(?:sub|sup))&gt;/gi, "<$1>");
+        }
+
         // Hàm vẽ thẻ kết quả
         function renderCards(items, type = 'category') {
             const container = document.getElementById("cardContainer");
             const emptyMessage = document.getElementById("emptyMessage");
+            const statusMessage = document.getElementById("statusMessage");
 
             container.innerHTML = "";
+            statusMessage.style.display = "none";
+            statusMessage.textContent = "";
 
             if (!items || !items.length) {
                 emptyMessage.style.display = "block";
@@ -445,14 +493,17 @@
             items.forEach((item, index) => {
                 const card = document.createElement("a");
                 card.className = "card";
-                card.href = item.link;
+                card.href = type === "experiment" ? (item.ytLink || item.link || "#") : (item.link || "#");
+                if (type === "experiment") {
+                    card.target = "_blank";
+                    card.rel = "noopener noreferrer";
+                }
                 card.style.animationDelay = `${index * 50}ms`; // Hiệu ứng load mượt mà
 
                 if (type === 'category') {
                     // Cấu trúc thẻ dành cho hiển thị 3 lớp mặc định
                     const title = document.createElement("h3");
                     title.textContent = item.title;
-
                     const description = document.createElement("p");
                     description.textContent = item.description || "Khám phá nội dung theo từng lớp.";
 
@@ -467,13 +518,13 @@
                     badge.style.borderRadius = "4px";
                     badge.style.fontSize = "12px";
                     badge.style.float = "right";
-
-                    const title = document.createElement("h3");
-                    title.textContent = item.title;
-                    title.style.textAlign = "left";
-                    title.style.marginTop = "10px";
-                    title.style.clear = "both";
-
+␊
+                    const title = document.createElement("h3");␊
+                    title.innerHTML = formatChemText(item.title || "Video thí nghiệm");
+                    title.style.textAlign = "left";␊
+                    title.style.marginTop = "10px";␊
+                    title.style.clear = "both";␊
+                    
                     const description = document.createElement("p");
                     description.textContent = `Nhấn để xem video tại trang ${item.badge}`;
                     description.style.textAlign = "left";
@@ -509,10 +560,12 @@
                 });
                 renderCards(filtered, 'experiment');
             } else {
+                const statusMessage = document.getElementById("statusMessage");
+                statusMessage.style.display = "block";
+                statusMessage.textContent = "Không thể tải dữ liệu thí nghiệm. Vui lòng thử tải lại trang.";
                 console.error("Lỗi: Không tìm thấy dữ liệu ALL_EXPERIMENTS. Bạn hãy chắc chắn file data.js đã nằm cùng thư mục.");
             }
         }
-
         // Xử lý bật/tắt menu dropdown
         const menuToggle = document.getElementById("menuToggle");
         const experimentMenu = document.getElementById("experimentMenu");
@@ -530,9 +583,52 @@
             }
         });
 
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                experimentMenu.classList.remove("open");
+                menuToggle.setAttribute("aria-expanded", "false");
+                menuToggle.focus();
+            }
+        });
+
+        const menuItems = Array.from(experimentMenu.querySelectorAll('[role="menuitem"]'));
+        experimentMenu.addEventListener("keydown", (event) => {
+            if (!["ArrowDown", "ArrowUp"].includes(event.key) || !menuItems.length) {
+                return;
+            }
+
+            event.preventDefault();
+            const activeIndex = menuItems.indexOf(document.activeElement);
+            if (event.key === "ArrowDown") {
+                menuItems[(activeIndex + 1) % menuItems.length].focus();
+            } else {
+                menuItems[(activeIndex - 1 + menuItems.length) % menuItems.length].focus();
+            }
+        });
+
+        menuToggle.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowDown" && experimentMenu.classList.contains("open") && menuItems.length) {
+                event.preventDefault();
+                menuItems[0].focus();
+            }
+        });
+
+        let searchTimer;
+        const searchInput = document.getElementById("searchInput");
+        const clearSearchButton = document.getElementById("clearSearch");
+
         // Lắng nghe thao tác gõ phím trên thanh tìm kiếm
-        document.getElementById("searchInput").addEventListener("input", (event) => {
-            searchExperiment(event.target.value);
+        searchInput.addEventListener("input", (event) => {
+            window.clearTimeout(searchTimer);
+            searchTimer = window.setTimeout(() => {
+                searchExperiment(event.target.value);
+            }, 150);
+        });
+
+        clearSearchButton.addEventListener("click", () => {
+            searchInput.value = "";
+            searchExperiment("");
+            searchInput.focus();
         });
 
         // Gọi hàm vẽ 3 thẻ Lớp 10, 11, 12 ngay khi tải trang lần đầu
