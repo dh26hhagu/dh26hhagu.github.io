@@ -1,1538 +1,737 @@
-diff --git a/index.html b/index.html
-index 609a664142ef514d42cf0f88fe87d67d377823ab..08f66c2ea7cf11af7a5a7a9e97614460b7008f91 100644
---- a/index.html
-+++ b/index.html
-@@ -1,796 +1,737 @@
--<!DOCTYPE html>
--<html lang="vi">
--<head>
--    <meta charset="UTF-8">
--    <meta name="viewport" content="width=device-width, initial-scale=1.0">
--    <title>Tổng hợp thí nghiệm</title>
--    <style>
--        :root {
--            --bg: #f3f6ff;
--            --surface: #ffffff;
--            --primary: #1a5dcc;
--            --primary-600: #154aa4;
--            --text: #1e293b;
--            --muted: #64748b;
--            --shadow: 0 18px 40px rgba(26, 93, 204, 0.15);
--            --radius: 18px;
--        }
--
--        * {
--            margin: 0;
--            padding: 0;
--            box-sizing: border-box;
--        }
--
--        body {
--            font-family: "Inter", "Segoe UI", Arial, sans-serif;
--            color: var(--text);
--            background:
--                radial-gradient(circle at top right, #dbe7ff 0%, #f3f6ff 45%),
--                var(--bg);
--            min-height: 100vh;
--            line-height: 1.6;
--        }
--
--        a {
--            color: inherit;
--            text-decoration: none;
--        }
--
--        .container {
--            width: min(1120px, 92vw);
--            margin: 0 auto;
--        }
--
--        header {
--            position: relative;
--            overflow: hidden;
--            isolation: isolate;
--        }
--
--        .hero {
--            min-height: 320px;
--            display: grid;
--            place-items: center;
--            text-align: center;
--            background: linear-gradient(rgba(9, 34, 87, 0.58), rgba(9, 34, 87, 0.52)),
--                        url("hoahoc2.jpg") center/cover no-repeat;
--        }
--
--        .hero-content {
--            background: rgba(255, 255, 255, 0.75);
--            backdrop-filter: blur(10px);
--            border: 1px solid rgba(255, 255, 255, 0.7);
--            border-radius: 24px;
--            padding: 2rem 2.4rem;
--            box-shadow: 0 16px 35px rgba(0, 0, 0, 0.18);
--            transform: translateY(12px);
--            opacity: 0;
--            animation: fadeUp 0.8s ease forwards;
--        }
--
--        .hero h1 {
--            font-size: clamp(1.8rem, 4vw, 2.7rem);
--            color: var(--primary);
--            margin-bottom: 0.35rem;
--        }
--
--        .hero p {
--            color: #334155;
--            font-size: clamp(0.95rem, 1.8vw, 1.08rem);
--        }
--
--        .nav-wrap {
--            position: sticky;
--            top: 0;
--            z-index: 50;
--            background: rgba(255, 255, 255, 0.75);
--            backdrop-filter: blur(14px);
--            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
--        }
--
--        .navbar {
--            min-height: 76px;
--            display: flex;
--            align-items: center;
--            justify-content: space-between;
--            gap: 1rem;
--        }
--
--        .brand {
--            display: inline-flex;
--            align-items: center;
--            gap: 0.6rem;
--            font-weight: 700;
--            color: var(--primary);
--            letter-spacing: 0.2px;
--        }
--
--        .brand-dot {
--            width: 12px;
--            height: 12px;
--            border-radius: 50%;
--            background: linear-gradient(45deg, #60a5fa, var(--primary));
--            box-shadow: 0 0 0 6px rgba(26, 93, 204, 0.12);
--        }
--
--        .nav-center {
--            display: flex;
--            align-items: center;
--            gap: 0.7rem;
--            flex-wrap: wrap;
--        }
--
--        .nav-item {
--            position: relative;
--        }
--
--        .nav-main {
--            display: inline-flex;
--            align-items: center;
--            gap: 0.35rem;
--            padding: 0.65rem 0.95rem;
--            border-radius: 12px;
--            color: #334155;
--            font-weight: 600;
--            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
--        }
--
--         .nav-main:hover,
--        .nav-main:focus-visible {
--            background: rgba(26, 93, 204, 0.1);
--            color: var(--primary);
--            transform: translateY(-1px);
--            outline: none;
--        }
--
--        .nav-main.is-disabled {
--            opacity: 0.58;
--            cursor: not-allowed;
--            pointer-events: none;
--            background: transparent;
--            color: #64748b;
--        }
--
--        .nav-arrow {
--            border: none;
--            background: transparent;
--            color: var(--primary);
--            cursor: pointer;
--            font-size: 0.8rem;
--            line-height: 1;
--            padding: 0.2rem;
--        }
--
--        .nav-dropdown {
--            display: none;
--            position: absolute;
--            top: calc(100% + 8px);
--            left: 0;
--            min-width: 190px;
--            border-radius: 14px;
--            background: var(--surface);
--            border: 1px solid rgba(15, 23, 42, 0.08);
--            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
--            overflow: hidden;
--            transform-origin: top left;
--            animation: dropdownIn 0.22s ease;
--        }
--
--        .nav-dropdown.open {
--            display: block;
--        }
--
--        .nav-dropdown a {
--            display: block;
--            padding: 0.7rem 0.95rem;
--            font-weight: 500;
--            color: #334155;
--            transition: background 0.2s ease;
--        }
--        .nav-dropdown a:hover,
--        .nav-dropdown a:focus-visible {
--            background: #eef4ff;
--            color: var(--primary);
--            outline: none;
--        }
--
--       
--        .nav-search {
--            flex: 0 1 340px;
--            display: flex;
--            align-items: center;
--            gap: 0.45rem;
--        }
--
--        .sr-only {
--            position: absolute;
--            width: 1px;
--            height: 1px;
--            padding: 0;
--            margin: -1px;
--            overflow: hidden;
--            clip: rect(0, 0, 0, 0);
--            border: 0;
--            white-space: nowrap;
--        }
--
--        .nav-search input {
--            flex: 1;
--            border: 1px solid rgba(100, 116, 139, 0.35);
--            border-radius: 999px;
--            padding: 0.67rem 1rem;
--            font-size: 0.95rem;
--            color: #0f172a;
--            background: #fff;
--            transition: border-color 0.2s ease, box-shadow 0.2s ease;
--        }
--
--        .clear-search {
--            border: 1px solid rgba(100, 116, 139, 0.35);
--            background: #fff;
--            color: #334155;
--            border-radius: 999px;
--            padding: 0.6rem 0.9rem;
--            font-weight: 600;
--            cursor: pointer;
--            transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
--        }
--
--        .clear-search[hidden] {
--            display: none;
--        }
--
--        .clear-search:hover,
--        .clear-search:focus-visible {
--            border-color: var(--primary);
--            color: var(--primary);
--            background: #eef4ff;
--            outline: none;
--        }
--        .nav-search input:focus {
--            border-color: var(--primary);
--            box-shadow: 0 0 0 4px rgba(26, 93, 204, 0.14);
--            outline: none;
--        }
--
--        main {
--            padding: 2.3rem 0 3rem;
--        }
--
--        .intro {
--            margin-bottom: 1.3rem;
--        }
--
--        .intro h2 {
--            color: var(--primary);
--            font-size: clamp(1.4rem, 2.5vw, 1.9rem);
--            margin-bottom: 0.45rem;
--        }
--
--        .intro p {
--            color: var(--muted);
--            max-width: 70ch;
--        }
--
--        .card-container {
--            list-style: none;
--            display: grid;
--            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
--            gap: 1rem;
--            margin-top: 1.1rem;
--        }
--
--        .card {
--            display: block;
--            background: var(--surface);
--            border-radius: var(--radius);
--            padding: 1.25rem 1.15rem;
--            border: 1px solid rgba(15, 23, 42, 0.06);
--            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
--            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
--            opacity: 0;
--            transform: translateY(10px);
--            animation: fadeUp 0.48s ease forwards;
--        }
--.card {
--    position: relative;
--    overflow: hidden;
--}
--
--.card::after {
--    content: "";
--    position: absolute;
--    inset: 0;
--    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
--    opacity: 0;
--    transition: 0.4s;
--}
--
--.card:hover::after {
--    opacity: 1;
--}
--       .card:hover {
--    transform: translateY(-8px) scale(1.02);
--    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
--}
--        .card:focus-visible {
--            transform: translateY(-5px);
--            border-color: rgba(26, 93, 204, 0.3);
--            box-shadow: var(--shadow);
--            outline: none;
--        }
--
--        .card h3 {
--            color: #1d4fb7;
--            margin-bottom: 0.45rem;
--            font-size: 1.1rem;
--        }
--
--        .card p {
--            color: var(--muted);
--            font-size: 0.95rem;
--        }
--
--        .card-badge {
--            display: inline-block;
--            background: #e91e63;
--            color: #fff;
--            padding: 3px 8px;
--            border-radius: 4px;
--            font-size: 12px;
--            float: right;
--        }
--
--        .card-title {
--            text-align: left;
--            margin-top: 10px;
--            clear: both;
--        }
--
--        .card-description {
--            text-align: left;
--            font-size: 14px;
--            margin-top: 5px;
--        }
--
--        .results-summary {
--            color: #334155;
--            margin-top: 0.8rem;
--            font-size: 0.95rem;
--            display: none;
--        }
--
--         .hidden-empty {
--            color: var(--muted);
--            margin-top: 0.8rem;
--            font-size: 0.95rem;
--            display: none;
--        }
--
--        .status-message {
--            color: #b42318;
--            margin-top: 0.8rem;
--            font-size: 0.95rem;
--            display: none;
--        }
--
--        footer {
--            margin-top: 1rem;
--            border-top: 1px solid rgba(100, 116, 139, 0.2);
--            padding: 1.2rem 0 1.6rem;
--            color: var(--muted);
--            text-align: center;
--            font-size: 0.9rem;
--        }
--
--        @keyframes fadeUp {
--            to {
--                opacity: 1;
--                transform: translateY(0);
--            }
--        }
--
--        @keyframes dropdownIn {
--            from {
--                opacity: 0;
--                transform: scale(0.98) translateY(-6px);
--            }
--            to {
--                opacity: 1;
--                transform: scale(1) translateY(0);
--            }
--        }
--
--        @media (max-width: 920px) {
--            .navbar {
--                flex-wrap: wrap;
--                justify-content: center;
--                padding: 0.9rem 0;
--            }
--
--            .brand {
--                width: 100%;
--                justify-content: center;
--            }
--
--            .nav-search {
--                width: min(420px, 100%);
--                flex-basis: 100%;
--            }
--        }
--
--        @media (max-width: 580px) {
--            .hero {
--                min-height: 280px;
--            }
--
--            .hero-content {
--                width: min(94vw, 560px);
--                padding: 1.5rem 1.2rem;
--            }
--
--            .nav-center {
--                justify-content: center;
--            }
--
--            .nav-dropdown {
--                left: 50%;
--                transform: translateX(-50%);
--                transform-origin: top center;
--            }
--
--            main {
--                padding-top: 1.5rem;
--            }
--        }
--        body.dark {
--    --bg: #0f172a;
--    --surface: #1e293b;
--    --text: #e2e8f0;
--    --muted: #94a3b8;
--}
--        .loading {
--    height: 100px;
--    border-radius: 12px;
--    background: linear-gradient(90deg, #eee, #ddd, #eee);
--    animation: shimmer 1.5s infinite;
--}
--
--@keyframes shimmer {
--    0% { background-position: -200px 0; }
--    100% { background-position: 200px 0; }
--}
--    </style>
--    <script src="data.js"></script>
--</head>
--<body>
--    <header>
--        <div class="hero">
--            <div class="hero-content container">
--                <h1>Tổng hợp thí nghiệm Hóa học</h1>
--                <p>Kho tài liệu trực quan cho học sinh THPT theo từng khối lớp.</p>
--            </div>
--        </div>
--    </header>
--
--    <div class="nav-wrap">
--        <nav class="container navbar" aria-label="Điều hướng chính">
--            <a href="index.html" class="brand" aria-label="Trang chủ thí nghiệm">
--                <span class="brand-dot" aria-hidden="true"></span>
--                Thí nghiệm THPT
--            </a>
--
--            <div class="nav-center">
--                <div class="nav-item">
--                    <a href="thinghiem.html" class="nav-main">Hóa học</a>
--                    <button class="nav-arrow" id="menuToggle" aria-expanded="false" aria-controls="experimentMenu" aria-haspopup="true" aria-label="Mở menu lớp">▼</button>
--                    <div class="nav-dropdown" id="experimentMenu" role="menu" aria-label="Danh sách lớp">
--                        <a href="lop10.html" role="menuitem">Lớp 10</a>
--                        <a href="lop11.html" role="menuitem">Lớp 11</a>
--                        <a href="lop12.html" role="menuitem">Lớp 12</a>
--                    </div>
--                    <button onclick="toggleDarkMode()">🌙</button>
--                </div>
--                <span class="nav-main is-disabled" aria-disabled="true">Coming soon</span>
--            </div>
--
--            <div class="nav-search">
--                <label class="sr-only" for="searchInput">Tìm thí nghiệm theo lớp hoặc chủ đề</label>
--                <input type="text" id="searchInput" placeholder="🔍 Tìm theo lớp, chủ đề..." autocomplete="off" disabled>
--                <button class="clear-search" id="clearSearch" type="button" aria-label="Xóa từ khóa tìm kiếm" hidden>Xóa</button>
--            </div>
--        </nav>
--    </div>
--    <main class="container">
--        <section class="intro" id="introSection">
--            <h2>Xin chào 👋</h2>
--            <p>Website tổng hợp thí nghiệm Hóa học dành cho giáo viên và học sinh THPT, giúp tra cứu nhanh theo lớp và từ khóa.</p>
--        </section>
--         <section>
--            <ul class="card-container" id="cardContainer"></ul>
--            <p class="results-summary" id="resultCount" role="status" aria-live="polite"></p>
--            <p class="hidden-empty" id="emptyMessage">Không tìm thấy nội dung phù hợp. Hãy thử từ khóa khác.</p>
--            <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
--        </section>
--    </main>
--
--    <footer>
--        © 2026 – Website thí nghiệm Hóa học | Sinh viên thực hiện
--    </footer>
--
--    <script>
--        function toggleDarkMode() {
--    document.body.classList.toggle("dark");
--}
--        // Dữ liệu hiển thị mặc định khi chưa gõ tìm kiếm
--        const CATEGORY_DATA = [
--            {
--                title: "Hóa học lớp 10",
--                description: "Nội dung thí nghiệm và mô phỏng theo chương trình lớp 10.",
--                link: "lop10.html"
--            },
--            {
--                title: "Hóa học lớp 11",
--                description: "Tổng hợp video thí nghiệm trọng tâm của chương trình lớp 11.",
--                link: "lop11.html"
--            },
--            {
--                title: "Hóa học lớp 12",
--                description: "Tài liệu trực quan phục vụ ôn tập và học tập lớp 12.",
--                link: "lop12.html"
--            }
--        ];
--
--        // Hàm bỏ dấu tiếng Việt
--        function highlight(text, keyword) {
--    const regex = new RegExp(`(${keyword})`, "gi");
--    return text.replace(regex, "<mark>$1</mark>");
--        function removeVietnameseTones(str) {
--            return str
--                .normalize("NFD")
--                .replace(/[\u0300-\u036f]/g, "")
--                .replace(/đ/g, "d")
--                .replace(/Đ/g, "D")
--                .toLowerCase();
--        }
--
--        // Chỉ cho phép một số thẻ HTML an toàn cho công thức hóa học
--        function highlight(text, keyword) {
--    const regex = new RegExp(`(${keyword})`, "gi");
--    return text.replace(regex, "<mark>$1</mark>");
--            function formatChemText(rawText = "") {
--            return rawText
--                .replace(/&/g, "&amp;")
--                .replace(/</g, "&lt;")
--                .replace(/>/g, "&gt;")
--                .replace(/&lt;(\/?(?:sub|sup))&gt;/gi, "<$1>");
--        }
--
--        // Hàm vẽ thẻ kết quả
--        function renderCards(items, type = 'category') {
--            const container = document.getElementById("cardContainer");
--            const emptyMessage = document.getElementById("emptyMessage");
--            const statusMessage = document.getElementById("statusMessage");
--            const resultCount = document.getElementById("resultCount");
--
--            container.innerHTML = "";
--            statusMessage.style.display = "none";
--            statusMessage.textContent = "";
--            resultCount.style.display = "none";
--            resultCount.textContent = "";
--
--            if (!items || !items.length) {
--                emptyMessage.style.display = "block";
--                return;
--            }
--
--            emptyMessage.style.display = "none";
--            if (type === "experiment") {
--                const suffix = items.length > 1 ? "kết quả" : "kết quả";
--                resultCount.textContent = `Tìm thấy ${items.length} ${suffix}.`;
--                resultCount.style.display = "block";
--            }
--
--            items.forEach((item, index) => {
--                const listItem = document.createElement("li");
--                const card = document.createElement("a");
--                card.className = "card";
--                const destination = type === "experiment" ? (item.ytLink || item.link || "") : (item.link || "");
--
--                if (destination) {
--                    card.href = destination;
--                } else {
--                    card.setAttribute("aria-disabled", "true");
--                    card.tabIndex = -1;
--                }
--
--                if (type === "experiment" && destination) {
--                    card.target = "_blank";
--                    card.rel = "noopener noreferrer";
--                }
--                card.style.animationDelay = `${index * 50}ms`; // Hiệu ứng load mượt mà
--
--                if (type === 'category') {
--                    // Cấu trúc thẻ dành cho hiển thị 3 lớp mặc định
--                    const title = document.createElement("h3");
--                    title.textContent = item.title;
--                    const description = document.createElement("p");
--                    description.textContent = item.description || "Khám phá nội dung theo từng lớp.";
--
--                    card.append(title, description);
--                } else {
--                    // Cấu trúc thẻ dành cho kết quả tìm kiếm video từ file data.js
--                    const badge = document.createElement("span");
--                    badge.className = "card-badge";
--                    badge.textContent = item.badge || "Không rõ lớp";
--
--                    const title = document.createElement("h3");
--                   title.innerHTML = highlight(
--    formatChemText(item.title || "Video thí nghiệm"),
--    searchInput.value
--);
--                    title.className = "card-title";
--                    
--                    const description = document.createElement("p");
--                    description.textContent = `Nhấn để xem video tại trang ${item.badge || "liên kết nguồn"}`;
--                    description.className = "card-description";
--
--                    card.append(badge, title, description);
--                }
--                listItem.appendChild(card);
--                container.appendChild(listItem);
--            });
--        }
--
--        // Xử lý logic tìm kiếm
--        function searchExperiment(value) {
--            document.getElementById("cardContainer").innerHTML = '<div class="loading"></div>';
--            renderCards(filtered, 'experiment');
--            const normalizedInput = removeVietnameseTones(value.trim());
--            const introSection = document.getElementById("introSection");
--
--            // Nếu ô tìm kiếm trống, hiện lại lời chào và 3 thẻ khối lớp
--            if (!normalizedInput) {
--                introSection.style.display = "block";
--                renderCards(CATEGORY_DATA, 'category');
--                return;
--            }
--
--            // Nếu người dùng bắt đầu gõ, ẩn lời chào
--            introSection.style.display = "none";
--
--            // Kiểm tra xem dữ liệu ALL_EXPERIMENTS từ file data.js đã được tải chưa
--            if (typeof ALL_EXPERIMENTS !== 'undefined') {
--                const filtered = ALL_EXPERIMENTS.filter((item) => {
--                    const normalizedText = removeVietnameseTones(`${item.title} ${item.keywords} ${item.badge}`);
--                    return normalizedText.includes(normalizedInput);
--                });
--                renderCards(filtered, 'experiment');
--            } else {
--                const statusMessage = document.getElementById("statusMessage");
--                const emptyMessage = document.getElementById("emptyMessage");
--                const resultCount = document.getElementById("resultCount");
--                document.getElementById("cardContainer").innerHTML = "";
--                emptyMessage.style.display = "none";
--                resultCount.style.display = "none";
--                statusMessage.style.display = "block";
--                statusMessage.textContent = "Không thể tải dữ liệu thí nghiệm. Vui lòng thử tải lại trang.";
--                console.error("Lỗi: Không tìm thấy dữ liệu ALL_EXPERIMENTS. Bạn hãy chắc chắn file data.js đã nằm cùng thư mục.");
--            }
--        }
--        // Xử lý bật/tắt menu dropdown
--        const menuToggle = document.getElementById("menuToggle");
--        const experimentMenu = document.getElementById("experimentMenu");
--        const menuItems = Array.from(experimentMenu.querySelectorAll('[role="menuitem"]'));
--
--        function closeMenu({ focusButton = false } = {}) {
--            experimentMenu.classList.remove("open");
--            menuToggle.setAttribute("aria-expanded", "false");
--            if (focusButton) {
--                menuToggle.focus();
--            }
--        }
--
--        menuToggle.addEventListener("click", (event) => {
--            event.stopPropagation();
--            const isOpen = experimentMenu.classList.toggle("open");
--            menuToggle.setAttribute("aria-expanded", String(isOpen));
--            if (isOpen && menuItems.length) {
--                menuItems[0].focus();
--            }
--        });
--
--        document.addEventListener("click", (event) => {
--            if (!event.target.closest(".nav-item")) {
--                closeMenu();
--            }
--        });
--
--        document.addEventListener("keydown", (event) => {
--            if (event.key === "Escape") {
--                closeMenu({ focusButton: true });
--            }
--        });
--
--        experimentMenu.addEventListener("keydown", (event) => {
--            if (!["ArrowDown", "ArrowUp"].includes(event.key) || !menuItems.length) {
--                return;
--            }
--
--            event.preventDefault();
--            const activeIndex = menuItems.indexOf(document.activeElement);
--            if (event.key === "ArrowDown") {
--                menuItems[(activeIndex + 1) % menuItems.length].focus();
--            } else {
--                menuItems[(activeIndex - 1 + menuItems.length) % menuItems.length].focus();
--            }
--        });
--
--        menuToggle.addEventListener("keydown", (event) => {
--            if (!menuItems.length) {
--                return;
--            }
--
--            if (event.key === "ArrowDown") {
--                event.preventDefault();
--                if (!experimentMenu.classList.contains("open")) {
--                    experimentMenu.classList.add("open");
--                    menuToggle.setAttribute("aria-expanded", "true");
--                }
--                menuItems[0].focus();
--            }
--        });
--
--        let searchTimer;
--        const searchInput = document.getElementById("searchInput");
--        const clearSearchButton = document.getElementById("clearSearch");
--
--        function updateSearchControlState() {
--            const hasText = searchInput.value.trim().length > 0;
--            clearSearchButton.hidden = !hasText;
--            clearSearchButton.disabled = !hasText;
--        }
--
--        // Lắng nghe thao tác gõ phím trên thanh tìm kiếm
--        searchInput.addEventListener("input", (event) => {
--           saveSearch(event.target.value);
--            updateSearchControlState();
--            window.clearTimeout(searchTimer);
--            searchTimer = window.setTimeout(() => {
--                searchExperiment(event.target.value);
--            }, 150);
--        });
--
--        clearSearchButton.addEventListener("click", () => {
--            searchInput.value = "";
--            updateSearchControlState();
--            searchExperiment("");
--            searchInput.focus();
--        });
--
--        if (typeof ALL_EXPERIMENTS !== "undefined" && Array.isArray(ALL_EXPERIMENTS)) {
--            searchInput.disabled = false;
--            searchInput.removeAttribute("aria-busy");
--        } else {
--            const statusMessage = document.getElementById("statusMessage");
--            statusMessage.style.display = "block";
--            statusMessage.textContent = "Dữ liệu chưa sẵn sàng. Vui lòng tải lại trang để tiếp tục tìm kiếm.";
--            searchInput.setAttribute("aria-busy", "true");
--        }
--
--        updateSearchControlState();
--        // Gọi hàm vẽ 3 thẻ Lớp 10, 11, 12 ngay khi tải trang lần đầu
--        renderCards(CATEGORY_DATA, 'category');
--    function saveSearch(value) {
--    let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
--    history.unshift(value);
--    localStorage.setItem("searchHistory", JSON.stringify(history.slice(0,5)));
--}
--    description.innerHTML = highlight(
--    `Nhấn để xem video tại trang ${item.badge || "liên kết nguồn"}`,
--    searchInput.value
--);       
--    </script>
--</body>
--</html>
-+<!DOCTYPE html>
-+<html lang="vi">
-+<head>
-+    <meta charset="UTF-8">
-+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-+    <title>Tổng hợp thí nghiệm</title>
-+    <style>
-+        :root {
-+            --bg: #f3f6ff;
-+            --surface: #ffffff;
-+            --primary: #1a5dcc;
-+            --primary-600: #154aa4;
-+            --text: #1e293b;
-+            --muted: #64748b;
-+            --shadow: 0 18px 40px rgba(26, 93, 204, 0.15);
-+            --radius: 18px;
-+        }
-+
-+        * {
-+            margin: 0;
-+            padding: 0;
-+            box-sizing: border-box;
-+        }
-+
-+        body {
-+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
-+            color: var(--text);
-+            background:
-+                radial-gradient(circle at top right, #dbe7ff 0%, #f3f6ff 45%),
-+                var(--bg);
-+            min-height: 100vh;
-+            line-height: 1.6;
-+        }
-+
-+        a {
-+            color: inherit;
-+            text-decoration: none;
-+        }
-+
-+        .container {
-+            width: min(1120px, 92vw);
-+            margin: 0 auto;
-+        }
-+
-+        header {
-+            position: relative;
-+            overflow: hidden;
-+            isolation: isolate;
-+        }
-+
-+        .hero {
-+            min-height: 320px;
-+            display: grid;
-+            place-items: center;
-+            text-align: center;
-+            background: linear-gradient(rgba(9, 34, 87, 0.58), rgba(9, 34, 87, 0.52)),
-+                        url("hoahoc2.jpg") center/cover no-repeat;
-+        }
-+
-+        .hero-content {
-+            background: rgba(255, 255, 255, 0.75);
-+            backdrop-filter: blur(10px);
-+            border: 1px solid rgba(255, 255, 255, 0.7);
-+            border-radius: 24px;
-+            padding: 2rem 2.4rem;
-+            box-shadow: 0 16px 35px rgba(0, 0, 0, 0.18);
-+            transform: translateY(12px);
-+            opacity: 0;
-+            animation: fadeUp 0.8s ease forwards;
-+        }
-+
-+        .hero h1 {
-+            font-size: clamp(1.8rem, 4vw, 2.7rem);
-+            color: var(--primary);
-+            margin-bottom: 0.35rem;
-+        }
-+
-+        .hero p {
-+            color: #334155;
-+            font-size: clamp(0.95rem, 1.8vw, 1.08rem);
-+        }
-+
-+        .nav-wrap {
-+            position: sticky;
-+            top: 0;
-+            z-index: 50;
-+            background: rgba(255, 255, 255, 0.75);
-+            backdrop-filter: blur(14px);
-+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-+        }
-+
-+        .navbar {
-+            min-height: 76px;
-+            display: flex;
-+            align-items: center;
-+            justify-content: space-between;
-+            gap: 1rem;
-+        }
-+
-+        .brand {
-+            display: inline-flex;
-+            align-items: center;
-+            gap: 0.6rem;
-+            font-weight: 700;
-+            color: var(--primary);
-+            letter-spacing: 0.2px;
-+        }
-+
-+        .brand-dot {
-+            width: 12px;
-+            height: 12px;
-+            border-radius: 50%;
-+            background: linear-gradient(45deg, #60a5fa, var(--primary));
-+            box-shadow: 0 0 0 6px rgba(26, 93, 204, 0.12);
-+        }
-+
-+        .nav-center {
-+            display: flex;
-+            align-items: center;
-+            gap: 0.7rem;
-+            flex-wrap: wrap;
-+        }
-+
-+        .nav-item {
-+            position: relative;
-+        }
-+
-+        .nav-main {
-+            display: inline-flex;
-+            align-items: center;
-+            gap: 0.35rem;
-+            padding: 0.65rem 0.95rem;
-+            border-radius: 12px;
-+            color: #334155;
-+            font-weight: 600;
-+            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-+        }
-+
-+         .nav-main:hover,
-+        .nav-main:focus-visible {
-+            background: rgba(26, 93, 204, 0.1);
-+            color: var(--primary);
-+            transform: translateY(-1px);
-+            outline: none;
-+        }
-+
-+        .nav-main.is-disabled {
-+            opacity: 0.58;
-+            cursor: not-allowed;
-+            pointer-events: none;
-+            background: transparent;
-+            color: #64748b;
-+        }
-+
-+        .nav-arrow {
-+            border: none;
-+            background: transparent;
-+            color: var(--primary);
-+            cursor: pointer;
-+            font-size: 0.8rem;
-+            line-height: 1;
-+            padding: 0.2rem;
-+        }
-+
-+        .nav-dropdown {
-+            display: none;
-+            position: absolute;
-+            top: calc(100% + 8px);
-+            left: 0;
-+            min-width: 190px;
-+            border-radius: 14px;
-+            background: var(--surface);
-+            border: 1px solid rgba(15, 23, 42, 0.08);
-+            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
-+            overflow: hidden;
-+            transform-origin: top left;
-+            animation: dropdownIn 0.22s ease;
-+        }
-+
-+        .nav-dropdown.open {
-+            display: block;
-+        }
-+
-+        .nav-dropdown a {
-+            display: block;
-+            padding: 0.7rem 0.95rem;
-+            font-weight: 500;
-+            color: #334155;
-+            transition: background 0.2s ease;
-+        }
-+        .nav-dropdown a:hover,
-+        .nav-dropdown a:focus-visible {
-+            background: #eef4ff;
-+            color: var(--primary);
-+            outline: none;
-+        }
-+
-+       
-+        .nav-search {
-+            flex: 0 1 340px;
-+            display: flex;
-+            align-items: center;
-+            gap: 0.45rem;
-+        }
-+
-+        .sr-only {
-+            position: absolute;
-+            width: 1px;
-+            height: 1px;
-+            padding: 0;
-+            margin: -1px;
-+            overflow: hidden;
-+            clip: rect(0, 0, 0, 0);
-+            border: 0;
-+            white-space: nowrap;
-+        }
-+
-+        .nav-search input {
-+            flex: 1;
-+            border: 1px solid rgba(100, 116, 139, 0.35);
-+            border-radius: 999px;
-+            padding: 0.67rem 1rem;
-+            font-size: 0.95rem;
-+            color: #0f172a;
-+            background: #fff;
-+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-+        }
-+
-+        .clear-search {
-+            border: 1px solid rgba(100, 116, 139, 0.35);
-+            background: #fff;
-+            color: #334155;
-+            border-radius: 999px;
-+            padding: 0.6rem 0.9rem;
-+            font-weight: 600;
-+            cursor: pointer;
-+            transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
-+        }
-+
-+        .clear-search[hidden] {
-+            display: none;
-+        }
-+
-+        .clear-search:hover,
-+        .clear-search:focus-visible {
-+            border-color: var(--primary);
-+            color: var(--primary);
-+            background: #eef4ff;
-+            outline: none;
-+        }
-+        .nav-search input:focus {
-+            border-color: var(--primary);
-+            box-shadow: 0 0 0 4px rgba(26, 93, 204, 0.14);
-+            outline: none;
-+        }
-+
-+        main {
-+            padding: 2.3rem 0 3rem;
-+        }
-+
-+        .intro {
-+            margin-bottom: 1.3rem;
-+        }
-+
-+        .intro h2 {
-+            color: var(--primary);
-+            font-size: clamp(1.4rem, 2.5vw, 1.9rem);
-+            margin-bottom: 0.45rem;
-+        }
-+
-+        .intro p {
-+            color: var(--muted);
-+            max-width: 70ch;
-+        }
-+
-+        .card-container {
-+            list-style: none;
-+            display: grid;
-+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-+            gap: 1rem;
-+            margin-top: 1.1rem;
-+        }
-+
-+        .card {
-+            display: block;
-+            background: var(--surface);
-+            border-radius: var(--radius);
-+            padding: 1.25rem 1.15rem;
-+            border: 1px solid rgba(15, 23, 42, 0.06);
-+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-+            opacity: 0;
-+            transform: translateY(10px);
-+            animation: fadeUp 0.48s ease forwards;
-+        }
-+.card {
-+    position: relative;
-+    overflow: hidden;
-+}
-+
-+.card::after {
-+    content: "";
-+    position: absolute;
-+    inset: 0;
-+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
-+    opacity: 0;
-+    transition: 0.4s;
-+}
-+
-+.card:hover::after {
-+    opacity: 1;
-+}
-+       .card:hover {
-+    transform: translateY(-8px) scale(1.02);
-+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-+},
-+        .card:focus-visible {
-+            transform: translateY(-5px);
-+            border-color: rgba(26, 93, 204, 0.3);
-+            box-shadow: var(--shadow);
-+            outline: none;
-+        }
-+
-+        .card h3 {
-+            color: #1d4fb7;
-+            margin-bottom: 0.45rem;
-+            font-size: 1.1rem;
-+        }
-+
-+        .card p {
-+            color: var(--muted);
-+            font-size: 0.95rem;
-+        }
-+
-+        .card-badge {
-+            display: inline-block;
-+            background: #e91e63;
-+            color: #fff;
-+            padding: 3px 8px;
-+            border-radius: 4px;
-+            font-size: 12px;
-+            float: right;
-+        }
-+
-+        .card-title {
-+            text-align: left;
-+            margin-top: 10px;
-+            clear: both;
-+        }
-+
-+        .card-description {
-+            text-align: left;
-+            font-size: 14px;
-+            margin-top: 5px;
-+        }
-+
-+        .results-summary {
-+            color: #334155;
-+            margin-top: 0.8rem;
-+            font-size: 0.95rem;
-+            display: none;
-+        }
-+
-+         .hidden-empty {
-+            color: var(--muted);
-+            margin-top: 0.8rem;
-+            font-size: 0.95rem;
-+            display: none;
-+        }
-+
-+        .status-message {
-+            color: #b42318;
-+            margin-top: 0.8rem;
-+            font-size: 0.95rem;
-+            display: none;
-+        }
-+
-+        footer {
-+            margin-top: 1rem;
-+            border-top: 1px solid rgba(100, 116, 139, 0.2);
-+            padding: 1.2rem 0 1.6rem;
-+            color: var(--muted);
-+            text-align: center;
-+            font-size: 0.9rem;
-+        }
-+
-+        @keyframes fadeUp {
-+            to {
-+                opacity: 1;
-+                transform: translateY(0);
-+            }
-+        }
-+
-+        @keyframes dropdownIn {
-+            from {
-+                opacity: 0;
-+                transform: scale(0.98) translateY(-6px);
-+            }
-+            to {
-+                opacity: 1;
-+                transform: scale(1) translateY(0);
-+            }
-+        }
-+
-+        @media (max-width: 920px) {
-+            .navbar {
-+                flex-wrap: wrap;
-+                justify-content: center;
-+                padding: 0.9rem 0;
-+            }
-+
-+            .brand {
-+                width: 100%;
-+                justify-content: center;
-+            }
-+
-+            .nav-search {
-+                width: min(420px, 100%);
-+                flex-basis: 100%;
-+            }
-+        }
-+
-+        @media (max-width: 580px) {
-+            .hero {
-+                min-height: 280px;
-+            }
-+
-+            .hero-content {
-+                width: min(94vw, 560px);
-+                padding: 1.5rem 1.2rem;
-+            }
-+
-+            .nav-center {
-+                justify-content: center;
-+            }
-+
-+            .nav-dropdown {
-+                left: 50%;
-+                transform: translateX(-50%);
-+                transform-origin: top center;
-+            }
-+
-+            main {
-+                padding-top: 1.5rem;
-+            }
-+        }
-+        body.dark {
-+    --bg: #0f172a;
-+    --surface: #1e293b;
-+    --text: #e2e8f0;
-+    --muted: #94a3b8;
-+}
-+        .loading {
-+    height: 100px;
-+    border-radius: 12px;
-+    background: linear-gradient(90deg, #eee, #ddd, #eee);
-+    animation: shimmer 1.5s infinite;
-+}
-+
-+@keyframes shimmer {
-+    0% { background-position: -200px 0; }
-+    100% { background-position: 200px 0; }
-+}
-+    </style>
-+    <script src="data.js"></script>
-+    <link rel="stylesheet" href="ui-system.css">
-+</head>
-+<body>
-+    <header>
-+        <div class="hero">
-+            <div class="hero-content container">
-+                <h1>Tổng hợp thí nghiệm Hóa học</h1>
-+                <p>Kho tài liệu trực quan cho học sinh THPT theo từng khối lớp.</p>
-+            </div>
-+        </div>
-+    </header>
-+
-+    <div class="nav-wrap">
-+        <nav class="container navbar" aria-label="Điều hướng chính">
-+            <a href="index.html" class="brand" aria-label="Trang chủ thí nghiệm">
-+                <span class="brand-dot" aria-hidden="true"></span>
-+                Thí nghiệm THPT
-+            </a>
-+
-+            <div class="nav-center">
-+                <div class="nav-item">
-+                    <a href="thinghiem.html" class="nav-main">Hóa học</a>
-+                    <button class="nav-arrow" id="menuToggle" aria-expanded="false" aria-controls="experimentMenu" aria-haspopup="true" aria-label="Mở menu lớp">▼</button>
-+                    <div class="nav-dropdown" id="experimentMenu" role="menu" aria-label="Danh sách lớp">
-+                        <a href="lop10.html" role="menuitem">Lớp 10</a>
-+                        <a href="lop11.html" role="menuitem">Lớp 11</a>
-+                        <a href="lop12.html" role="menuitem">Lớp 12</a>
-+                    </div>
-+                    <button onclick="toggleDarkMode()">🌙</button>
-+                </div>
-+                <span class="nav-main is-disabled" aria-disabled="true">Coming soon</span>
-+            </div>
-+
-+            <div class="nav-search">
-+                <label class="sr-only" for="searchInput">Tìm thí nghiệm theo lớp hoặc chủ đề</label>
-+                <input type="text" id="searchInput" placeholder="🔍 Tìm theo lớp, chủ đề..." autocomplete="off" disabled>
-+                <button class="clear-search" id="clearSearch" type="button" aria-label="Xóa từ khóa tìm kiếm" hidden>Xóa</button>
-+            </div>
-+        </nav>
-+    </div>
-+    <main class="container">
-+        <section class="intro" id="introSection">
-+            <h2>Xin chào 👋</h2>
-+            <p>Website tổng hợp thí nghiệm Hóa học dành cho giáo viên và học sinh THPT, giúp tra cứu nhanh theo lớp và từ khóa.</p>
-+        </section>
-+         <section>
-+            <ul class="card-container" id="cardContainer"></ul>
-+            <p class="results-summary" id="resultCount" role="status" aria-live="polite"></p>
-+            <p class="hidden-empty" id="emptyMessage">Không tìm thấy nội dung phù hợp. Hãy thử từ khóa khác.</p>
-+            <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
-+        </section>
-+    </main>
-+
-+    <footer>
-+        © 2026 – Website thí nghiệm Hóa học | Sinh viên thực hiện
-+    </footer>
-+
-+    <script>
-+        function toggleDarkMode() {
-+            document.body.classList.toggle("dark");
-+        }
-+
-+        const CATEGORY_DATA = [
-+            {
-+                title: "Hóa học lớp 10",
-+                description: "Nội dung thí nghiệm và mô phỏng theo chương trình lớp 10.",
-+                link: "lop10.html"
-+            },
-+            {
-+                title: "Hóa học lớp 11",
-+                description: "Tổng hợp video thí nghiệm trọng tâm của chương trình lớp 11.",
-+                link: "lop11.html"
-+            },
-+            {
-+                title: "Hóa học lớp 12",
-+                description: "Tài liệu trực quan phục vụ ôn tập và học tập lớp 12.",
-+                link: "lop12.html"
-+            }
-+        ];
-+
-+        function removeVietnameseTones(str) {
-+            return (str || "")
-+                .normalize("NFD")
-+               .replace(/[\u0300-\u036f]/g, "")
-+                .replace(/đ/g, "d")
-+                .replace(/Đ/g, "D")
-+                .toLowerCase();
-+        }
-+
-+        function formatChemText(rawText = "") {
-+            return rawText
-+                .replace(/&/g, "&amp;")
-+                .replace(/</g, "&lt;")
-+                .replace(/>/g, "&gt;")
-+                .replace(/&lt;(\/?(?:sub|sup))&gt;/gi, "<$1>");
-+        }
-+
-+        function highlight(text, keyword) {
-+            if (!keyword) return text;
-+            const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-+            const regex = new RegExp(`(${escaped})`, "gi");
-+            return text.replace(regex, "<mark>$1</mark>");
-+        }
-+
-+        const searchInput = document.getElementById("searchInput");
-+        const clearSearchButton = document.getElementById("clearSearch");
-+
-+        function renderCards(items, type = "category") {
-+            const container = document.getElementById("cardContainer");
-+            const emptyMessage = document.getElementById("emptyMessage");
-+            const statusMessage = document.getElementById("statusMessage");
-+            const resultCount = document.getElementById("resultCount");
-+
-+            container.innerHTML = "";
-+            statusMessage.style.display = "none";
-+            statusMessage.textContent = "";
-+            resultCount.style.display = "none";
-+
-+            if (!items || !items.length) {
-+                emptyMessage.style.display = "block";
-+                return;
-+            }
-+
-+            emptyMessage.style.display = "none";
-+            if (type === "experiment") {
-+                resultCount.textContent = `Tìm thấy ${items.length} kết quả.`;
-+                resultCount.style.display = "block";
-+            }
-+
-+            items.forEach((item, index) => {
-+                const listItem = document.createElement("li");
-+                const card = document.createElement("a");
-+                card.className = "card";
-+                card.style.animationDelay = `${index * 50}ms`;
-+
-+                const destination = type === "experiment" ? (item.ytLink || item.link || "") : (item.link || "");
-+                if (destination) {
-+                    card.href = destination;
-+                } else {
-+                    card.setAttribute("aria-disabled", "true");
-+                    card.tabIndex = -1;
-+                }
-+
-+                if (type === "experiment" && destination) {
-+                    card.target = "_blank";
-+                    card.rel = "noopener noreferrer";
-+                }
-+
-+                if (type === "category") {
-+                    const title = document.createElement("h3");
-+                    title.textContent = item.title;
-+                    const description = document.createElement("p");
-+                    description.textContent = item.description || "Khám phá nội dung theo từng lớp.";
-+                    card.append(title, description);
-+                } else {
-+                    const badge = document.createElement("span");
-+                    badge.className = "card-badge";
-+                    badge.textContent = item.badge || "Không rõ lớp";
-+
-+                    const title = document.createElement("h3");
-+                    title.className = "card-title";
-+                    title.innerHTML = highlight(formatChemText(item.title || "Video thí nghiệm"), searchInput.value.trim());
-+
-+                    const description = document.createElement("p");
-+                    description.className = "card-description";
-+                    description.textContent = `Nhấn để xem video tại trang ${item.badge || "liên kết nguồn"}`;
-+
-+                    card.append(badge, title, description);
-+                }
-+
-+                listItem.appendChild(card);
-+                container.appendChild(listItem);
-+            });
-+        }
-+
-+        function searchExperiment(value) {
-+            const normalizedInput = removeVietnameseTones(value.trim());
-+            const introSection = document.getElementById("introSection");
-+
-+            if (!normalizedInput) {
-+                introSection.style.display = "block";
-+                renderCards(CATEGORY_DATA, "category");
-+                return;
-+            }
-+
-+            introSection.style.display = "none";
-+
-+            if (typeof ALL_EXPERIMENTS !== "undefined") {
-+                const filtered = ALL_EXPERIMENTS.filter((item) => {
-+                    const normalizedText = removeVietnameseTones(`${item.title} ${item.keywords} ${item.badge}`);
-+                    return normalizedText.includes(normalizedInput);
-+                });
-+                renderCards(filtered, "experiment");
-+            } else {
-+                const statusMessage = document.getElementById("statusMessage");
-+                statusMessage.style.display = "block";
-+                statusMessage.textContent = "Không thể tải dữ liệu thí nghiệm. Vui lòng thử tải lại trang.";
-+            }
-+        }
-+
-+        const menuToggle = document.getElementById("menuToggle");
-+        const experimentMenu = document.getElementById("experimentMenu");
-+        const menuItems = Array.from(experimentMenu.querySelectorAll('[role="menuitem"]'));
-+
-+        function closeMenu({ focusButton = false } = {}) {
-+            experimentMenu.classList.remove("open");
-+            menuToggle.setAttribute("aria-expanded", "false");
-+            if (focusButton) menuToggle.focus();
-+        }
-+
-+        menuToggle.addEventListener("click", (event) => {
-+            event.stopPropagation();
-+            const isOpen = experimentMenu.classList.toggle("open");
-+            menuToggle.setAttribute("aria-expanded", String(isOpen));
-+            if (isOpen && menuItems.length) menuItems[0].focus();
-+        });
-+
-+        document.addEventListener("click", (event) => {
-+            if (!event.target.closest(".nav-item")) closeMenu();
-+        });
-+
-+        document.addEventListener("keydown", (event) => {
-+            if (event.key === "Escape") closeMenu({ focusButton: true });
-+        });
-+
-+        let searchTimer;
-+
-+        function updateSearchControlState() {
-+            const hasText = searchInput.value.trim().length > 0;
-+            clearSearchButton.hidden = !hasText;
-+            clearSearchButton.disabled = !hasText;
-+        }
-+
-+        searchInput.addEventListener("input", (event) => {
-+            saveSearch(event.target.value);
-+            updateSearchControlState();
-+            window.clearTimeout(searchTimer);
-+            searchTimer = window.setTimeout(() => {
-+                searchExperiment(event.target.value);
-+            }, 150);
-+        });
-+
-+        clearSearchButton.addEventListener("click", () => {
-+            searchInput.value = "";
-+            updateSearchControlState();
-+            searchExperiment("");
-+            searchInput.focus();
-+        });
-+
-+        function saveSearch(value) {
-+            if (!value.trim()) return;
-+            const history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
-+            history.unshift(value);
-+            localStorage.setItem("searchHistory", JSON.stringify(history.slice(0, 5)));
-+        }
-+
-+        if (typeof ALL_EXPERIMENTS !== "undefined" && Array.isArray(ALL_EXPERIMENTS)) {
-+            searchInput.disabled = false;
-+            searchInput.removeAttribute("aria-busy");
-+        } else {
-+            const statusMessage = document.getElementById("statusMessage");
-+            statusMessage.style.display = "block";
-+            statusMessage.textContent = "Dữ liệu chưa sẵn sàng. Vui lòng tải lại trang để tiếp tục tìm kiếm.";
-+            searchInput.setAttribute("aria-busy", "true");
-+        }
-+
-+        updateSearchControlState();
-+        renderCards(CATEGORY_DATA, "category");
-+    </script>
-+    <script src="ui-enhance.js"></script>
-+</body>
-+</html>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng hợp thí nghiệm</title>
+    <style>
+        :root {
+            --bg: #f3f6ff;
+            --surface: #ffffff;
+            --primary: #1a5dcc;
+            --primary-600: #154aa4;
+            --text: #1e293b;
+            --muted: #64748b;
+            --shadow: 0 18px 40px rgba(26, 93, 204, 0.15);
+            --radius: 18px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top right, #dbe7ff 0%, #f3f6ff 45%),
+                var(--bg);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1120px, 92vw);
+            margin: 0 auto;
+        }
+
+        header {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .hero {
+            min-height: 320px;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(9, 34, 87, 0.58), rgba(9, 34, 87, 0.52)),
+                        url("hoahoc2.jpg") center/cover no-repeat;
+        }
+
+        .hero-content {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 24px;
+            padding: 2rem 2.4rem;
+            box-shadow: 0 16px 35px rgba(0, 0, 0, 0.18);
+            transform: translateY(12px);
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(1.8rem, 4vw, 2.7rem);
+            color: var(--primary);
+            margin-bottom: 0.35rem;
+        }
+
+        .hero p {
+            color: #334155;
+            font-size: clamp(0.95rem, 1.8vw, 1.08rem);
+        }
+
+        .nav-wrap {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        .navbar {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.2px;
+        }
+
+        .brand-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #60a5fa, var(--primary));
+            box-shadow: 0 0 0 6px rgba(26, 93, 204, 0.12);
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.65rem 0.95rem;
+            border-radius: 12px;
+            color: #334155;
+            font-weight: 600;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+
+         .nav-main:hover,
+        .nav-main:focus-visible {
+            background: rgba(26, 93, 204, 0.1);
+            color: var(--primary);
+            transform: translateY(-1px);
+            outline: none;
+        }
+
+        .nav-main.is-disabled {
+            opacity: 0.58;
+            cursor: not-allowed;
+            pointer-events: none;
+            background: transparent;
+            color: #64748b;
+        }
+
+        .nav-arrow {
+            border: none;
+            background: transparent;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            line-height: 1;
+            padding: 0.2rem;
+        }
+
+        .nav-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            min-width: 190px;
+            border-radius: 14px;
+            background: var(--surface);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
+            overflow: hidden;
+            transform-origin: top left;
+            animation: dropdownIn 0.22s ease;
+        }
+
+        .nav-dropdown.open {
+            display: block;
+        }
+
+        .nav-dropdown a {
+            display: block;
+            padding: 0.7rem 0.95rem;
+            font-weight: 500;
+            color: #334155;
+            transition: background 0.2s ease;
+        }
+        .nav-dropdown a:hover,
+        .nav-dropdown a:focus-visible {
+            background: #eef4ff;
+            color: var(--primary);
+            outline: none;
+        }
+
+       
+        .nav-search {
+            flex: 0 1 340px;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+            white-space: nowrap;
+        }
+
+        .nav-search input {
+            flex: 1;
+            border: 1px solid rgba(100, 116, 139, 0.35);
+            border-radius: 999px;
+            padding: 0.67rem 1rem;
+            font-size: 0.95rem;
+            color: #0f172a;
+            background: #fff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .clear-search {
+            border: 1px solid rgba(100, 116, 139, 0.35);
+            background: #fff;
+            color: #334155;
+            border-radius: 999px;
+            padding: 0.6rem 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+        }
+
+        .clear-search[hidden] {
+            display: none;
+        }
+
+        .clear-search:hover,
+        .clear-search:focus-visible {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #eef4ff;
+            outline: none;
+        }
+        .nav-search input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(26, 93, 204, 0.14);
+            outline: none;
+        }
+
+        main {
+            padding: 2.3rem 0 3rem;
+        }
+
+        .intro {
+            margin-bottom: 1.3rem;
+        }
+
+        .intro h2 {
+            color: var(--primary);
+            font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+            margin-bottom: 0.45rem;
+        }
+
+        .intro p {
+            color: var(--muted);
+            max-width: 70ch;
+        }
+
+        .card-container {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-top: 1.1rem;
+        }
+
+        .card {
+            display: block;
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 1.25rem 1.15rem;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeUp 0.48s ease forwards;
+        }
+.card {
+    position: relative;
+    overflow: hidden;
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+       .card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+        .card:focus-visible {
+            transform: translateY(-5px);
+            border-color: rgba(26, 93, 204, 0.3);
+            box-shadow: var(--shadow);
+            outline: none;
+        }
+
+        .card h3 {
+            color: #1d4fb7;
+            margin-bottom: 0.45rem;
+            font-size: 1.1rem;
+        }
+
+        .card p {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .card-badge {
+            display: inline-block;
+            background: #e91e63;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            float: right;
+        }
+
+        .card-title {
+            text-align: left;
+            margin-top: 10px;
+            clear: both;
+        }
+
+        .card-description {
+            text-align: left;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .results-summary {
+            color: #334155;
+            margin-top: 0.8rem;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+         .hidden-empty {
+            color: var(--muted);
+            margin-top: 0.8rem;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .status-message {
+            color: #b42318;
+            margin-top: 0.8rem;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        footer {
+            margin-top: 1rem;
+            border-top: 1px solid rgba(100, 116, 139, 0.2);
+            padding: 1.2rem 0 1.6rem;
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes dropdownIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98) translateY(-6px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @media (max-width: 920px) {
+            .navbar {
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 0.9rem 0;
+            }
+
+            .brand {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-search {
+                width: min(420px, 100%);
+                flex-basis: 100%;
+            }
+        }
+
+        @media (max-width: 580px) {
+            .hero {
+                min-height: 280px;
+            }
+
+            .hero-content {
+                width: min(94vw, 560px);
+                padding: 1.5rem 1.2rem;
+            }
+
+            .nav-center {
+                justify-content: center;
+            }
+
+            .nav-dropdown {
+                left: 50%;
+                transform: translateX(-50%);
+                transform-origin: top center;
+            }
+
+            main {
+                padding-top: 1.5rem;
+            }
+        }
+        body.dark {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+}
+        .loading {
+    height: 100px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #eee, #ddd, #eee);
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: 200px 0; }
+}
+    </style>
+    <script src="data.js"></script>
+    <link rel="stylesheet" href="ui-system.css">
+</head>
+<body>
+    <header>
+        <div class="hero">
+            <div class="hero-content container">
+                <h1>Tổng hợp thí nghiệm Hóa học</h1>
+                <p>Kho tài liệu trực quan cho học sinh THPT theo từng khối lớp.</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-wrap">
+        <nav class="container navbar" aria-label="Điều hướng chính">
+            <a href="index.html" class="brand" aria-label="Trang chủ thí nghiệm">
+                <span class="brand-dot" aria-hidden="true"></span>
+                Thí nghiệm THPT
+            </a>
+
+            <div class="nav-center">
+                <div class="nav-item">
+                    <a href="thinghiem.html" class="nav-main">Hóa học</a>
+                    <button class="nav-arrow" id="menuToggle" aria-expanded="false" aria-controls="experimentMenu" aria-haspopup="true" aria-label="Mở menu lớp">▼</button>
+                    <div class="nav-dropdown" id="experimentMenu" role="menu" aria-label="Danh sách lớp">
+                        <a href="lop10.html" role="menuitem">Lớp 10</a>
+                        <a href="lop11.html" role="menuitem">Lớp 11</a>
+                        <a href="lop12.html" role="menuitem">Lớp 12</a>
+                    </div>
+                    <button onclick="toggleDarkMode()">🌙</button>
+                </div>
+                <span class="nav-main is-disabled" aria-disabled="true">Coming soon</span>
+            </div>
+
+            <div class="nav-search">
+                <label class="sr-only" for="searchInput">Tìm thí nghiệm theo lớp hoặc chủ đề</label>
+                <input type="text" id="searchInput" placeholder="🔍 Tìm theo lớp, chủ đề..." autocomplete="off" disabled>
+                <button class="clear-search" id="clearSearch" type="button" aria-label="Xóa từ khóa tìm kiếm" hidden>Xóa</button>
+            </div>
+        </nav>
+    </div>
+    <main class="container">
+        <section class="intro" id="introSection">
+            <h2>Xin chào 👋</h2>
+            <p>Website tổng hợp thí nghiệm Hóa học dành cho giáo viên và học sinh THPT, giúp tra cứu nhanh theo lớp và từ khóa.</p>
+        </section>
+         <section>
+            <ul class="card-container" id="cardContainer"></ul>
+            <p class="results-summary" id="resultCount" role="status" aria-live="polite"></p>
+            <p class="hidden-empty" id="emptyMessage">Không tìm thấy nội dung phù hợp. Hãy thử từ khóa khác.</p>
+            <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
+        </section>
+    </main>
+
+    <footer>
+        © 2026 – Website thí nghiệm Hóa học | Sinh viên thực hiện
+    </footer>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark");
+        }
+
+        const CATEGORY_DATA = [
+            {
+                title: "Hóa học lớp 10",
+                description: "Nội dung thí nghiệm và mô phỏng theo chương trình lớp 10.",
+                link: "lop10.html"
+            },
+            {
+                title: "Hóa học lớp 11",
+                description: "Tổng hợp video thí nghiệm trọng tâm của chương trình lớp 11.",
+                link: "lop11.html"
+            },
+            {
+                title: "Hóa học lớp 12",
+                description: "Tài liệu trực quan phục vụ ôn tập và học tập lớp 12.",
+                link: "lop12.html"
+            }
+        ];
+
+        function removeVietnameseTones(str) {
+            return (str || "")
+                .normalize("NFD")
+                .replace(/[̀-ͯ]/g, "")
+                .replace(/đ/g, "d")
+                .replace(/Đ/g, "D")
+                .toLowerCase();
+        }
+
+        function formatChemText(rawText = "") {
+            return rawText
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/&lt;(\/?(?:sub|sup))&gt;/gi, "<$1>");
+        }
+
+        function highlight(text, keyword) {
+            if (!keyword) return text;
+            const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const regex = new RegExp(`(${escaped})`, "gi");
+            return text.replace(regex, "<mark>$1</mark>");
+        }
+
+        const searchInput = document.getElementById("searchInput");
+        const clearSearchButton = document.getElementById("clearSearch");
+
+        function renderCards(items, type = "category") {
+            const container = document.getElementById("cardContainer");
+            const emptyMessage = document.getElementById("emptyMessage");
+            const statusMessage = document.getElementById("statusMessage");
+            const resultCount = document.getElementById("resultCount");
+
+            container.innerHTML = "";
+            statusMessage.style.display = "none";
+            statusMessage.textContent = "";
+            resultCount.style.display = "none";
+
+            if (!items || !items.length) {
+                emptyMessage.style.display = "block";
+                return;
+            }
+
+            emptyMessage.style.display = "none";
+            if (type === "experiment") {
+                resultCount.textContent = `Tìm thấy ${items.length} kết quả.`;
+                resultCount.style.display = "block";
+            }
+
+            items.forEach((item, index) => {
+                const listItem = document.createElement("li");
+                const card = document.createElement("a");
+                card.className = "card";
+                card.style.animationDelay = `${index * 50}ms`;
+
+                const destination = type === "experiment" ? (item.ytLink || item.link || "") : (item.link || "");
+                if (destination) {
+                    card.href = destination;
+                } else {
+                    card.setAttribute("aria-disabled", "true");
+                    card.tabIndex = -1;
+                }
+
+                if (type === "experiment" && destination) {
+                    card.target = "_blank";
+                    card.rel = "noopener noreferrer";
+                }
+
+                if (type === "category") {
+                    const title = document.createElement("h3");
+                    title.textContent = item.title;
+                    const description = document.createElement("p");
+                    description.textContent = item.description || "Khám phá nội dung theo từng lớp.";
+                    card.append(title, description);
+                } else {
+                    const badge = document.createElement("span");
+                    badge.className = "card-badge";
+                    badge.textContent = item.badge || "Không rõ lớp";
+
+                    const title = document.createElement("h3");
+                    title.className = "card-title";
+                    title.innerHTML = highlight(formatChemText(item.title || "Video thí nghiệm"), searchInput.value.trim());
+
+                    const description = document.createElement("p");
+                    description.className = "card-description";
+                    description.textContent = `Nhấn để xem video tại trang ${item.badge || "liên kết nguồn"}`;
+
+                    card.append(badge, title, description);
+                }
+
+                listItem.appendChild(card);
+                container.appendChild(listItem);
+            });
+        }
+
+        function searchExperiment(value) {
+            const normalizedInput = removeVietnameseTones(value.trim());
+            const introSection = document.getElementById("introSection");
+
+            if (!normalizedInput) {
+                introSection.style.display = "block";
+                renderCards(CATEGORY_DATA, "category");
+                return;
+            }
+
+            introSection.style.display = "none";
+
+            if (typeof ALL_EXPERIMENTS !== "undefined") {
+                const filtered = ALL_EXPERIMENTS.filter((item) => {
+                    const normalizedText = removeVietnameseTones(`${item.title} ${item.keywords} ${item.badge}`);
+                    return normalizedText.includes(normalizedInput);
+                });
+                renderCards(filtered, "experiment");
+            } else {
+                const statusMessage = document.getElementById("statusMessage");
+                statusMessage.style.display = "block";
+                statusMessage.textContent = "Không thể tải dữ liệu thí nghiệm. Vui lòng thử tải lại trang.";
+            }
+        }
+
+        const menuToggle = document.getElementById("menuToggle");
+        const experimentMenu = document.getElementById("experimentMenu");
+        const menuItems = Array.from(experimentMenu.querySelectorAll('[role="menuitem"]'));
+
+        function closeMenu({ focusButton = false } = {}) {
+            experimentMenu.classList.remove("open");
+            menuToggle.setAttribute("aria-expanded", "false");
+            if (focusButton) menuToggle.focus();
+        }
+
+        menuToggle.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const isOpen = experimentMenu.classList.toggle("open");
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
+            if (isOpen && menuItems.length) menuItems[0].focus();
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!event.target.closest(".nav-item")) closeMenu();
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") closeMenu({ focusButton: true });
+        });
+
+        let searchTimer;
+
+        function updateSearchControlState() {
+            const hasText = searchInput.value.trim().length > 0;
+            clearSearchButton.hidden = !hasText;
+            clearSearchButton.disabled = !hasText;
+        }
+
+        searchInput.addEventListener("input", (event) => {
+            saveSearch(event.target.value);
+            updateSearchControlState();
+            window.clearTimeout(searchTimer);
+            searchTimer = window.setTimeout(() => {
+                searchExperiment(event.target.value);
+            }, 150);
+        });
+
+        clearSearchButton.addEventListener("click", () => {
+            searchInput.value = "";
+            updateSearchControlState();
+            searchExperiment("");
+            searchInput.focus();
+        });
+
+        function saveSearch(value) {
+            if (!value.trim()) return;
+            const history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+            history.unshift(value);
+            localStorage.setItem("searchHistory", JSON.stringify(history.slice(0, 5)));
+        }
+
+        if (typeof ALL_EXPERIMENTS !== "undefined" && Array.isArray(ALL_EXPERIMENTS)) {
+            searchInput.disabled = false;
+            searchInput.removeAttribute("aria-busy");
+        } else {
+            const statusMessage = document.getElementById("statusMessage");
+            statusMessage.style.display = "block";
+            statusMessage.textContent = "Dữ liệu chưa sẵn sàng. Vui lòng tải lại trang để tiếp tục tìm kiếm.";
+            searchInput.setAttribute("aria-busy", "true");
+        }
+
+        updateSearchControlState();
+        renderCards(CATEGORY_DATA, "category");
+    </script>
+    <script src="ui-enhance.js"></script>
+</body>
+</html>
