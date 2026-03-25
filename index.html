@@ -293,8 +293,27 @@
             transform: translateY(10px);
             animation: fadeUp 0.48s ease forwards;
         }
+.card {
+    position: relative;
+    overflow: hidden;
+}
 
-        .card:hover,
+.card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+       .card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+},
         .card:focus-visible {
             transform: translateY(-5px);
             border-color: rgba(26, 93, 204, 0.3);
@@ -425,6 +444,23 @@
                 padding-top: 1.5rem;
             }
         }
+        body.dark {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+}
+        .loading {
+    height: 100px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #eee, #ddd, #eee);
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: 200px 0; }
+}
     </style>
     <script src="data.js"></script>
 </head>
@@ -454,6 +490,7 @@
                         <a href="lop11.html" role="menuitem">Lớp 11</a>
                         <a href="lop12.html" role="menuitem">Lớp 12</a>
                     </div>
+                    <button onclick="toggleDarkMode()">🌙</button>
                 </div>
                 <span class="nav-main is-disabled" aria-disabled="true">Coming soon</span>
             </div>
@@ -483,6 +520,9 @@
     </footer>
 
     <script>
+        function toggleDarkMode() {
+    document.body.classList.toggle("dark");
+}
         // Dữ liệu hiển thị mặc định khi chưa gõ tìm kiếm
         const CATEGORY_DATA = [
             {
@@ -503,6 +543,9 @@
         ];
 
         // Hàm bỏ dấu tiếng Việt
+        function highlight(text, keyword) {
+    const regex = new RegExp(`(${keyword})`, "gi");
+    return text.replace(regex, "<mark>$1</mark>");
         function removeVietnameseTones(str) {
             return str
                 .normalize("NFD")
@@ -513,7 +556,10 @@
         }
 
         // Chỉ cho phép một số thẻ HTML an toàn cho công thức hóa học
-        function formatChemText(rawText = "") {
+        function highlight(text, keyword) {
+    const regex = new RegExp(`(${keyword})`, "gi");
+    return text.replace(regex, "<mark>$1</mark>");
+            function formatChemText(rawText = "") {
             return rawText
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
@@ -580,7 +626,10 @@
                     badge.textContent = item.badge || "Không rõ lớp";
 
                     const title = document.createElement("h3");
-                    title.innerHTML = formatChemText(item.title || "Video thí nghiệm");
+                   title.innerHTML = highlight(
+    formatChemText(item.title || "Video thí nghiệm"),
+    searchInput.value
+);
                     title.className = "card-title";
                     
                     const description = document.createElement("p");
@@ -596,6 +645,8 @@
 
         // Xử lý logic tìm kiếm
         function searchExperiment(value) {
+            document.getElementById("cardContainer").innerHTML = '<div class="loading"></div>';
+            renderCards(filtered, 'experiment');
             const normalizedInput = removeVietnameseTones(value.trim());
             const introSection = document.getElementById("introSection");
 
@@ -703,6 +754,7 @@
 
         // Lắng nghe thao tác gõ phím trên thanh tìm kiếm
         searchInput.addEventListener("input", (event) => {
+           saveSearch(event.target.value);
             updateSearchControlState();
             window.clearTimeout(searchTimer);
             searchTimer = window.setTimeout(() => {
@@ -730,6 +782,15 @@
         updateSearchControlState();
         // Gọi hàm vẽ 3 thẻ Lớp 10, 11, 12 ngay khi tải trang lần đầu
         renderCards(CATEGORY_DATA, 'category');
+    function saveSearch(value) {
+    let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
+    history.unshift(value);
+    localStorage.setItem("searchHistory", JSON.stringify(history.slice(0,5)));
+}
+    description.innerHTML = highlight(
+    `Nhấn để xem video tại trang ${item.badge || "liên kết nguồn"}`,
+    searchInput.value
+);       
     </script>
 </body>
 </html>
