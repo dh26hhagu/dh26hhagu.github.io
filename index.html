@@ -403,14 +403,17 @@
         const CATEGORY_DATA = [
             {
                 title: "Hóa học lớp 10",
+                description: "Nội dung thí nghiệm và mô phỏng theo chương trình lớp 10.",
                 link: "lop10.html"
             },
             {
                 title: "Hóa học lớp 11",
+                description: "Tổng hợp video thí nghiệm trọng tâm của chương trình lớp 11.",
                 link: "lop11.html"
             },
             {
                 title: "Hóa học lớp 12",
+                description: "Tài liệu trực quan phục vụ ôn tập và học tập lớp 12.",
                 link: "lop12.html"
             }
         ];
@@ -444,20 +447,40 @@
                 card.className = "card";
                 card.href = item.link;
                 card.style.animationDelay = `${index * 50}ms`; // Hiệu ứng load mượt mà
-                
+
                 if (type === 'category') {
                     // Cấu trúc thẻ dành cho hiển thị 3 lớp mặc định
-                    card.innerHTML = `
-                        <h3>${item.title}</h3>
-                        <p>${item.description}</p>
-                    `;
+                    const title = document.createElement("h3");
+                    title.textContent = item.title;
+
+                    const description = document.createElement("p");
+                    description.textContent = item.description || "Khám phá nội dung theo từng lớp.";
+
+                    card.append(title, description);
                 } else {
                     // Cấu trúc thẻ dành cho kết quả tìm kiếm video từ file data.js
-                    card.innerHTML = `
-                        <span style="background: #e91e63; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; float: right;">${item.badge}</span>
-                        <h3 style="text-align: left; margin-top: 10px; clear: both;">${item.title}</h3>
-                        <p style="text-align: left; font-size: 14px; margin-top: 5px;">Nhấn để xem video tại trang ${item.badge}</p>
-                    `;
+                    const badge = document.createElement("span");
+                    badge.textContent = item.badge;
+                    badge.style.background = "#e91e63";
+                    badge.style.color = "white";
+                    badge.style.padding = "3px 8px";
+                    badge.style.borderRadius = "4px";
+                    badge.style.fontSize = "12px";
+                    badge.style.float = "right";
+
+                    const title = document.createElement("h3");
+                    title.textContent = item.title;
+                    title.style.textAlign = "left";
+                    title.style.marginTop = "10px";
+                    title.style.clear = "both";
+
+                    const description = document.createElement("p");
+                    description.textContent = `Nhấn để xem video tại trang ${item.badge}`;
+                    description.style.textAlign = "left";
+                    description.style.fontSize = "14px";
+                    description.style.marginTop = "5px";
+
+                    card.append(badge, title, description);
                 }
                 container.appendChild(card);
             });
@@ -513,7 +536,7 @@
         });
 
         // Gọi hàm vẽ 3 thẻ Lớp 10, 11, 12 ngay khi tải trang lần đầu
-        
+        renderCards(CATEGORY_DATA, 'category');
     </script>
 </body>
 </html>
