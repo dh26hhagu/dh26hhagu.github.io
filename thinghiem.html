@@ -345,6 +345,7 @@
         }
     </style>
     <script src="data.js"></script>
+    <link rel="stylesheet" href="ui-system.css">
 </head>
 <body>
     <header>
@@ -465,17 +466,11 @@
         // Xử lý logic tìm kiếm
         function searchExperiment(value) {
             const normalizedInput = removeVietnameseTones(value.trim());
-            const introSection = document.getElementById("introSection");
-
-            // Nếu ô tìm kiếm trống, hiện lại lời chào và 3 thẻ khối lớp
+            // Nếu ô tìm kiếm trống, hiện lại danh mục mặc định
             if (!normalizedInput) {
-                introSection.style.display = "block";
                 renderCards(CATEGORY_DATA, 'category');
                 return;
             }
-
-            // Nếu người dùng bắt đầu gõ, ẩn lời chào
-            introSection.style.display = "none";
 
             // Kiểm tra xem dữ liệu ALL_EXPERIMENTS từ file data.js đã được tải chưa
             if (typeof ALL_EXPERIMENTS !== 'undefined') {
@@ -514,5 +509,6 @@
         // Gọi hàm vẽ 3 thẻ Lớp 10, 11, 12 ngay khi tải trang lần đầu
         renderCards(CATEGORY_DATA, 'category');
     </script>
+    <script src="ui-enhance.js"></script>
 </body>
 </html>
