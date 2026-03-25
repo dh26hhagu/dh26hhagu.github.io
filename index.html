@@ -196,11 +196,23 @@
         }
 
        
-.nav-search {
+        .nav-search {
             flex: 0 1 340px;
             display: flex;
             align-items: center;
             gap: 0.45rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+            white-space: nowrap;
         }
 
         .nav-search input {
@@ -223,6 +235,10 @@
             font-weight: 600;
             cursor: pointer;
             transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+        }
+
+        .clear-search[hidden] {
+            display: none;
         }
 
         .clear-search:hover,
@@ -258,6 +274,7 @@
         }
 
         .card-container {
+            list-style: none;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1rem;
@@ -294,6 +311,35 @@
         .card p {
             color: var(--muted);
             font-size: 0.95rem;
+        }
+
+        .card-badge {
+            display: inline-block;
+            background: #e91e63;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            float: right;
+        }
+
+        .card-title {
+            text-align: left;
+            margin-top: 10px;
+            clear: both;
+        }
+
+        .card-description {
+            text-align: left;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .results-summary {
+            color: #334155;
+            margin-top: 0.8rem;
+            font-size: 0.95rem;
+            display: none;
         }
 
          .hidden-empty {
@@ -400,10 +446,10 @@
             </a>
 
             <div class="nav-center">
-                <div class="nav-item">␊
-                    <a href="thinghiem.html" class="nav-main">Hóa học</a>␊
-                    <button class="nav-arrow" id="menuToggle" aria-expanded="false" aria-controls="experimentMenu" aria-label="Mở menu lớp">▼</button>␊
-                    <div class="nav-dropdown" id="experimentMenu" role="menu" aria-label="Danh sách lớp">␊
+                <div class="nav-item">
+                    <a href="thinghiem.html" class="nav-main">Hóa học</a>
+                    <button class="nav-arrow" id="menuToggle" aria-expanded="false" aria-controls="experimentMenu" aria-haspopup="true" aria-label="Mở menu lớp">▼</button>
+                    <div class="nav-dropdown" id="experimentMenu" role="menu" aria-label="Danh sách lớp">
                         <a href="lop10.html" role="menuitem">Lớp 10</a>
                         <a href="lop11.html" role="menuitem">Lớp 11</a>
                         <a href="lop12.html" role="menuitem">Lớp 12</a>
@@ -413,8 +459,9 @@
             </div>
 
             <div class="nav-search">
-                <input type="text" id="searchInput" placeholder="🔍 Tìm theo lớp, chủ đề..." autocomplete="off">
-                <button class="clear-search" id="clearSearch" type="button" aria-label="Xóa từ khóa tìm kiếm">Xóa</button>
+                <label class="sr-only" for="searchInput">Tìm thí nghiệm theo lớp hoặc chủ đề</label>
+                <input type="text" id="searchInput" placeholder="🔍 Tìm theo lớp, chủ đề..." autocomplete="off" disabled>
+                <button class="clear-search" id="clearSearch" type="button" aria-label="Xóa từ khóa tìm kiếm" hidden>Xóa</button>
             </div>
         </nav>
     </div>
@@ -424,7 +471,8 @@
             <p>Website tổng hợp thí nghiệm Hóa học dành cho giáo viên và học sinh THPT, giúp tra cứu nhanh theo lớp và từ khóa.</p>
         </section>
          <section>
-            <div class="card-container" id="cardContainer"></div>
+            <ul class="card-container" id="cardContainer"></ul>
+            <p class="results-summary" id="resultCount" role="status" aria-live="polite"></p>
             <p class="hidden-empty" id="emptyMessage">Không tìm thấy nội dung phù hợp. Hãy thử từ khóa khác.</p>
             <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
         </section>
@@ -478,10 +526,13 @@
             const container = document.getElementById("cardContainer");
             const emptyMessage = document.getElementById("emptyMessage");
             const statusMessage = document.getElementById("statusMessage");
+            const resultCount = document.getElementById("resultCount");
 
             container.innerHTML = "";
             statusMessage.style.display = "none";
             statusMessage.textContent = "";
+            resultCount.style.display = "none";
+            resultCount.textContent = "";
 
             if (!items || !items.length) {
                 emptyMessage.style.display = "block";
@@ -489,12 +540,26 @@
             }
 
             emptyMessage.style.display = "none";
+            if (type === "experiment") {
+                const suffix = items.length > 1 ? "kết quả" : "kết quả";
+                resultCount.textContent = `Tìm thấy ${items.length} ${suffix}.`;
+                resultCount.style.display = "block";
+            }
 
             items.forEach((item, index) => {
+                const listItem = document.createElement("li");
                 const card = document.createElement("a");
                 card.className = "card";
-                card.href = type === "experiment" ? (item.ytLink || item.link || "#") : (item.link || "#");
-                if (type === "experiment") {
+                const destination = type === "experiment" ? (item.ytLink || item.link || "") : (item.link || "");
+
+                if (destination) {
+                    card.href = destination;
+                } else {
+                    card.setAttribute("aria-disabled", "true");
+                    card.tabIndex = -1;
+                }
+
+                if (type === "experiment" && destination) {
                     card.target = "_blank";
                     card.rel = "noopener noreferrer";
                 }
@@ -511,29 +576,21 @@
                 } else {
                     // Cấu trúc thẻ dành cho kết quả tìm kiếm video từ file data.js
                     const badge = document.createElement("span");
-                    badge.textContent = item.badge;
-                    badge.style.background = "#e91e63";
-                    badge.style.color = "white";
-                    badge.style.padding = "3px 8px";
-                    badge.style.borderRadius = "4px";
-                    badge.style.fontSize = "12px";
-                    badge.style.float = "right";
-␊
-                    const title = document.createElement("h3");␊
+                    badge.className = "card-badge";
+                    badge.textContent = item.badge || "Không rõ lớp";
+
+                    const title = document.createElement("h3");
                     title.innerHTML = formatChemText(item.title || "Video thí nghiệm");
-                    title.style.textAlign = "left";␊
-                    title.style.marginTop = "10px";␊
-                    title.style.clear = "both";␊
+                    title.className = "card-title";
                     
                     const description = document.createElement("p");
-                    description.textContent = `Nhấn để xem video tại trang ${item.badge}`;
-                    description.style.textAlign = "left";
-                    description.style.fontSize = "14px";
-                    description.style.marginTop = "5px";
+                    description.textContent = `Nhấn để xem video tại trang ${item.badge || "liên kết nguồn"}`;
+                    description.className = "card-description";
 
                     card.append(badge, title, description);
                 }
-                container.appendChild(card);
+                listItem.appendChild(card);
+                container.appendChild(listItem);
             });
         }
 
@@ -561,6 +618,11 @@
                 renderCards(filtered, 'experiment');
             } else {
                 const statusMessage = document.getElementById("statusMessage");
+                const emptyMessage = document.getElementById("emptyMessage");
+                const resultCount = document.getElementById("resultCount");
+                document.getElementById("cardContainer").innerHTML = "";
+                emptyMessage.style.display = "none";
+                resultCount.style.display = "none";
                 statusMessage.style.display = "block";
                 statusMessage.textContent = "Không thể tải dữ liệu thí nghiệm. Vui lòng thử tải lại trang.";
                 console.error("Lỗi: Không tìm thấy dữ liệu ALL_EXPERIMENTS. Bạn hãy chắc chắn file data.js đã nằm cùng thư mục.");
@@ -569,29 +631,37 @@
         // Xử lý bật/tắt menu dropdown
         const menuToggle = document.getElementById("menuToggle");
         const experimentMenu = document.getElementById("experimentMenu");
+        const menuItems = Array.from(experimentMenu.querySelectorAll('[role="menuitem"]'));
+
+        function closeMenu({ focusButton = false } = {}) {
+            experimentMenu.classList.remove("open");
+            menuToggle.setAttribute("aria-expanded", "false");
+            if (focusButton) {
+                menuToggle.focus();
+            }
+        }
 
         menuToggle.addEventListener("click", (event) => {
             event.stopPropagation();
             const isOpen = experimentMenu.classList.toggle("open");
             menuToggle.setAttribute("aria-expanded", String(isOpen));
+            if (isOpen && menuItems.length) {
+                menuItems[0].focus();
+            }
         });
 
         document.addEventListener("click", (event) => {
             if (!event.target.closest(".nav-item")) {
-                experimentMenu.classList.remove("open");
-                menuToggle.setAttribute("aria-expanded", "false");
+                closeMenu();
             }
         });
 
         document.addEventListener("keydown", (event) => {
             if (event.key === "Escape") {
-                experimentMenu.classList.remove("open");
-                menuToggle.setAttribute("aria-expanded", "false");
-                menuToggle.focus();
+                closeMenu({ focusButton: true });
             }
         });
 
-        const menuItems = Array.from(experimentMenu.querySelectorAll('[role="menuitem"]'));
         experimentMenu.addEventListener("keydown", (event) => {
             if (!["ArrowDown", "ArrowUp"].includes(event.key) || !menuItems.length) {
                 return;
@@ -607,8 +677,16 @@
         });
 
         menuToggle.addEventListener("keydown", (event) => {
-            if (event.key === "ArrowDown" && experimentMenu.classList.contains("open") && menuItems.length) {
+            if (!menuItems.length) {
+                return;
+            }
+
+            if (event.key === "ArrowDown") {
                 event.preventDefault();
+                if (!experimentMenu.classList.contains("open")) {
+                    experimentMenu.classList.add("open");
+                    menuToggle.setAttribute("aria-expanded", "true");
+                }
                 menuItems[0].focus();
             }
         });
@@ -617,8 +695,15 @@
         const searchInput = document.getElementById("searchInput");
         const clearSearchButton = document.getElementById("clearSearch");
 
+        function updateSearchControlState() {
+            const hasText = searchInput.value.trim().length > 0;
+            clearSearchButton.hidden = !hasText;
+            clearSearchButton.disabled = !hasText;
+        }
+
         // Lắng nghe thao tác gõ phím trên thanh tìm kiếm
         searchInput.addEventListener("input", (event) => {
+            updateSearchControlState();
             window.clearTimeout(searchTimer);
             searchTimer = window.setTimeout(() => {
                 searchExperiment(event.target.value);
@@ -627,10 +712,22 @@
 
         clearSearchButton.addEventListener("click", () => {
             searchInput.value = "";
+            updateSearchControlState();
             searchExperiment("");
             searchInput.focus();
         });
 
+        if (typeof ALL_EXPERIMENTS !== "undefined" && Array.isArray(ALL_EXPERIMENTS)) {
+            searchInput.disabled = false;
+            searchInput.removeAttribute("aria-busy");
+        } else {
+            const statusMessage = document.getElementById("statusMessage");
+            statusMessage.style.display = "block";
+            statusMessage.textContent = "Dữ liệu chưa sẵn sàng. Vui lòng tải lại trang để tiếp tục tìm kiếm.";
+            searchInput.setAttribute("aria-busy", "true");
+        }
+
+        updateSearchControlState();
         // Gọi hàm vẽ 3 thẻ Lớp 10, 11, 12 ngay khi tải trang lần đầu
         renderCards(CATEGORY_DATA, 'category');
     </script>
