@@ -1,16 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
   document.body.classList.add('ui-enhanced');
 
+  // ===== Highlight trang hiện tại =====
   const current = location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav-main[href]').forEach((link) => {
     const href = link.getAttribute('href');
-    if (href === current) link.classList.add('active-page');
+    if (href === current) {
+      link.classList.add('active-page');
+    }
   });
 
+  // ===== Enhance search input =====
   document.querySelectorAll('#searchInput').forEach((input) => {
     if (input.dataset.enhanced === '1') return;
+
+    if (!input.parentNode) return;
+
     const wrapper = document.createElement('div');
     wrapper.className = 'ui-search-wrap';
+
     input.parentNode.insertBefore(wrapper, input);
     wrapper.appendChild(input);
 
@@ -20,10 +28,53 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.appendChild(icon);
 
     input.dataset.enhanced = '1';
-    input.placeholder = input.placeholder.replace('🔍', '').trim();
+
+    // Fix lỗi placeholder null
+    if (input.placeholder) {
+      input.placeholder = input.placeholder.replace('🔍', '').trim();
+    }
   });
 
+  // ===== Bảo mật link mở tab mới =====
+  document.querySelectorAll('a[target="_blank"]').forEach((link) => {
+    const existingRel = link.getAttribute('rel') || '';
+    const relTokens = new Set(existingRel.split(/\s+/).filter(Boolean));
+
+    relTokens.add('noopener');
+    relTokens.add('noreferrer');
+
+    link.setAttribute('rel', Array.from(relTokens).join(' '));
+  });
+
+  // ===== Tối ưu ảnh =====
+  document.querySelectorAll('img').forEach((img) => {
+    if (!img.hasAttribute('loading')) {
+      img.loading = 'lazy';
+    }
+
+    if (!img.hasAttribute('decoding')) {
+      img.decoding = 'async';
+    }
+
+    if (!img.getAttribute('alt') || !img.getAttribute('alt').trim()) {
+      img.alt = 'Thumbnail video thí nghiệm hóa học';
+    }
+  });
+
+  // ===== Animation card khi scroll =====
   const cards = document.querySelectorAll('.card');
+
+  if (!cards.length) return;
+
+  // Fallback cho trình duyệt cũ
+  if (!('IntersectionObserver' in window)) {
+    cards.forEach((card) => {
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    });
+    return;
+  }
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -37,7 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
   cards.forEach((card, i) => {
     card.style.opacity = '0';
     card.style.transform = 'translateY(12px)';
+    card.style.transition = 'all 0.4s ease';
     card.style.transitionDelay = `${Math.min(i * 25, 220)}ms`;
+
     observer.observe(card);
   });
 });
