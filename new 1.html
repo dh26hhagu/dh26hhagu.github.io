@@ -414,16 +414,23 @@
                 link: "lop12.html"
             }
         ];
-
         // Hàm bỏ dấu tiếng Việt
         function removeVietnameseTones(str) {
-            return str
+            return (str || "")
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "")
                 .replace(/đ/g, "d")
                 .replace(/Đ/g, "D")
                 .toLowerCase();
         }
+
+        function escapeHtml(text = "") {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
 
         // Hàm vẽ thẻ kết quả
         function renderCards(items, type = 'category') {
@@ -442,21 +449,31 @@
             items.forEach((item, index) => {
                 const card = document.createElement("a");
                 card.className = "card";
-                card.href = item.link;
                 card.style.animationDelay = `${index * 50}ms`; // Hiệu ứng load mượt mà
+
+                const destination = type === "experiment" ? (item.ytLink || item.link || "") : (item.link || "");
+                if (destination) {
+                    card.href = destination;
+                } else {
+                    card.setAttribute("aria-disabled", "true");
+                    card.tabIndex = -1;
+                }
+
+                if (type === "experiment" && destination) {
+                    card.target = "_blank";
+                    card.rel = "noopener noreferrer";
+                }
                 
                 if (type === 'category') {
                     // Cấu trúc thẻ dành cho hiển thị 3 lớp mặc định
                     card.innerHTML = `
-                        <h3>${item.title}</h3>
-                        <p>${item.description}</p>
+                       <h3>${escapeHtml(item.title || "")}</h3>
+                        <p>${escapeHtml(item.description || "Khám phá nội dung theo từng lớp.")}</p>
                     `;
                 } else {
                     // Cấu trúc thẻ dành cho kết quả tìm kiếm video từ file data.js
                     card.innerHTML = `
-                        <span style="background: #e91e63; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; float: right;">${item.badge}</span>
-                        <h3 style="text-align: left; margin-top: 10px; clear: both;">${item.title}</h3>
-                        <p style="text-align: left; font-size: 14px; margin-top: 5px;">Nhấn để xem video tại trang ${item.badge}</p>
+                        <span style="background
                     `;
                 }
                 container.appendChild(card);
