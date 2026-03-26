@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     link.setAttribute('rel', Array.from(relTokens).join(' '));
   });
 
-  // ===== Tối ưu ảnh =====
+  // ===== Tối ưu ảnh & nút  =====
   document.querySelectorAll('img').forEach((img) => {
     if (!img.hasAttribute('loading')) {
       img.loading = 'lazy';
@@ -57,14 +57,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!img.getAttribute('alt') || !img.getAttribute('alt').trim()) {
-      img.alt = 'Thumbnail video thí nghiệm hóa học';
+      const cardTitle = img.closest('.card')?.querySelector('h3')?.textContent?.trim();
+      img.alt = cardTitle ? `Thumbnail: ${cardTitle}` : 'Thumbnail video thí nghiệm hóa học';
     }
   });
-
+document.querySelectorAll('a.play-btn').forEach((button) => {
+    if (button.getAttribute('aria-label')) return;
+    const cardTitle = button.closest('.card')?.querySelector('h3')?.textContent?.trim();
+    button.setAttribute('aria-label', cardTitle ? `Mở video: ${cardTitle}` : 'Mở video thí nghiệm');
+  });
+  
   // ===== Animation card khi scroll =====
   const cards = document.querySelectorAll('.card');
 
   if (!cards.length) return;
+const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReducedMotion) {
+    cards.forEach((card) => {
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+      card.style.transition = 'none';
+      card.style.transitionDelay = '0ms';
+    });
+    return;
+  }
 
   // Fallback cho trình duyệt cũ
   if (!('IntersectionObserver' in window)) {
