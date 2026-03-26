@@ -157,3 +157,22 @@ body[data-theme="dark"] .top {
   background: #142033 !important;
   color: #e2e8f0 !important;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .card:hover,
+  .card:focus-within,
+  .card:focus-visible,
+  .play-btn:hover,
+  button:active,
+  .clear-search:active,
+  .back-btn:active {
+    transform: none !important;
+  }
+}
