@@ -1,1833 +1,1680 @@
-+<!doctype html>
-+<html lang="vi">
-+<head>
-+  <meta charset="UTF-8" />
-+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-+  <title>Periodic Table - 118 Elements</title>
-+  <style>
-+    :root {
-+      --bg: #f5f7fb;
-+      --panel: #ffffff;
-+      --text: #111827;
-+      --muted: #6b7280;
-+      --line: #d1d5db;
-+    }
-+
-+    body.dark {
-+      --bg: #0f172a;
-+      --panel: #111827;
-+      --text: #f3f4f6;
-+      --muted: #9ca3af;
-+      --line: #334155;
-+    }
-+
-+    * { box-sizing: border-box; }
-+
-+    body {
-+      margin: 0;
-+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-+      background: var(--bg);
-+      color: var(--text);
-+    }
-+
-+    .container {
-+      max-width: 1600px;
-+      margin: 0 auto;
-+      padding: 16px;
-+    }
-+
-+    h1 { margin: 0 0 12px; font-size: 26px; }
-+
-+    .toolbar {
-+      display: flex;
-+      flex-wrap: wrap;
-+      gap: 8px;
-+      margin-bottom: 12px;
-+    }
-+
-+    input, select, button {
-+      padding: 8px 10px;
-+      border: 1px solid var(--line);
-+      border-radius: 8px;
-+      background: var(--panel);
-+      color: var(--text);
-+      font: inherit;
-+    }
-+
-+    .legend {
-+      display: flex;
-+      flex-wrap: wrap;
-+      gap: 8px;
-+      margin: 0 0 10px;
-+    }
-+
-+    .tag {
-+      font-size: 12px;
-+      color: #fff;
-+      border-radius: 999px;
-+      padding: 6px 10px;
-+    }
-+
-+    .table-wrap {
-+      overflow: auto;
-+      border: 1px solid var(--line);
-+      border-radius: 12px;
-+      background: var(--panel);
-+      padding: 10px;
-+    }
-+
-+    .periodic-grid {
-+      display: grid;
-+      grid-template-columns: repeat(18, minmax(58px, 1fr));
-+      grid-auto-rows: 74px;
-+      gap: 6px;
-+      min-width: 1120px;
-+    }
-+
-+    .row-label {
-+      display: flex;
-+      align-items: center;
-+      font-size: 12px;
-+      color: var(--muted);
-+      padding-left: 4px;
-+      font-weight: 600;
-+    }
-+
-+    .element {
-+      border: 1px solid rgba(0,0,0,0.08);
-+      border-radius: 10px;
-+      color: #fff;
-+      cursor: pointer;
-+      display: flex;
-+      flex-direction: column;
-+      justify-content: space-between;
-+      padding: 6px;
-+      transition: transform .2s ease, box-shadow .2s ease;
-+    }
-+
-+    .element:hover {
-+      transform: scale(1.06);
-+      box-shadow: 0 10px 18px rgba(0,0,0,0.22);
-+      z-index: 2;
-+    }
-+
-+    .num { font-size: 11px; font-weight: 700; }
-+    .sym { font-size: 24px; line-height: 1; font-weight: 800; text-align: center; }
-+    .name { font-size: 10px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-+
-+    .c-alkali { background: #e53935; }
-+    .c-alkaline-earth { background: #fb8c00; }
-+    .c-transition { background: #1e88e5; }
-+    .c-nonmetal { background: #43a047; }
-+    .c-halogen { background: #2e7d32; }
-+    .c-noble-gas { background: #8e24aa; }
-+    .c-metalloid { background: #fbc02d; color: #111; }
-+    .c-lanthanide, .c-actinide { background: #00acc1; }
-+    .c-post-transition { background: #546e7a; }
-+
-+    .modal {
-+      position: fixed;
-+      inset: 0;
-+      background: rgba(0,0,0,0.45);
-+      display: none;
-+      align-items: center;
-+      justify-content: center;
-+      padding: 16px;
-+    }
-+
-+    .modal.show { display: flex; }
-+
-+    .modal-card {
-+      width: min(560px, 100%);
-+      border: 1px solid var(--line);
-+      border-radius: 14px;
-+      background: var(--panel);
-+      padding: 18px;
-+    }
-+
-+    .modal-card h2 { margin: 0 0 10px; }
-+
-+    .detail {
-+      display: grid;
-+      grid-template-columns: 170px 1fr;
-+      gap: 8px;
-+      font-size: 14px;
-+    }
-+
-+    .muted { color: var(--muted); }
-+
-+    @media (max-width: 768px) {
-+      .periodic-grid {
-+        grid-auto-rows: 64px;
-+        min-width: 1000px;
-+      }
-+      .sym { font-size: 20px; }
-+    }
-+  </style>
-+</head>
-+<body>
-+  <div class="container">
-+    <h1>Bảng tuần hoàn hoá học (FULL 118 nguyên tố)</h1>
-+
-+    <div class="toolbar">
-+      <input id="search" type="text" placeholder="Tìm theo tên hoặc ký hiệu..." />
-+      <select id="filter">
-+        <option value="all">Tất cả nhóm</option>
-+        <option value="alkali">Alkali</option>
-+        <option value="alkaline earth">Alkaline earth</option>
-+        <option value="transition">Transition</option>
-+        <option value="post-transition">Post-transition</option>
-+        <option value="nonmetal">Nonmetal</option>
-+        <option value="metalloid">Metalloid</option>
-+        <option value="halogen">Halogen</option>
-+        <option value="noble gas">Noble gas</option>
-+        <option value="lanthanide">Lanthanide</option>
-+        <option value="actinide">Actinide</option>
-+      </select>
-+      <button id="themeBtn">🌙 Dark mode</button>
-+    </div>
-+
-+    <div class="legend">
-+      <span class="tag c-alkali">Alkali</span>
-+      <span class="tag c-alkaline-earth">Alkaline earth</span>
-+      <span class="tag c-transition">Transition</span>
-+      <span class="tag c-post-transition">Post-transition</span>
-+      <span class="tag c-nonmetal">Nonmetal</span>
-+      <span class="tag c-halogen">Halogen</span>
-+      <span class="tag c-noble-gas">Noble gas</span>
-+      <span class="tag c-metalloid">Metalloid</span>
-+      <span class="tag c-lanthanide">Lanthanide / Actinide</span>
-+    </div>
-+
-+    <div class="table-wrap">
-+      <div id="grid" class="periodic-grid"></div>
-+    </div>
-+  </div>
-+
-+  <div id="modal" class="modal">
-+    <div id="modalCard" class="modal-card"></div>
-+  </div>
-+
-+  <script>
-+    // DATA
-+    const elements = [
-+  {
-+    "number": 1,
-+    "symbol": "H",
-+    "name": "Hydrogen",
-+    "mass": "1.008",
-+    "electronConfig": "1s1",
-+    "electronegativity": 2.2,
-+    "category": "nonmetal",
-+    "period": 1,
-+    "group": 1,
-+    "displayPeriod": 1,
-+    "displayGroup": 1
-+  },
-+  {
-+    "number": 2,
-+    "symbol": "He",
-+    "name": "Helium",
-+    "mass": "4.0026",
-+    "electronConfig": "1s2",
-+    "electronegativity": null,
-+    "category": "noble gas",
-+    "period": 1,
-+    "group": 18,
-+    "displayPeriod": 1,
-+    "displayGroup": 18
-+  },
-+  {
-+    "number": 3,
-+    "symbol": "Li",
-+    "name": "Lithium",
-+    "mass": "6.94",
-+    "electronConfig": "[He] 2s1",
-+    "electronegativity": 0.98,
-+    "category": "alkali",
-+    "period": 2,
-+    "group": 1,
-+    "displayPeriod": 2,
-+    "displayGroup": 1
-+  },
-+  {
-+    "number": 4,
-+    "symbol": "Be",
-+    "name": "Beryllium",
-+    "mass": "9.0122",
-+    "electronConfig": "[He] 2s2",
-+    "electronegativity": 1.57,
-+    "category": "alkaline earth",
-+    "period": 2,
-+    "group": 2,
-+    "displayPeriod": 2,
-+    "displayGroup": 2
-+  },
-+  {
-+    "number": 5,
-+    "symbol": "B",
-+    "name": "Boron",
-+    "mass": "10.81",
-+    "electronConfig": "[He] 2s2 2p1",
-+    "electronegativity": 2.04,
-+    "category": "metalloid",
-+    "period": 2,
-+    "group": 13,
-+    "displayPeriod": 2,
-+    "displayGroup": 13
-+  },
-+  {
-+    "number": 6,
-+    "symbol": "C",
-+    "name": "Carbon",
-+    "mass": "12.011",
-+    "electronConfig": "[He] 2s2 2p2",
-+    "electronegativity": 2.55,
-+    "category": "nonmetal",
-+    "period": 2,
-+    "group": 14,
-+    "displayPeriod": 2,
-+    "displayGroup": 14
-+  },
-+  {
-+    "number": 7,
-+    "symbol": "N",
-+    "name": "Nitrogen",
-+    "mass": "14.007",
-+    "electronConfig": "[He] 2s2 2p3",
-+    "electronegativity": 3.04,
-+    "category": "nonmetal",
-+    "period": 2,
-+    "group": 15,
-+    "displayPeriod": 2,
-+    "displayGroup": 15
-+  },
-+  {
-+    "number": 8,
-+    "symbol": "O",
-+    "name": "Oxygen",
-+    "mass": "15.999",
-+    "electronConfig": "[He] 2s2 2p4",
-+    "electronegativity": 3.44,
-+    "category": "nonmetal",
-+    "period": 2,
-+    "group": 16,
-+    "displayPeriod": 2,
-+    "displayGroup": 16
-+  },
-+  {
-+    "number": 9,
-+    "symbol": "F",
-+    "name": "Fluorine",
-+    "mass": "18.998",
-+    "electronConfig": "[He] 2s2 2p5",
-+    "electronegativity": 3.98,
-+    "category": "halogen",
-+    "period": 2,
-+    "group": 17,
-+    "displayPeriod": 2,
-+    "displayGroup": 17
-+  },
-+  {
-+    "number": 10,
-+    "symbol": "Ne",
-+    "name": "Neon",
-+    "mass": "20.180",
-+    "electronConfig": "[He] 2s2 2p6",
-+    "electronegativity": null,
-+    "category": "noble gas",
-+    "period": 2,
-+    "group": 18,
-+    "displayPeriod": 2,
-+    "displayGroup": 18
-+  },
-+  {
-+    "number": 11,
-+    "symbol": "Na",
-+    "name": "Sodium",
-+    "mass": "22.990",
-+    "electronConfig": "[Ne] 3s1",
-+    "electronegativity": 0.93,
-+    "category": "alkali",
-+    "period": 3,
-+    "group": 1,
-+    "displayPeriod": 3,
-+    "displayGroup": 1
-+  },
-+  {
-+    "number": 12,
-+    "symbol": "Mg",
-+    "name": "Magnesium",
-+    "mass": "24.305",
-+    "electronConfig": "[Ne] 3s2",
-+    "electronegativity": 1.31,
-+    "category": "alkaline earth",
-+    "period": 3,
-+    "group": 2,
-+    "displayPeriod": 3,
-+    "displayGroup": 2
-+  },
-+  {
-+    "number": 13,
-+    "symbol": "Al",
-+    "name": "Aluminum",
-+    "mass": "26.982",
-+    "electronConfig": "[Ne] 3s2 3p1",
-+    "electronegativity": 1.61,
-+    "category": "post-transition",
-+    "period": 3,
-+    "group": 13,
-+    "displayPeriod": 3,
-+    "displayGroup": 13
-+  },
-+  {
-+    "number": 14,
-+    "symbol": "Si",
-+    "name": "Silicon",
-+    "mass": "28.085",
-+    "electronConfig": "[Ne] 3s2 3p2",
-+    "electronegativity": 1.9,
-+    "category": "metalloid",
-+    "period": 3,
-+    "group": 14,
-+    "displayPeriod": 3,
-+    "displayGroup": 14
-+  },
-+  {
-+    "number": 15,
-+    "symbol": "P",
-+    "name": "Phosphorus",
-+    "mass": "30.974",
-+    "electronConfig": "[Ne] 3s2 3p3",
-+    "electronegativity": 2.19,
-+    "category": "nonmetal",
-+    "period": 3,
-+    "group": 15,
-+    "displayPeriod": 3,
-+    "displayGroup": 15
-+  },
-+  {
-+    "number": 16,
-+    "symbol": "S",
-+    "name": "Sulfur",
-+    "mass": "32.06",
-+    "electronConfig": "[Ne] 3s2 3p4",
-+    "electronegativity": 2.58,
-+    "category": "nonmetal",
-+    "period": 3,
-+    "group": 16,
-+    "displayPeriod": 3,
-+    "displayGroup": 16
-+  },
-+  {
-+    "number": 17,
-+    "symbol": "Cl",
-+    "name": "Chlorine",
-+    "mass": "35.45",
-+    "electronConfig": "[Ne] 3s2 3p5",
-+    "electronegativity": 3.16,
-+    "category": "halogen",
-+    "period": 3,
-+    "group": 17,
-+    "displayPeriod": 3,
-+    "displayGroup": 17
-+  },
-+  {
-+    "number": 18,
-+    "symbol": "Ar",
-+    "name": "Argon",
-+    "mass": "39.948",
-+    "electronConfig": "[Ne] 3s2 3p6",
-+    "electronegativity": null,
-+    "category": "noble gas",
-+    "period": 3,
-+    "group": 18,
-+    "displayPeriod": 3,
-+    "displayGroup": 18
-+  },
-+  {
-+    "number": 19,
-+    "symbol": "K",
-+    "name": "Potassium",
-+    "mass": "39.098",
-+    "electronConfig": "[Ar] 4s1",
-+    "electronegativity": 0.82,
-+    "category": "alkali",
-+    "period": 4,
-+    "group": 1,
-+    "displayPeriod": 4,
-+    "displayGroup": 1
-+  },
-+  {
-+    "number": 20,
-+    "symbol": "Ca",
-+    "name": "Calcium",
-+    "mass": "40.078",
-+    "electronConfig": "[Ar] 4s2",
-+    "electronegativity": 1.0,
-+    "category": "alkaline earth",
-+    "period": 4,
-+    "group": 2,
-+    "displayPeriod": 4,
-+    "displayGroup": 2
-+  },
-+  {
-+    "number": 21,
-+    "symbol": "Sc",
-+    "name": "Scandium",
-+    "mass": "44.956",
-+    "electronConfig": "[Ar] 4s2 3d1",
-+    "electronegativity": 1.36,
-+    "category": "transition",
-+    "period": 4,
-+    "group": 3,
-+    "displayPeriod": 4,
-+    "displayGroup": 3
-+  },
-+  {
-+    "number": 22,
-+    "symbol": "Ti",
-+    "name": "Titanium",
-+    "mass": "47.867",
-+    "electronConfig": "[Ar] 4s2 3d2",
-+    "electronegativity": 1.54,
-+    "category": "transition",
-+    "period": 4,
-+    "group": 4,
-+    "displayPeriod": 4,
-+    "displayGroup": 4
-+  },
-+  {
-+    "number": 23,
-+    "symbol": "V",
-+    "name": "Vanadium",
-+    "mass": "50.942",
-+    "electronConfig": "[Ar] 4s2 3d3",
-+    "electronegativity": 1.63,
-+    "category": "transition",
-+    "period": 4,
-+    "group": 5,
-+    "displayPeriod": 4,
-+    "displayGroup": 5
-+  },
-+  {
-+    "number": 24,
-+    "symbol": "Cr",
-+    "name": "Chromium",
-+    "mass": "51.996",
-+    "electronConfig": "[Ar] 3d5 4s1",
-+    "electronegativity": 1.66,
-+    "category": "transition",
-+    "period": 4,
-+    "group": 6,
-+    "displayPeriod": 4,
-+    "displayGroup": 6
-+  },
-+  {
-+    "number": 25,
-+    "symbol": "Mn",
-+    "name": "Manganese",
-+    "mass": "54.938",
-+    "electronConfig": "[Ar] 4s2 3d5",
-+    "electronegativity": 1.55,
-+    "category": "transition",
-+    "period": 4,
-+    "group": 7,
-+    "displayPeriod": 4,
-+    "displayGroup": 7
-+  },
-+  {
-+    "number": 26,
-+    "symbol": "Fe",
-+    "name": "Iron",
-+    "mass": "55.845",
-+    "electronConfig": "[Ar] 4s2 3d6",
-+    "electronegativity": 1.83,
-+    "category": "transition",
-+    "period": 4,
-+    "group": 8,
-+    "displayPeriod": 4,
-+    "displayGroup": 8
-+  },
-+  {
-+    "number": 27,
-+    "symbol": "Co",
-+    "name": "Cobalt",
-+    "mass": "58.933",
-+    "electronConfig": "[Ar] 4s2 3d7",
-+    "electronegativity": 1.88,
-+    "category": "transition",
-+    "period": 4,
-+    "group": 9,
-+    "displayPeriod": 4,
-+    "displayGroup": 9
-+  },
-+  {
-+    "number": 28,
-+    "symbol": "Ni",
-+    "name": "Nickel",
-+    "mass": "58.693",
-+    "electronConfig": "[Ar] 4s2 3d8",
-+    "electronegativity": 1.91,
-+    "category": "transition",
-+    "period": 4,
-+    "group": 10,
-+    "displayPeriod": 4,
-+    "displayGroup": 10
-+  },
-+  {
-+    "number": 29,
-+    "symbol": "Cu",
-+    "name": "Copper",
-+    "mass": "63.546",
-+    "electronConfig": "[Ar] 3d10 4s1",
-+    "electronegativity": 1.9,
-+    "category": "transition",
-+    "period": 4,
-+    "group": 11,
-+    "displayPeriod": 4,
-+    "displayGroup": 11
-+  },
-+  {
-+    "number": 30,
-+    "symbol": "Zn",
-+    "name": "Zinc",
-+    "mass": "65.38",
-+    "electronConfig": "[Ar] 4s2 3d10",
-+    "electronegativity": 1.65,
-+    "category": "transition",
-+    "period": 4,
-+    "group": 12,
-+    "displayPeriod": 4,
-+    "displayGroup": 12
-+  },
-+  {
-+    "number": 31,
-+    "symbol": "Ga",
-+    "name": "Gallium",
-+    "mass": "69.723",
-+    "electronConfig": "[Ar] 4s2 3d10 4p1",
-+    "electronegativity": 1.81,
-+    "category": "post-transition",
-+    "period": 4,
-+    "group": 13,
-+    "displayPeriod": 4,
-+    "displayGroup": 13
-+  },
-+  {
-+    "number": 32,
-+    "symbol": "Ge",
-+    "name": "Germanium",
-+    "mass": "72.630",
-+    "electronConfig": "[Ar] 4s2 3d10 4p2",
-+    "electronegativity": 2.01,
-+    "category": "metalloid",
-+    "period": 4,
-+    "group": 14,
-+    "displayPeriod": 4,
-+    "displayGroup": 14
-+  },
-+  {
-+    "number": 33,
-+    "symbol": "As",
-+    "name": "Arsenic",
-+    "mass": "74.922",
-+    "electronConfig": "[Ar] 4s2 3d10 4p3",
-+    "electronegativity": 2.18,
-+    "category": "metalloid",
-+    "period": 4,
-+    "group": 15,
-+    "displayPeriod": 4,
-+    "displayGroup": 15
-+  },
-+  {
-+    "number": 34,
-+    "symbol": "Se",
-+    "name": "Selenium",
-+    "mass": "78.971",
-+    "electronConfig": "[Ar] 4s2 3d10 4p4",
-+    "electronegativity": 2.55,
-+    "category": "nonmetal",
-+    "period": 4,
-+    "group": 16,
-+    "displayPeriod": 4,
-+    "displayGroup": 16
-+  },
-+  {
-+    "number": 35,
-+    "symbol": "Br",
-+    "name": "Bromine",
-+    "mass": "79.904",
-+    "electronConfig": "[Ar] 4s2 3d10 4p5",
-+    "electronegativity": 2.96,
-+    "category": "halogen",
-+    "period": 4,
-+    "group": 17,
-+    "displayPeriod": 4,
-+    "displayGroup": 17
-+  },
-+  {
-+    "number": 36,
-+    "symbol": "Kr",
-+    "name": "Krypton",
-+    "mass": "83.798",
-+    "electronConfig": "[Ar] 4s2 3d10 4p6",
-+    "electronegativity": 3.0,
-+    "category": "noble gas",
-+    "period": 4,
-+    "group": 18,
-+    "displayPeriod": 4,
-+    "displayGroup": 18
-+  },
-+  {
-+    "number": 37,
-+    "symbol": "Rb",
-+    "name": "Rubidium",
-+    "mass": "85.468",
-+    "electronConfig": "[Kr] 5s1",
-+    "electronegativity": 0.82,
-+    "category": "alkali",
-+    "period": 5,
-+    "group": 1,
-+    "displayPeriod": 5,
-+    "displayGroup": 1
-+  },
-+  {
-+    "number": 38,
-+    "symbol": "Sr",
-+    "name": "Strontium",
-+    "mass": "87.62",
-+    "electronConfig": "[Kr] 5s2",
-+    "electronegativity": 0.95,
-+    "category": "alkaline earth",
-+    "period": 5,
-+    "group": 2,
-+    "displayPeriod": 5,
-+    "displayGroup": 2
-+  },
-+  {
-+    "number": 39,
-+    "symbol": "Y",
-+    "name": "Yttrium",
-+    "mass": "88.906",
-+    "electronConfig": "[Kr] 5s2 4d1",
-+    "electronegativity": 1.22,
-+    "category": "transition",
-+    "period": 5,
-+    "group": 3,
-+    "displayPeriod": 5,
-+    "displayGroup": 3
-+  },
-+  {
-+    "number": 40,
-+    "symbol": "Zr",
-+    "name": "Zirconium",
-+    "mass": "91.224",
-+    "electronConfig": "[Kr] 5s2 4d2",
-+    "electronegativity": 1.33,
-+    "category": "transition",
-+    "period": 5,
-+    "group": 4,
-+    "displayPeriod": 5,
-+    "displayGroup": 4
-+  },
-+  {
-+    "number": 41,
-+    "symbol": "Nb",
-+    "name": "Niobium",
-+    "mass": "92.906",
-+    "electronConfig": "[Kr] 4d4 5s1",
-+    "electronegativity": 1.6,
-+    "category": "transition",
-+    "period": 5,
-+    "group": 5,
-+    "displayPeriod": 5,
-+    "displayGroup": 5
-+  },
-+  {
-+    "number": 42,
-+    "symbol": "Mo",
-+    "name": "Molybdenum",
-+    "mass": "95.95",
-+    "electronConfig": "[Kr] 4d5 5s1",
-+    "electronegativity": 2.16,
-+    "category": "transition",
-+    "period": 5,
-+    "group": 6,
-+    "displayPeriod": 5,
-+    "displayGroup": 6
-+  },
-+  {
-+    "number": 43,
-+    "symbol": "Tc",
-+    "name": "Technetium",
-+    "mass": "[98]",
-+    "electronConfig": "[Kr] 5s2 4d5",
-+    "electronegativity": 1.9,
-+    "category": "transition",
-+    "period": 5,
-+    "group": 7,
-+    "displayPeriod": 5,
-+    "displayGroup": 7
-+  },
-+  {
-+    "number": 44,
-+    "symbol": "Ru",
-+    "name": "Ruthenium",
-+    "mass": "101.07",
-+    "electronConfig": "[Kr] 4d7 5s1",
-+    "electronegativity": 2.2,
-+    "category": "transition",
-+    "period": 5,
-+    "group": 8,
-+    "displayPeriod": 5,
-+    "displayGroup": 8
-+  },
-+  {
-+    "number": 45,
-+    "symbol": "Rh",
-+    "name": "Rhodium",
-+    "mass": "102.91",
-+    "electronConfig": "[Kr] 4d8 5s1",
-+    "electronegativity": 2.28,
-+    "category": "transition",
-+    "period": 5,
-+    "group": 9,
-+    "displayPeriod": 5,
-+    "displayGroup": 9
-+  },
-+  {
-+    "number": 46,
-+    "symbol": "Pd",
-+    "name": "Palladium",
-+    "mass": "106.42",
-+    "electronConfig": "[Kr] 4d10",
-+    "electronegativity": 2.2,
-+    "category": "transition",
-+    "period": 5,
-+    "group": 10,
-+    "displayPeriod": 5,
-+    "displayGroup": 10
-+  },
-+  {
-+    "number": 47,
-+    "symbol": "Ag",
-+    "name": "Silver",
-+    "mass": "107.87",
-+    "electronConfig": "[Kr] 4d10 5s1",
-+    "electronegativity": 1.93,
-+    "category": "transition",
-+    "period": 5,
-+    "group": 11,
-+    "displayPeriod": 5,
-+    "displayGroup": 11
-+  },
-+  {
-+    "number": 48,
-+    "symbol": "Cd",
-+    "name": "Cadmium",
-+    "mass": "112.41",
-+    "electronConfig": "[Kr] 5s2 4d10",
-+    "electronegativity": 1.69,
-+    "category": "transition",
-+    "period": 5,
-+    "group": 12,
-+    "displayPeriod": 5,
-+    "displayGroup": 12
-+  },
-+  {
-+    "number": 49,
-+    "symbol": "In",
-+    "name": "Indium",
-+    "mass": "114.82",
-+    "electronConfig": "[Kr] 5s2 4d10 5p1",
-+    "electronegativity": 1.78,
-+    "category": "post-transition",
-+    "period": 5,
-+    "group": 13,
-+    "displayPeriod": 5,
-+    "displayGroup": 13
-+  },
-+  {
-+    "number": 50,
-+    "symbol": "Sn",
-+    "name": "Tin",
-+    "mass": "118.71",
-+    "electronConfig": "[Kr] 5s2 4d10 5p2",
-+    "electronegativity": 1.96,
-+    "category": "post-transition",
-+    "period": 5,
-+    "group": 14,
-+    "displayPeriod": 5,
-+    "displayGroup": 14
-+  },
-+  {
-+    "number": 51,
-+    "symbol": "Sb",
-+    "name": "Antimony",
-+    "mass": "121.76",
-+    "electronConfig": "[Kr] 5s2 4d10 5p3",
-+    "electronegativity": 2.05,
-+    "category": "metalloid",
-+    "period": 5,
-+    "group": 15,
-+    "displayPeriod": 5,
-+    "displayGroup": 15
-+  },
-+  {
-+    "number": 52,
-+    "symbol": "Te",
-+    "name": "Tellurium",
-+    "mass": "127.60",
-+    "electronConfig": "[Kr] 5s2 4d10 5p4",
-+    "electronegativity": 2.1,
-+    "category": "metalloid",
-+    "period": 5,
-+    "group": 16,
-+    "displayPeriod": 5,
-+    "displayGroup": 16
-+  },
-+  {
-+    "number": 53,
-+    "symbol": "I",
-+    "name": "Iodine",
-+    "mass": "126.90",
-+    "electronConfig": "[Kr] 5s2 4d10 5p5",
-+    "electronegativity": 2.66,
-+    "category": "halogen",
-+    "period": 5,
-+    "group": 17,
-+    "displayPeriod": 5,
-+    "displayGroup": 17
-+  },
-+  {
-+    "number": 54,
-+    "symbol": "Xe",
-+    "name": "Xenon",
-+    "mass": "131.29",
-+    "electronConfig": "[Kr] 5s2 4d10 5p6",
-+    "electronegativity": 2.6,
-+    "category": "noble gas",
-+    "period": 5,
-+    "group": 18,
-+    "displayPeriod": 5,
-+    "displayGroup": 18
-+  },
-+  {
-+    "number": 55,
-+    "symbol": "Cs",
-+    "name": "Cesium",
-+    "mass": "132.91",
-+    "electronConfig": "[Xe] 6s1",
-+    "electronegativity": 0.79,
-+    "category": "alkali",
-+    "period": 6,
-+    "group": 1,
-+    "displayPeriod": 6,
-+    "displayGroup": 1
-+  },
-+  {
-+    "number": 56,
-+    "symbol": "Ba",
-+    "name": "Barium",
-+    "mass": "137.33",
-+    "electronConfig": "[Xe] 6s2",
-+    "electronegativity": 0.89,
-+    "category": "alkaline earth",
-+    "period": 6,
-+    "group": 2,
-+    "displayPeriod": 6,
-+    "displayGroup": 2
-+  },
-+  {
-+    "number": 57,
-+    "symbol": "La",
-+    "name": "Lanthanum",
-+    "mass": "138.91",
-+    "electronConfig": "[Xe] 5d1 6s2",
-+    "electronegativity": 1.1,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 4
-+  },
-+  {
-+    "number": 58,
-+    "symbol": "Ce",
-+    "name": "Cerium",
-+    "mass": "140.12",
-+    "electronConfig": "[Xe] 4f1 5d1 6s2",
-+    "electronegativity": 1.12,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 5
-+  },
-+  {
-+    "number": 59,
-+    "symbol": "Pr",
-+    "name": "Praseodymium",
-+    "mass": "140.91",
-+    "electronConfig": "[Xe] 6s2 4f3",
-+    "electronegativity": 1.13,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 6
-+  },
-+  {
-+    "number": 60,
-+    "symbol": "Nd",
-+    "name": "Neodymium",
-+    "mass": "144.24",
-+    "electronConfig": "[Xe] 6s2 4f4",
-+    "electronegativity": 1.14,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 7
-+  },
-+  {
-+    "number": 61,
-+    "symbol": "Pm",
-+    "name": "Promethium",
-+    "mass": "[145]",
-+    "electronConfig": "[Xe] 6s2 4f5",
-+    "electronegativity": 1.13,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 8
-+  },
-+  {
-+    "number": 62,
-+    "symbol": "Sm",
-+    "name": "Samarium",
-+    "mass": "150.36",
-+    "electronConfig": "[Xe] 6s2 4f6",
-+    "electronegativity": 1.17,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 9
-+  },
-+  {
-+    "number": 63,
-+    "symbol": "Eu",
-+    "name": "Europium",
-+    "mass": "151.96",
-+    "electronConfig": "[Xe] 6s2 4f7",
-+    "electronegativity": 1.2,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 10
-+  },
-+  {
-+    "number": 64,
-+    "symbol": "Gd",
-+    "name": "Gadolinium",
-+    "mass": "157.25",
-+    "electronConfig": "[Xe] 4f7 5d1 6s2",
-+    "electronegativity": 1.2,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 11
-+  },
-+  {
-+    "number": 65,
-+    "symbol": "Tb",
-+    "name": "Terbium",
-+    "mass": "158.93",
-+    "electronConfig": "[Xe] 6s2 4f9",
-+    "electronegativity": 1.1,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 12
-+  },
-+  {
-+    "number": 66,
-+    "symbol": "Dy",
-+    "name": "Dysprosium",
-+    "mass": "162.50",
-+    "electronConfig": "[Xe] 6s2 4f10",
-+    "electronegativity": 1.22,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 13
-+  },
-+  {
-+    "number": 67,
-+    "symbol": "Ho",
-+    "name": "Holmium",
-+    "mass": "164.93",
-+    "electronConfig": "[Xe] 6s2 4f11",
-+    "electronegativity": 1.23,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 14
-+  },
-+  {
-+    "number": 68,
-+    "symbol": "Er",
-+    "name": "Erbium",
-+    "mass": "167.26",
-+    "electronConfig": "[Xe] 6s2 4f12",
-+    "electronegativity": 1.24,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 15
-+  },
-+  {
-+    "number": 69,
-+    "symbol": "Tm",
-+    "name": "Thulium",
-+    "mass": "168.93",
-+    "electronConfig": "[Xe] 6s2 4f13",
-+    "electronegativity": 1.25,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 16
-+  },
-+  {
-+    "number": 70,
-+    "symbol": "Yb",
-+    "name": "Ytterbium",
-+    "mass": "173.05",
-+    "electronConfig": "[Xe] 6s2 4f14",
-+    "electronegativity": 1.1,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 17
-+  },
-+  {
-+    "number": 71,
-+    "symbol": "Lu",
-+    "name": "Lutetium",
-+    "mass": "174.97",
-+    "electronConfig": "[Xe] 6s2 4f14 5d1",
-+    "electronegativity": 1.27,
-+    "category": "lanthanide",
-+    "period": 6,
-+    "group": 3,
-+    "displayPeriod": 8,
-+    "displayGroup": 18
-+  },
-+  {
-+    "number": 72,
-+    "symbol": "Hf",
-+    "name": "Hafnium",
-+    "mass": "178.49",
-+    "electronConfig": "[Xe] 6s2 4f14 5d2",
-+    "electronegativity": 1.3,
-+    "category": "transition",
-+    "period": 6,
-+    "group": 4,
-+    "displayPeriod": 6,
-+    "displayGroup": 4
-+  },
-+  {
-+    "number": 73,
-+    "symbol": "Ta",
-+    "name": "Tantalum",
-+    "mass": "180.95",
-+    "electronConfig": "[Xe] 6s2 4f14 5d3",
-+    "electronegativity": 1.5,
-+    "category": "transition",
-+    "period": 6,
-+    "group": 5,
-+    "displayPeriod": 6,
-+    "displayGroup": 5
-+  },
-+  {
-+    "number": 74,
-+    "symbol": "W",
-+    "name": "Tungsten",
-+    "mass": "183.84",
-+    "electronConfig": "[Xe] 6s2 4f14 5d4",
-+    "electronegativity": 2.36,
-+    "category": "transition",
-+    "period": 6,
-+    "group": 6,
-+    "displayPeriod": 6,
-+    "displayGroup": 6
-+  },
-+  {
-+    "number": 75,
-+    "symbol": "Re",
-+    "name": "Rhenium",
-+    "mass": "186.21",
-+    "electronConfig": "[Xe] 6s2 4f14 5d5",
-+    "electronegativity": 1.9,
-+    "category": "transition",
-+    "period": 6,
-+    "group": 7,
-+    "displayPeriod": 6,
-+    "displayGroup": 7
-+  },
-+  {
-+    "number": 76,
-+    "symbol": "Os",
-+    "name": "Osmium",
-+    "mass": "190.23",
-+    "electronConfig": "[Xe] 6s2 4f14 5d6",
-+    "electronegativity": 2.2,
-+    "category": "transition",
-+    "period": 6,
-+    "group": 8,
-+    "displayPeriod": 6,
-+    "displayGroup": 8
-+  },
-+  {
-+    "number": 77,
-+    "symbol": "Ir",
-+    "name": "Iridium",
-+    "mass": "192.22",
-+    "electronConfig": "[Xe] 6s2 4f14 5d7",
-+    "electronegativity": 2.2,
-+    "category": "transition",
-+    "period": 6,
-+    "group": 9,
-+    "displayPeriod": 6,
-+    "displayGroup": 9
-+  },
-+  {
-+    "number": 78,
-+    "symbol": "Pt",
-+    "name": "Platinum",
-+    "mass": "195.08",
-+    "electronConfig": "[Xe] 4f14 5d9 6s1",
-+    "electronegativity": 2.28,
-+    "category": "transition",
-+    "period": 6,
-+    "group": 10,
-+    "displayPeriod": 6,
-+    "displayGroup": 10
-+  },
-+  {
-+    "number": 79,
-+    "symbol": "Au",
-+    "name": "Gold",
-+    "mass": "196.97",
-+    "electronConfig": "[Xe] 4f14 5d10 6s1",
-+    "electronegativity": 2.54,
-+    "category": "transition",
-+    "period": 6,
-+    "group": 11,
-+    "displayPeriod": 6,
-+    "displayGroup": 11
-+  },
-+  {
-+    "number": 80,
-+    "symbol": "Hg",
-+    "name": "Mercury",
-+    "mass": "200.59",
-+    "electronConfig": "[Xe] 6s2 4f14 5d10",
-+    "electronegativity": 2.0,
-+    "category": "transition",
-+    "period": 6,
-+    "group": 12,
-+    "displayPeriod": 6,
-+    "displayGroup": 12
-+  },
-+  {
-+    "number": 81,
-+    "symbol": "Tl",
-+    "name": "Thallium",
-+    "mass": "204.38",
-+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p1",
-+    "electronegativity": 1.62,
-+    "category": "post-transition",
-+    "period": 6,
-+    "group": 13,
-+    "displayPeriod": 6,
-+    "displayGroup": 13
-+  },
-+  {
-+    "number": 82,
-+    "symbol": "Pb",
-+    "name": "Lead",
-+    "mass": "207.2",
-+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p2",
-+    "electronegativity": 2.33,
-+    "category": "post-transition",
-+    "period": 6,
-+    "group": 14,
-+    "displayPeriod": 6,
-+    "displayGroup": 14
-+  },
-+  {
-+    "number": 83,
-+    "symbol": "Bi",
-+    "name": "Bismuth",
-+    "mass": "208.98",
-+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p3",
-+    "electronegativity": 2.02,
-+    "category": "post-transition",
-+    "period": 6,
-+    "group": 15,
-+    "displayPeriod": 6,
-+    "displayGroup": 15
-+  },
-+  {
-+    "number": 84,
-+    "symbol": "Po",
-+    "name": "Polonium",
-+    "mass": "[209]",
-+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p4",
-+    "electronegativity": 2.0,
-+    "category": "metalloid",
-+    "period": 6,
-+    "group": 16,
-+    "displayPeriod": 6,
-+    "displayGroup": 16
-+  },
-+  {
-+    "number": 85,
-+    "symbol": "At",
-+    "name": "Astatine",
-+    "mass": "[210]",
-+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p5",
-+    "electronegativity": 2.2,
-+    "category": "halogen",
-+    "period": 6,
-+    "group": 17,
-+    "displayPeriod": 6,
-+    "displayGroup": 17
-+  },
-+  {
-+    "number": 86,
-+    "symbol": "Rn",
-+    "name": "Radon",
-+    "mass": "[222]",
-+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p6",
-+    "electronegativity": null,
-+    "category": "noble gas",
-+    "period": 6,
-+    "group": 18,
-+    "displayPeriod": 6,
-+    "displayGroup": 18
-+  },
-+  {
-+    "number": 87,
-+    "symbol": "Fr",
-+    "name": "Francium",
-+    "mass": "[223]",
-+    "electronConfig": "[Rn] 7s1",
-+    "electronegativity": 0.7,
-+    "category": "alkali",
-+    "period": 7,
-+    "group": 1,
-+    "displayPeriod": 7,
-+    "displayGroup": 1
-+  },
-+  {
-+    "number": 88,
-+    "symbol": "Ra",
-+    "name": "Radium",
-+    "mass": "[226]",
-+    "electronConfig": "[Rn] 7s2",
-+    "electronegativity": 0.9,
-+    "category": "alkaline earth",
-+    "period": 7,
-+    "group": 2,
-+    "displayPeriod": 7,
-+    "displayGroup": 2
-+  },
-+  {
-+    "number": 89,
-+    "symbol": "Ac",
-+    "name": "Actinium",
-+    "mass": "[227]",
-+    "electronConfig": "[Rn] 6d1 7s2",
-+    "electronegativity": 1.1,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 4
-+  },
-+  {
-+    "number": 90,
-+    "symbol": "Th",
-+    "name": "Thorium",
-+    "mass": "232.04",
-+    "electronConfig": "[Rn] 6d2 7s2",
-+    "electronegativity": 1.3,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 5
-+  },
-+  {
-+    "number": 91,
-+    "symbol": "Pa",
-+    "name": "Protactinium",
-+    "mass": "231.04",
-+    "electronConfig": "[Rn] 5f2 6d1 7s2",
-+    "electronegativity": 1.5,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 6
-+  },
-+  {
-+    "number": 92,
-+    "symbol": "U",
-+    "name": "Uranium",
-+    "mass": "238.03",
-+    "electronConfig": "[Rn] 5f3 6d1 7s2",
-+    "electronegativity": 1.38,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 7
-+  },
-+  {
-+    "number": 93,
-+    "symbol": "Np",
-+    "name": "Neptunium",
-+    "mass": "[237]",
-+    "electronConfig": "[Rn] 5f4 6d1 7s2",
-+    "electronegativity": 1.36,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 8
-+  },
-+  {
-+    "number": 94,
-+    "symbol": "Pu",
-+    "name": "Plutonium",
-+    "mass": "[244]",
-+    "electronConfig": "[Rn] 7s2 5f6",
-+    "electronegativity": 1.28,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 9
-+  },
-+  {
-+    "number": 95,
-+    "symbol": "Am",
-+    "name": "Americium",
-+    "mass": "[243]",
-+    "electronConfig": "[Rn] 7s2 5f7",
-+    "electronegativity": null,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 10
-+  },
-+  {
-+    "number": 96,
-+    "symbol": "Cm",
-+    "name": "Curium",
-+    "mass": "[247]",
-+    "electronConfig": "[Rn] 5f7 6d1 7s2",
-+    "electronegativity": null,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 11
-+  },
-+  {
-+    "number": 97,
-+    "symbol": "Bk",
-+    "name": "Berkelium",
-+    "mass": "[247]",
-+    "electronConfig": "[Rn] 7s2 5f9",
-+    "electronegativity": null,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 12
-+  },
-+  {
-+    "number": 98,
-+    "symbol": "Cf",
-+    "name": "Californium",
-+    "mass": "[251]",
-+    "electronConfig": "[Rn] 7s2 5f10",
-+    "electronegativity": null,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 13
-+  },
-+  {
-+    "number": 99,
-+    "symbol": "Es",
-+    "name": "Einsteinium",
-+    "mass": "[252]",
-+    "electronConfig": "[Rn] 7s2 5f11",
-+    "electronegativity": null,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 14
-+  },
-+  {
-+    "number": 100,
-+    "symbol": "Fm",
-+    "name": "Fermium",
-+    "mass": "[257]",
-+    "electronConfig": "[Rn] 7s2 5f12",
-+    "electronegativity": null,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 15
-+  },
-+  {
-+    "number": 101,
-+    "symbol": "Md",
-+    "name": "Mendelevium",
-+    "mass": "[258]",
-+    "electronConfig": "[Rn] 7s2 5f13",
-+    "electronegativity": null,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 16
-+  },
-+  {
-+    "number": 102,
-+    "symbol": "No",
-+    "name": "Nobelium",
-+    "mass": "[259]",
-+    "electronConfig": "[Rn] 7s2 5f14",
-+    "electronegativity": null,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 17
-+  },
-+  {
-+    "number": 103,
-+    "symbol": "Lr",
-+    "name": "Lawrencium",
-+    "mass": "[266]",
-+    "electronConfig": "[Rn] 5f14 7s2 7p1",
-+    "electronegativity": null,
-+    "category": "actinide",
-+    "period": 7,
-+    "group": 3,
-+    "displayPeriod": 9,
-+    "displayGroup": 18
-+  },
-+  {
-+    "number": 104,
-+    "symbol": "Rf",
-+    "name": "Rutherfordium",
-+    "mass": "[267]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d2",
-+    "electronegativity": null,
-+    "category": "transition",
-+    "period": 7,
-+    "group": 4,
-+    "displayPeriod": 7,
-+    "displayGroup": 4
-+  },
-+  {
-+    "number": 105,
-+    "symbol": "Db",
-+    "name": "Dubnium",
-+    "mass": "[268]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d3",
-+    "electronegativity": null,
-+    "category": "transition",
-+    "period": 7,
-+    "group": 5,
-+    "displayPeriod": 7,
-+    "displayGroup": 5
-+  },
-+  {
-+    "number": 106,
-+    "symbol": "Sg",
-+    "name": "Seaborgium",
-+    "mass": "[269]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d4",
-+    "electronegativity": null,
-+    "category": "transition",
-+    "period": 7,
-+    "group": 6,
-+    "displayPeriod": 7,
-+    "displayGroup": 6
-+  },
-+  {
-+    "number": 107,
-+    "symbol": "Bh",
-+    "name": "Bohrium",
-+    "mass": "[270]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d5",
-+    "electronegativity": null,
-+    "category": "transition",
-+    "period": 7,
-+    "group": 7,
-+    "displayPeriod": 7,
-+    "displayGroup": 7
-+  },
-+  {
-+    "number": 108,
-+    "symbol": "Hs",
-+    "name": "Hassium",
-+    "mass": "[277]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d6",
-+    "electronegativity": null,
-+    "category": "transition",
-+    "period": 7,
-+    "group": 8,
-+    "displayPeriod": 7,
-+    "displayGroup": 8
-+  },
-+  {
-+    "number": 109,
-+    "symbol": "Mt",
-+    "name": "Meitnerium",
-+    "mass": "[278]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d7",
-+    "electronegativity": null,
-+    "category": "transition",
-+    "period": 7,
-+    "group": 9,
-+    "displayPeriod": 7,
-+    "displayGroup": 9
-+  },
-+  {
-+    "number": 110,
-+    "symbol": "Ds",
-+    "name": "Darmstadtium",
-+    "mass": "[281]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d8",
-+    "electronegativity": null,
-+    "category": "transition",
-+    "period": 7,
-+    "group": 10,
-+    "displayPeriod": 7,
-+    "displayGroup": 10
-+  },
-+  {
-+    "number": 111,
-+    "symbol": "Rg",
-+    "name": "Roentgenium",
-+    "mass": "[282]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d9",
-+    "electronegativity": null,
-+    "category": "transition",
-+    "period": 7,
-+    "group": 11,
-+    "displayPeriod": 7,
-+    "displayGroup": 11
-+  },
-+  {
-+    "number": 112,
-+    "symbol": "Cn",
-+    "name": "Copernicium",
-+    "mass": "[285]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d10",
-+    "electronegativity": null,
-+    "category": "transition",
-+    "period": 7,
-+    "group": 12,
-+    "displayPeriod": 7,
-+    "displayGroup": 12
-+  },
-+  {
-+    "number": 113,
-+    "symbol": "Nh",
-+    "name": "Nihonium",
-+    "mass": "[286]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p1",
-+    "electronegativity": null,
-+    "category": "post-transition",
-+    "period": 7,
-+    "group": 13,
-+    "displayPeriod": 7,
-+    "displayGroup": 13
-+  },
-+  {
-+    "number": 114,
-+    "symbol": "Fl",
-+    "name": "Flerovium",
-+    "mass": "[289]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p2",
-+    "electronegativity": null,
-+    "category": "post-transition",
-+    "period": 7,
-+    "group": 14,
-+    "displayPeriod": 7,
-+    "displayGroup": 14
-+  },
-+  {
-+    "number": 115,
-+    "symbol": "Mc",
-+    "name": "Moscovium",
-+    "mass": "[290]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p3",
-+    "electronegativity": null,
-+    "category": "post-transition",
-+    "period": 7,
-+    "group": 15,
-+    "displayPeriod": 7,
-+    "displayGroup": 15
-+  },
-+  {
-+    "number": 116,
-+    "symbol": "Lv",
-+    "name": "Livermorium",
-+    "mass": "[293]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p4",
-+    "electronegativity": null,
-+    "category": "post-transition",
-+    "period": 7,
-+    "group": 16,
-+    "displayPeriod": 7,
-+    "displayGroup": 16
-+  },
-+  {
-+    "number": 117,
-+    "symbol": "Ts",
-+    "name": "Tennessine",
-+    "mass": "[294]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p5",
-+    "electronegativity": null,
-+    "category": "halogen",
-+    "period": 7,
-+    "group": 17,
-+    "displayPeriod": 7,
-+    "displayGroup": 17
-+  },
-+  {
-+    "number": 118,
-+    "symbol": "Og",
-+    "name": "Oganesson",
-+    "mass": "[294]",
-+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p6",
-+    "electronegativity": null,
-+    "category": "noble gas",
-+    "period": 7,
-+    "group": 18,
-+    "displayPeriod": 7,
-+    "displayGroup": 18
-+  }
-+];
-+
-+    // RENDER
-+    const grid = document.getElementById('grid');
-+    const searchInput = document.getElementById('search');
-+    const filterSelect = document.getElementById('filter');
-+    const modal = document.getElementById('modal');
-+    const modalCard = document.getElementById('modalCard');
-+    const themeBtn = document.getElementById('themeBtn');
-+
-+    const toClass = (category) => `c-${category.replace(/\s+/g, '-')}`;
-+
-+    function renderTable() {
-+      const query = searchInput.value.trim().toLowerCase();
-+      const filter = filterSelect.value;
-+
-+      grid.innerHTML = '';
-+
-+      const visible = elements.filter((el) => {
-+        const matchText = !query || el.name.toLowerCase().includes(query) || el.symbol.toLowerCase().includes(query);
-+        const matchFilter = filter === 'all' || el.category === filter;
-+        return matchText && matchFilter;
-+      });
-+
-+      // Optional visual row labels for f-block rows.
-+      const lanthLabel = document.createElement('div');
-+      lanthLabel.className = 'row-label';
-+      lanthLabel.style.gridColumn = '1 / span 3';
-+      lanthLabel.style.gridRow = '8';
-+      lanthLabel.textContent = 'Lanthanides';
-+      grid.appendChild(lanthLabel);
-+
-+      const actLabel = document.createElement('div');
-+      actLabel.className = 'row-label';
-+      actLabel.style.gridColumn = '1 / span 3';
-+      actLabel.style.gridRow = '9';
-+      actLabel.textContent = 'Actinides';
-+      grid.appendChild(actLabel);
-+
-+      visible.forEach((el) => {
-+        const cell = document.createElement('button');
-+        cell.className = `element ${toClass(el.category)}`;
-+        cell.style.gridColumn = String(el.displayGroup);
-+        cell.style.gridRow = String(el.displayPeriod);
-+        cell.innerHTML = `
-+          <div class="num">${el.number}</div>
-+          <div class="sym">${el.symbol}</div>
-+          <div class="name">${el.name}</div>
-+        `;
-+        cell.addEventListener('click', () => openModal(el));
-+        grid.appendChild(cell);
-+      });
-+    }
-+
-+    // EVENT
-+    function openModal(el) {
-+      modalCard.innerHTML = `
-+        <h2>${el.name} (${el.symbol})</h2>
-+        <div class="detail">
-+          <div class="muted">Atomic number (Z)</div><div>${el.number}</div>
-+          <div class="muted">Atomic mass</div><div>${el.mass}</div>
-+          <div class="muted">Electron configuration</div><div>${el.electronConfig}</div>
-+          <div class="muted">Electronegativity</div><div>${el.electronegativity ?? 'N/A'}</div>
-+          <div class="muted">Category</div><div>${el.category}</div>
-+          <div class="muted">Period / Group</div><div>${el.period} / ${el.group}</div>
-+        </div>
-+      `;
-+      modal.classList.add('show');
-+    }
-+
-+    modal.addEventListener('click', (e) => {
-+      if (e.target === modal) modal.classList.remove('show');
-+    });
-+
-+    searchInput.addEventListener('input', renderTable);
-+    filterSelect.addEventListener('change', renderTable);
-+
-+    themeBtn.addEventListener('click', () => {
-+      document.body.classList.toggle('dark');
-+      themeBtn.textContent = document.body.classList.contains('dark') ? '☀️ Light mode' : '🌙 Dark mode';
-+    });
-+
-+    renderTable();
-+  </script>
-+</body>
-+</html>
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Periodic - Periodic Table 118</title>
+  <style>
+    :root {--bg:#f5f7fb;--panel:#ffffff;--text:#111827;--muted:#6b7280;--line:#d1d5db}
+    body.dark {--bg:#0f172a;--panel:#111827;--text:#f3f4f6;--muted:#9ca3af;--line:#334155}
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text); }
+    .container { max-width:1600px; margin:0 auto; padding:16px; }
+    h1 { margin:0 0 12px; font-size:26px; }
+    .toolbar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; align-items:center; }
+    input,select,button,.nav-link { padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:var(--panel); color:var(--text); font:inherit; text-decoration:none; }
+    .nav-link:hover,button:hover { filter:brightness(0.98); }
+    .legend { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 10px; }
+    .tag { font-size:12px; color:#fff; border-radius:999px; padding:6px 10px; }
+    .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:12px; background:var(--panel); padding:10px; }
+    .periodic-grid { display:grid; grid-template-columns:repeat(18,minmax(58px,1fr)); grid-auto-rows:74px; gap:6px; min-width:1120px; }
+    .row-label { display:flex; align-items:center; font-size:12px; color:var(--muted); padding-left:4px; font-weight:600; }
+    .element { border:1px solid rgba(0,0,0,0.08); border-radius:10px; color:#fff; cursor:pointer; display:flex; flex-direction:column; justify-content:space-between; padding:6px; transition:transform .2s ease, box-shadow .2s ease; }
+    .element:hover { transform:scale(1.06); box-shadow:0 10px 18px rgba(0,0,0,0.22); z-index:2; }
+    .num { font-size:11px; font-weight:700; } .sym { font-size:24px; line-height:1; font-weight:800; text-align:center; } .name { font-size:10px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .c-alkali { background:#e53935; } .c-alkaline-earth { background:#fb8c00; } .c-transition { background:#1e88e5; } .c-nonmetal { background:#43a047; } .c-halogen { background:#2e7d32; } .c-noble-gas { background:#8e24aa; } .c-metalloid { background:#fbc02d; color:#111; } .c-lanthanide,.c-actinide { background:#00acc1; } .c-post-transition { background:#546e7a; }
+    .modal { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; padding:16px; } .modal.show { display:flex; }
+    .modal-card { width:min(560px,100%); border:1px solid var(--line); border-radius:14px; background:var(--panel); padding:18px; } .modal-card h2 { margin:0 0 10px; }
+    .detail { display:grid; grid-template-columns:170px 1fr; gap:8px; font-size:14px; } .muted { color:var(--muted); }
+    .footer-note { margin-top:8px; font-size:12px; color:var(--muted); }
+    @media (max-width:768px) { .periodic-grid { grid-auto-rows:64px; min-width:1000px; } .sym { font-size:20px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bảng tuần hoàn hoá học (FULL 118 nguyên tố)</h1>
+    <div class="toolbar">
+      <a class="nav-link" href="index.html">Về index.html</a>
+      <input id="search" type="text" placeholder="Tìm theo tên hoặc ký hiệu..." />
+      <select id="filter">
+        <option value="all">Tất cả nhóm</option><option value="alkali">Alkali</option><option value="alkaline earth">Alkaline earth</option>
+        <option value="transition">Transition</option><option value="post-transition">Post-transition</option><option value="nonmetal">Nonmetal</option>
+        <option value="metalloid">Metalloid</option><option value="halogen">Halogen</option><option value="noble gas">Noble gas</option>
+        <option value="lanthanide">Lanthanide</option><option value="actinide">Actinide</option>
+      </select>
+      <button id="themeBtn">🌙 Dark mode</button>
+      <button id="resetBtn">↺ Reset filter</button>
+    </div>
+    <div class="legend">
+      <span class="tag c-alkali">Alkali</span><span class="tag c-alkaline-earth">Alkaline earth</span><span class="tag c-transition">Transition</span>
+      <span class="tag c-post-transition">Post-transition</span><span class="tag c-nonmetal">Nonmetal</span><span class="tag c-halogen">Halogen</span>
+      <span class="tag c-noble-gas">Noble gas</span><span class="tag c-metalloid">Metalloid</span><span class="tag c-lanthanide">Lanthanide / Actinide</span>
+    </div>
+    <div class="table-wrap"><div id="grid" class="periodic-grid"></div></div>
+    <div id="resultCount" class="footer-note"></div>
+  </div>
+
+  <div id="modal" class="modal"><div id="modalCard" class="modal-card"></div></div>
+
+  <script>
+    // DATA
+    const elements = [
+  {
+    "number": 1,
+    "symbol": "H",
+    "name": "Hydrogen",
+    "mass": "1.008",
+    "electronConfig": "1s1",
+    "electronegativity": 2.2,
+    "category": "nonmetal",
+    "period": 1,
+    "group": 1,
+    "displayPeriod": 1,
+    "displayGroup": 1
+  },
+  {
+    "number": 2,
+    "symbol": "He",
+    "name": "Helium",
+    "mass": "4.0026",
+    "electronConfig": "1s2",
+    "electronegativity": null,
+    "category": "noble gas",
+    "period": 1,
+    "group": 18,
+    "displayPeriod": 1,
+    "displayGroup": 18
+  },
+  {
+    "number": 3,
+    "symbol": "Li",
+    "name": "Lithium",
+    "mass": "6.94",
+    "electronConfig": "[He] 2s1",
+    "electronegativity": 0.98,
+    "category": "alkali",
+    "period": 2,
+    "group": 1,
+    "displayPeriod": 2,
+    "displayGroup": 1
+  },
+  {
+    "number": 4,
+    "symbol": "Be",
+    "name": "Beryllium",
+    "mass": "9.0122",
+    "electronConfig": "[He] 2s2",
+    "electronegativity": 1.57,
+    "category": "alkaline earth",
+    "period": 2,
+    "group": 2,
+    "displayPeriod": 2,
+    "displayGroup": 2
+  },
+  {
+    "number": 5,
+    "symbol": "B",
+    "name": "Boron",
+    "mass": "10.81",
+    "electronConfig": "[He] 2s2 2p1",
+    "electronegativity": 2.04,
+    "category": "metalloid",
+    "period": 2,
+    "group": 13,
+    "displayPeriod": 2,
+    "displayGroup": 13
+  },
+  {
+    "number": 6,
+    "symbol": "C",
+    "name": "Carbon",
+    "mass": "12.011",
+    "electronConfig": "[He] 2s2 2p2",
+    "electronegativity": 2.55,
+    "category": "nonmetal",
+    "period": 2,
+    "group": 14,
+    "displayPeriod": 2,
+    "displayGroup": 14
+  },
+  {
+    "number": 7,
+    "symbol": "N",
+    "name": "Nitrogen",
+    "mass": "14.007",
+    "electronConfig": "[He] 2s2 2p3",
+    "electronegativity": 3.04,
+    "category": "nonmetal",
+    "period": 2,
+    "group": 15,
+    "displayPeriod": 2,
+    "displayGroup": 15
+  },
+  {
+    "number": 8,
+    "symbol": "O",
+    "name": "Oxygen",
+    "mass": "15.999",
+    "electronConfig": "[He] 2s2 2p4",
+    "electronegativity": 3.44,
+    "category": "nonmetal",
+    "period": 2,
+    "group": 16,
+    "displayPeriod": 2,
+    "displayGroup": 16
+  },
+  {
+    "number": 9,
+    "symbol": "F",
+    "name": "Fluorine",
+    "mass": "18.998",
+    "electronConfig": "[He] 2s2 2p5",
+    "electronegativity": 3.98,
+    "category": "halogen",
+    "period": 2,
+    "group": 17,
+    "displayPeriod": 2,
+    "displayGroup": 17
+  },
+  {
+    "number": 10,
+    "symbol": "Ne",
+    "name": "Neon",
+    "mass": "20.180",
+    "electronConfig": "[He] 2s2 2p6",
+    "electronegativity": null,
+    "category": "noble gas",
+    "period": 2,
+    "group": 18,
+    "displayPeriod": 2,
+    "displayGroup": 18
+  },
+  {
+    "number": 11,
+    "symbol": "Na",
+    "name": "Sodium",
+    "mass": "22.990",
+    "electronConfig": "[Ne] 3s1",
+    "electronegativity": 0.93,
+    "category": "alkali",
+    "period": 3,
+    "group": 1,
+    "displayPeriod": 3,
+    "displayGroup": 1
+  },
+  {
+    "number": 12,
+    "symbol": "Mg",
+    "name": "Magnesium",
+    "mass": "24.305",
+    "electronConfig": "[Ne] 3s2",
+    "electronegativity": 1.31,
+    "category": "alkaline earth",
+    "period": 3,
+    "group": 2,
+    "displayPeriod": 3,
+    "displayGroup": 2
+  },
+  {
+    "number": 13,
+    "symbol": "Al",
+    "name": "Aluminum",
+    "mass": "26.982",
+    "electronConfig": "[Ne] 3s2 3p1",
+    "electronegativity": 1.61,
+    "category": "post-transition",
+    "period": 3,
+    "group": 13,
+    "displayPeriod": 3,
+    "displayGroup": 13
+  },
+  {
+    "number": 14,
+    "symbol": "Si",
+    "name": "Silicon",
+    "mass": "28.085",
+    "electronConfig": "[Ne] 3s2 3p2",
+    "electronegativity": 1.9,
+    "category": "metalloid",
+    "period": 3,
+    "group": 14,
+    "displayPeriod": 3,
+    "displayGroup": 14
+  },
+  {
+    "number": 15,
+    "symbol": "P",
+    "name": "Phosphorus",
+    "mass": "30.974",
+    "electronConfig": "[Ne] 3s2 3p3",
+    "electronegativity": 2.19,
+    "category": "nonmetal",
+    "period": 3,
+    "group": 15,
+    "displayPeriod": 3,
+    "displayGroup": 15
+  },
+  {
+    "number": 16,
+    "symbol": "S",
+    "name": "Sulfur",
+    "mass": "32.06",
+    "electronConfig": "[Ne] 3s2 3p4",
+    "electronegativity": 2.58,
+    "category": "nonmetal",
+    "period": 3,
+    "group": 16,
+    "displayPeriod": 3,
+    "displayGroup": 16
+  },
+  {
+    "number": 17,
+    "symbol": "Cl",
+    "name": "Chlorine",
+    "mass": "35.45",
+    "electronConfig": "[Ne] 3s2 3p5",
+    "electronegativity": 3.16,
+    "category": "halogen",
+    "period": 3,
+    "group": 17,
+    "displayPeriod": 3,
+    "displayGroup": 17
+  },
+  {
+    "number": 18,
+    "symbol": "Ar",
+    "name": "Argon",
+    "mass": "39.948",
+    "electronConfig": "[Ne] 3s2 3p6",
+    "electronegativity": null,
+    "category": "noble gas",
+    "period": 3,
+    "group": 18,
+    "displayPeriod": 3,
+    "displayGroup": 18
+  },
+  {
+    "number": 19,
+    "symbol": "K",
+    "name": "Potassium",
+    "mass": "39.098",
+    "electronConfig": "[Ar] 4s1",
+    "electronegativity": 0.82,
+    "category": "alkali",
+    "period": 4,
+    "group": 1,
+    "displayPeriod": 4,
+    "displayGroup": 1
+  },
+  {
+    "number": 20,
+    "symbol": "Ca",
+    "name": "Calcium",
+    "mass": "40.078",
+    "electronConfig": "[Ar] 4s2",
+    "electronegativity": 1.0,
+    "category": "alkaline earth",
+    "period": 4,
+    "group": 2,
+    "displayPeriod": 4,
+    "displayGroup": 2
+  },
+  {
+    "number": 21,
+    "symbol": "Sc",
+    "name": "Scandium",
+    "mass": "44.956",
+    "electronConfig": "[Ar] 4s2 3d1",
+    "electronegativity": 1.36,
+    "category": "transition",
+    "period": 4,
+    "group": 3,
+    "displayPeriod": 4,
+    "displayGroup": 3
+  },
+  {
+    "number": 22,
+    "symbol": "Ti",
+    "name": "Titanium",
+    "mass": "47.867",
+    "electronConfig": "[Ar] 4s2 3d2",
+    "electronegativity": 1.54,
+    "category": "transition",
+    "period": 4,
+    "group": 4,
+    "displayPeriod": 4,
+    "displayGroup": 4
+  },
+  {
+    "number": 23,
+    "symbol": "V",
+    "name": "Vanadium",
+    "mass": "50.942",
+    "electronConfig": "[Ar] 4s2 3d3",
+    "electronegativity": 1.63,
+    "category": "transition",
+    "period": 4,
+    "group": 5,
+    "displayPeriod": 4,
+    "displayGroup": 5
+  },
+  {
+    "number": 24,
+    "symbol": "Cr",
+    "name": "Chromium",
+    "mass": "51.996",
+    "electronConfig": "[Ar] 3d5 4s1",
+    "electronegativity": 1.66,
+    "category": "transition",
+    "period": 4,
+    "group": 6,
+    "displayPeriod": 4,
+    "displayGroup": 6
+  },
+  {
+    "number": 25,
+    "symbol": "Mn",
+    "name": "Manganese",
+    "mass": "54.938",
+    "electronConfig": "[Ar] 4s2 3d5",
+    "electronegativity": 1.55,
+    "category": "transition",
+    "period": 4,
+    "group": 7,
+    "displayPeriod": 4,
+    "displayGroup": 7
+  },
+  {
+    "number": 26,
+    "symbol": "Fe",
+    "name": "Iron",
+    "mass": "55.845",
+    "electronConfig": "[Ar] 4s2 3d6",
+    "electronegativity": 1.83,
+    "category": "transition",
+    "period": 4,
+    "group": 8,
+    "displayPeriod": 4,
+    "displayGroup": 8
+  },
+  {
+    "number": 27,
+    "symbol": "Co",
+    "name": "Cobalt",
+    "mass": "58.933",
+    "electronConfig": "[Ar] 4s2 3d7",
+    "electronegativity": 1.88,
+    "category": "transition",
+    "period": 4,
+    "group": 9,
+    "displayPeriod": 4,
+    "displayGroup": 9
+  },
+  {
+    "number": 28,
+    "symbol": "Ni",
+    "name": "Nickel",
+    "mass": "58.693",
+    "electronConfig": "[Ar] 4s2 3d8",
+    "electronegativity": 1.91,
+    "category": "transition",
+    "period": 4,
+    "group": 10,
+    "displayPeriod": 4,
+    "displayGroup": 10
+  },
+  {
+    "number": 29,
+    "symbol": "Cu",
+    "name": "Copper",
+    "mass": "63.546",
+    "electronConfig": "[Ar] 3d10 4s1",
+    "electronegativity": 1.9,
+    "category": "transition",
+    "period": 4,
+    "group": 11,
+    "displayPeriod": 4,
+    "displayGroup": 11
+  },
+  {
+    "number": 30,
+    "symbol": "Zn",
+    "name": "Zinc",
+    "mass": "65.38",
+    "electronConfig": "[Ar] 4s2 3d10",
+    "electronegativity": 1.65,
+    "category": "transition",
+    "period": 4,
+    "group": 12,
+    "displayPeriod": 4,
+    "displayGroup": 12
+  },
+  {
+    "number": 31,
+    "symbol": "Ga",
+    "name": "Gallium",
+    "mass": "69.723",
+    "electronConfig": "[Ar] 4s2 3d10 4p1",
+    "electronegativity": 1.81,
+    "category": "post-transition",
+    "period": 4,
+    "group": 13,
+    "displayPeriod": 4,
+    "displayGroup": 13
+  },
+  {
+    "number": 32,
+    "symbol": "Ge",
+    "name": "Germanium",
+    "mass": "72.630",
+    "electronConfig": "[Ar] 4s2 3d10 4p2",
+    "electronegativity": 2.01,
+    "category": "metalloid",
+    "period": 4,
+    "group": 14,
+    "displayPeriod": 4,
+    "displayGroup": 14
+  },
+  {
+    "number": 33,
+    "symbol": "As",
+    "name": "Arsenic",
+    "mass": "74.922",
+    "electronConfig": "[Ar] 4s2 3d10 4p3",
+    "electronegativity": 2.18,
+    "category": "metalloid",
+    "period": 4,
+    "group": 15,
+    "displayPeriod": 4,
+    "displayGroup": 15
+  },
+  {
+    "number": 34,
+    "symbol": "Se",
+    "name": "Selenium",
+    "mass": "78.971",
+    "electronConfig": "[Ar] 4s2 3d10 4p4",
+    "electronegativity": 2.55,
+    "category": "nonmetal",
+    "period": 4,
+    "group": 16,
+    "displayPeriod": 4,
+    "displayGroup": 16
+  },
+  {
+    "number": 35,
+    "symbol": "Br",
+    "name": "Bromine",
+    "mass": "79.904",
+    "electronConfig": "[Ar] 4s2 3d10 4p5",
+    "electronegativity": 2.96,
+    "category": "halogen",
+    "period": 4,
+    "group": 17,
+    "displayPeriod": 4,
+    "displayGroup": 17
+  },
+  {
+    "number": 36,
+    "symbol": "Kr",
+    "name": "Krypton",
+    "mass": "83.798",
+    "electronConfig": "[Ar] 4s2 3d10 4p6",
+    "electronegativity": 3.0,
+    "category": "noble gas",
+    "period": 4,
+    "group": 18,
+    "displayPeriod": 4,
+    "displayGroup": 18
+  },
+  {
+    "number": 37,
+    "symbol": "Rb",
+    "name": "Rubidium",
+    "mass": "85.468",
+    "electronConfig": "[Kr] 5s1",
+    "electronegativity": 0.82,
+    "category": "alkali",
+    "period": 5,
+    "group": 1,
+    "displayPeriod": 5,
+    "displayGroup": 1
+  },
+  {
+    "number": 38,
+    "symbol": "Sr",
+    "name": "Strontium",
+    "mass": "87.62",
+    "electronConfig": "[Kr] 5s2",
+    "electronegativity": 0.95,
+    "category": "alkaline earth",
+    "period": 5,
+    "group": 2,
+    "displayPeriod": 5,
+    "displayGroup": 2
+  },
+  {
+    "number": 39,
+    "symbol": "Y",
+    "name": "Yttrium",
+    "mass": "88.906",
+    "electronConfig": "[Kr] 5s2 4d1",
+    "electronegativity": 1.22,
+    "category": "transition",
+    "period": 5,
+    "group": 3,
+    "displayPeriod": 5,
+    "displayGroup": 3
+  },
+  {
+    "number": 40,
+    "symbol": "Zr",
+    "name": "Zirconium",
+    "mass": "91.224",
+    "electronConfig": "[Kr] 5s2 4d2",
+    "electronegativity": 1.33,
+    "category": "transition",
+    "period": 5,
+    "group": 4,
+    "displayPeriod": 5,
+    "displayGroup": 4
+  },
+  {
+    "number": 41,
+    "symbol": "Nb",
+    "name": "Niobium",
+    "mass": "92.906",
+    "electronConfig": "[Kr] 4d4 5s1",
+    "electronegativity": 1.6,
+    "category": "transition",
+    "period": 5,
+    "group": 5,
+    "displayPeriod": 5,
+    "displayGroup": 5
+  },
+  {
+    "number": 42,
+    "symbol": "Mo",
+    "name": "Molybdenum",
+    "mass": "95.95",
+    "electronConfig": "[Kr] 4d5 5s1",
+    "electronegativity": 2.16,
+    "category": "transition",
+    "period": 5,
+    "group": 6,
+    "displayPeriod": 5,
+    "displayGroup": 6
+  },
+  {
+    "number": 43,
+    "symbol": "Tc",
+    "name": "Technetium",
+    "mass": "[98]",
+    "electronConfig": "[Kr] 5s2 4d5",
+    "electronegativity": 1.9,
+    "category": "transition",
+    "period": 5,
+    "group": 7,
+    "displayPeriod": 5,
+    "displayGroup": 7
+  },
+  {
+    "number": 44,
+    "symbol": "Ru",
+    "name": "Ruthenium",
+    "mass": "101.07",
+    "electronConfig": "[Kr] 4d7 5s1",
+    "electronegativity": 2.2,
+    "category": "transition",
+    "period": 5,
+    "group": 8,
+    "displayPeriod": 5,
+    "displayGroup": 8
+  },
+  {
+    "number": 45,
+    "symbol": "Rh",
+    "name": "Rhodium",
+    "mass": "102.91",
+    "electronConfig": "[Kr] 4d8 5s1",
+    "electronegativity": 2.28,
+    "category": "transition",
+    "period": 5,
+    "group": 9,
+    "displayPeriod": 5,
+    "displayGroup": 9
+  },
+  {
+    "number": 46,
+    "symbol": "Pd",
+    "name": "Palladium",
+    "mass": "106.42",
+    "electronConfig": "[Kr] 4d10",
+    "electronegativity": 2.2,
+    "category": "transition",
+    "period": 5,
+    "group": 10,
+    "displayPeriod": 5,
+    "displayGroup": 10
+  },
+  {
+    "number": 47,
+    "symbol": "Ag",
+    "name": "Silver",
+    "mass": "107.87",
+    "electronConfig": "[Kr] 4d10 5s1",
+    "electronegativity": 1.93,
+    "category": "transition",
+    "period": 5,
+    "group": 11,
+    "displayPeriod": 5,
+    "displayGroup": 11
+  },
+  {
+    "number": 48,
+    "symbol": "Cd",
+    "name": "Cadmium",
+    "mass": "112.41",
+    "electronConfig": "[Kr] 5s2 4d10",
+    "electronegativity": 1.69,
+    "category": "transition",
+    "period": 5,
+    "group": 12,
+    "displayPeriod": 5,
+    "displayGroup": 12
+  },
+  {
+    "number": 49,
+    "symbol": "In",
+    "name": "Indium",
+    "mass": "114.82",
+    "electronConfig": "[Kr] 5s2 4d10 5p1",
+    "electronegativity": 1.78,
+    "category": "post-transition",
+    "period": 5,
+    "group": 13,
+    "displayPeriod": 5,
+    "displayGroup": 13
+  },
+  {
+    "number": 50,
+    "symbol": "Sn",
+    "name": "Tin",
+    "mass": "118.71",
+    "electronConfig": "[Kr] 5s2 4d10 5p2",
+    "electronegativity": 1.96,
+    "category": "post-transition",
+    "period": 5,
+    "group": 14,
+    "displayPeriod": 5,
+    "displayGroup": 14
+  },
+  {
+    "number": 51,
+    "symbol": "Sb",
+    "name": "Antimony",
+    "mass": "121.76",
+    "electronConfig": "[Kr] 5s2 4d10 5p3",
+    "electronegativity": 2.05,
+    "category": "metalloid",
+    "period": 5,
+    "group": 15,
+    "displayPeriod": 5,
+    "displayGroup": 15
+  },
+  {
+    "number": 52,
+    "symbol": "Te",
+    "name": "Tellurium",
+    "mass": "127.60",
+    "electronConfig": "[Kr] 5s2 4d10 5p4",
+    "electronegativity": 2.1,
+    "category": "metalloid",
+    "period": 5,
+    "group": 16,
+    "displayPeriod": 5,
+    "displayGroup": 16
+  },
+  {
+    "number": 53,
+    "symbol": "I",
+    "name": "Iodine",
+    "mass": "126.90",
+    "electronConfig": "[Kr] 5s2 4d10 5p5",
+    "electronegativity": 2.66,
+    "category": "halogen",
+    "period": 5,
+    "group": 17,
+    "displayPeriod": 5,
+    "displayGroup": 17
+  },
+  {
+    "number": 54,
+    "symbol": "Xe",
+    "name": "Xenon",
+    "mass": "131.29",
+    "electronConfig": "[Kr] 5s2 4d10 5p6",
+    "electronegativity": 2.6,
+    "category": "noble gas",
+    "period": 5,
+    "group": 18,
+    "displayPeriod": 5,
+    "displayGroup": 18
+  },
+  {
+    "number": 55,
+    "symbol": "Cs",
+    "name": "Cesium",
+    "mass": "132.91",
+    "electronConfig": "[Xe] 6s1",
+    "electronegativity": 0.79,
+    "category": "alkali",
+    "period": 6,
+    "group": 1,
+    "displayPeriod": 6,
+    "displayGroup": 1
+  },
+  {
+    "number": 56,
+    "symbol": "Ba",
+    "name": "Barium",
+    "mass": "137.33",
+    "electronConfig": "[Xe] 6s2",
+    "electronegativity": 0.89,
+    "category": "alkaline earth",
+    "period": 6,
+    "group": 2,
+    "displayPeriod": 6,
+    "displayGroup": 2
+  },
+  {
+    "number": 57,
+    "symbol": "La",
+    "name": "Lanthanum",
+    "mass": "138.91",
+    "electronConfig": "[Xe] 5d1 6s2",
+    "electronegativity": 1.1,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 4
+  },
+  {
+    "number": 58,
+    "symbol": "Ce",
+    "name": "Cerium",
+    "mass": "140.12",
+    "electronConfig": "[Xe] 4f1 5d1 6s2",
+    "electronegativity": 1.12,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 5
+  },
+  {
+    "number": 59,
+    "symbol": "Pr",
+    "name": "Praseodymium",
+    "mass": "140.91",
+    "electronConfig": "[Xe] 6s2 4f3",
+    "electronegativity": 1.13,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 6
+  },
+  {
+    "number": 60,
+    "symbol": "Nd",
+    "name": "Neodymium",
+    "mass": "144.24",
+    "electronConfig": "[Xe] 6s2 4f4",
+    "electronegativity": 1.14,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 7
+  },
+  {
+    "number": 61,
+    "symbol": "Pm",
+    "name": "Promethium",
+    "mass": "[145]",
+    "electronConfig": "[Xe] 6s2 4f5",
+    "electronegativity": 1.13,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 8
+  },
+  {
+    "number": 62,
+    "symbol": "Sm",
+    "name": "Samarium",
+    "mass": "150.36",
+    "electronConfig": "[Xe] 6s2 4f6",
+    "electronegativity": 1.17,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 9
+  },
+  {
+    "number": 63,
+    "symbol": "Eu",
+    "name": "Europium",
+    "mass": "151.96",
+    "electronConfig": "[Xe] 6s2 4f7",
+    "electronegativity": 1.2,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 10
+  },
+  {
+    "number": 64,
+    "symbol": "Gd",
+    "name": "Gadolinium",
+    "mass": "157.25",
+    "electronConfig": "[Xe] 4f7 5d1 6s2",
+    "electronegativity": 1.2,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 11
+  },
+  {
+    "number": 65,
+    "symbol": "Tb",
+    "name": "Terbium",
+    "mass": "158.93",
+    "electronConfig": "[Xe] 6s2 4f9",
+    "electronegativity": 1.1,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 12
+  },
+  {
+    "number": 66,
+    "symbol": "Dy",
+    "name": "Dysprosium",
+    "mass": "162.50",
+    "electronConfig": "[Xe] 6s2 4f10",
+    "electronegativity": 1.22,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 13
+  },
+  {
+    "number": 67,
+    "symbol": "Ho",
+    "name": "Holmium",
+    "mass": "164.93",
+    "electronConfig": "[Xe] 6s2 4f11",
+    "electronegativity": 1.23,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 14
+  },
+  {
+    "number": 68,
+    "symbol": "Er",
+    "name": "Erbium",
+    "mass": "167.26",
+    "electronConfig": "[Xe] 6s2 4f12",
+    "electronegativity": 1.24,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 15
+  },
+  {
+    "number": 69,
+    "symbol": "Tm",
+    "name": "Thulium",
+    "mass": "168.93",
+    "electronConfig": "[Xe] 6s2 4f13",
+    "electronegativity": 1.25,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 16
+  },
+  {
+    "number": 70,
+    "symbol": "Yb",
+    "name": "Ytterbium",
+    "mass": "173.05",
+    "electronConfig": "[Xe] 6s2 4f14",
+    "electronegativity": 1.1,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 17
+  },
+  {
+    "number": 71,
+    "symbol": "Lu",
+    "name": "Lutetium",
+    "mass": "174.97",
+    "electronConfig": "[Xe] 6s2 4f14 5d1",
+    "electronegativity": 1.27,
+    "category": "lanthanide",
+    "period": 6,
+    "group": 3,
+    "displayPeriod": 8,
+    "displayGroup": 18
+  },
+  {
+    "number": 72,
+    "symbol": "Hf",
+    "name": "Hafnium",
+    "mass": "178.49",
+    "electronConfig": "[Xe] 6s2 4f14 5d2",
+    "electronegativity": 1.3,
+    "category": "transition",
+    "period": 6,
+    "group": 4,
+    "displayPeriod": 6,
+    "displayGroup": 4
+  },
+  {
+    "number": 73,
+    "symbol": "Ta",
+    "name": "Tantalum",
+    "mass": "180.95",
+    "electronConfig": "[Xe] 6s2 4f14 5d3",
+    "electronegativity": 1.5,
+    "category": "transition",
+    "period": 6,
+    "group": 5,
+    "displayPeriod": 6,
+    "displayGroup": 5
+  },
+  {
+    "number": 74,
+    "symbol": "W",
+    "name": "Tungsten",
+    "mass": "183.84",
+    "electronConfig": "[Xe] 6s2 4f14 5d4",
+    "electronegativity": 2.36,
+    "category": "transition",
+    "period": 6,
+    "group": 6,
+    "displayPeriod": 6,
+    "displayGroup": 6
+  },
+  {
+    "number": 75,
+    "symbol": "Re",
+    "name": "Rhenium",
+    "mass": "186.21",
+    "electronConfig": "[Xe] 6s2 4f14 5d5",
+    "electronegativity": 1.9,
+    "category": "transition",
+    "period": 6,
+    "group": 7,
+    "displayPeriod": 6,
+    "displayGroup": 7
+  },
+  {
+    "number": 76,
+    "symbol": "Os",
+    "name": "Osmium",
+    "mass": "190.23",
+    "electronConfig": "[Xe] 6s2 4f14 5d6",
+    "electronegativity": 2.2,
+    "category": "transition",
+    "period": 6,
+    "group": 8,
+    "displayPeriod": 6,
+    "displayGroup": 8
+  },
+  {
+    "number": 77,
+    "symbol": "Ir",
+    "name": "Iridium",
+    "mass": "192.22",
+    "electronConfig": "[Xe] 6s2 4f14 5d7",
+    "electronegativity": 2.2,
+    "category": "transition",
+    "period": 6,
+    "group": 9,
+    "displayPeriod": 6,
+    "displayGroup": 9
+  },
+  {
+    "number": 78,
+    "symbol": "Pt",
+    "name": "Platinum",
+    "mass": "195.08",
+    "electronConfig": "[Xe] 4f14 5d9 6s1",
+    "electronegativity": 2.28,
+    "category": "transition",
+    "period": 6,
+    "group": 10,
+    "displayPeriod": 6,
+    "displayGroup": 10
+  },
+  {
+    "number": 79,
+    "symbol": "Au",
+    "name": "Gold",
+    "mass": "196.97",
+    "electronConfig": "[Xe] 4f14 5d10 6s1",
+    "electronegativity": 2.54,
+    "category": "transition",
+    "period": 6,
+    "group": 11,
+    "displayPeriod": 6,
+    "displayGroup": 11
+  },
+  {
+    "number": 80,
+    "symbol": "Hg",
+    "name": "Mercury",
+    "mass": "200.59",
+    "electronConfig": "[Xe] 6s2 4f14 5d10",
+    "electronegativity": 2.0,
+    "category": "transition",
+    "period": 6,
+    "group": 12,
+    "displayPeriod": 6,
+    "displayGroup": 12
+  },
+  {
+    "number": 81,
+    "symbol": "Tl",
+    "name": "Thallium",
+    "mass": "204.38",
+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p1",
+    "electronegativity": 1.62,
+    "category": "post-transition",
+    "period": 6,
+    "group": 13,
+    "displayPeriod": 6,
+    "displayGroup": 13
+  },
+  {
+    "number": 82,
+    "symbol": "Pb",
+    "name": "Lead",
+    "mass": "207.2",
+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p2",
+    "electronegativity": 2.33,
+    "category": "post-transition",
+    "period": 6,
+    "group": 14,
+    "displayPeriod": 6,
+    "displayGroup": 14
+  },
+  {
+    "number": 83,
+    "symbol": "Bi",
+    "name": "Bismuth",
+    "mass": "208.98",
+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p3",
+    "electronegativity": 2.02,
+    "category": "post-transition",
+    "period": 6,
+    "group": 15,
+    "displayPeriod": 6,
+    "displayGroup": 15
+  },
+  {
+    "number": 84,
+    "symbol": "Po",
+    "name": "Polonium",
+    "mass": "[209]",
+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p4",
+    "electronegativity": 2.0,
+    "category": "metalloid",
+    "period": 6,
+    "group": 16,
+    "displayPeriod": 6,
+    "displayGroup": 16
+  },
+  {
+    "number": 85,
+    "symbol": "At",
+    "name": "Astatine",
+    "mass": "[210]",
+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p5",
+    "electronegativity": 2.2,
+    "category": "halogen",
+    "period": 6,
+    "group": 17,
+    "displayPeriod": 6,
+    "displayGroup": 17
+  },
+  {
+    "number": 86,
+    "symbol": "Rn",
+    "name": "Radon",
+    "mass": "[222]",
+    "electronConfig": "[Xe] 6s2 4f14 5d10 6p6",
+    "electronegativity": null,
+    "category": "noble gas",
+    "period": 6,
+    "group": 18,
+    "displayPeriod": 6,
+    "displayGroup": 18
+  },
+  {
+    "number": 87,
+    "symbol": "Fr",
+    "name": "Francium",
+    "mass": "[223]",
+    "electronConfig": "[Rn] 7s1",
+    "electronegativity": 0.7,
+    "category": "alkali",
+    "period": 7,
+    "group": 1,
+    "displayPeriod": 7,
+    "displayGroup": 1
+  },
+  {
+    "number": 88,
+    "symbol": "Ra",
+    "name": "Radium",
+    "mass": "[226]",
+    "electronConfig": "[Rn] 7s2",
+    "electronegativity": 0.9,
+    "category": "alkaline earth",
+    "period": 7,
+    "group": 2,
+    "displayPeriod": 7,
+    "displayGroup": 2
+  },
+  {
+    "number": 89,
+    "symbol": "Ac",
+    "name": "Actinium",
+    "mass": "[227]",
+    "electronConfig": "[Rn] 6d1 7s2",
+    "electronegativity": 1.1,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 4
+  },
+  {
+    "number": 90,
+    "symbol": "Th",
+    "name": "Thorium",
+    "mass": "232.04",
+    "electronConfig": "[Rn] 6d2 7s2",
+    "electronegativity": 1.3,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 5
+  },
+  {
+    "number": 91,
+    "symbol": "Pa",
+    "name": "Protactinium",
+    "mass": "231.04",
+    "electronConfig": "[Rn] 5f2 6d1 7s2",
+    "electronegativity": 1.5,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 6
+  },
+  {
+    "number": 92,
+    "symbol": "U",
+    "name": "Uranium",
+    "mass": "238.03",
+    "electronConfig": "[Rn] 5f3 6d1 7s2",
+    "electronegativity": 1.38,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 7
+  },
+  {
+    "number": 93,
+    "symbol": "Np",
+    "name": "Neptunium",
+    "mass": "[237]",
+    "electronConfig": "[Rn] 5f4 6d1 7s2",
+    "electronegativity": 1.36,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 8
+  },
+  {
+    "number": 94,
+    "symbol": "Pu",
+    "name": "Plutonium",
+    "mass": "[244]",
+    "electronConfig": "[Rn] 7s2 5f6",
+    "electronegativity": 1.28,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 9
+  },
+  {
+    "number": 95,
+    "symbol": "Am",
+    "name": "Americium",
+    "mass": "[243]",
+    "electronConfig": "[Rn] 7s2 5f7",
+    "electronegativity": null,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 10
+  },
+  {
+    "number": 96,
+    "symbol": "Cm",
+    "name": "Curium",
+    "mass": "[247]",
+    "electronConfig": "[Rn] 5f7 6d1 7s2",
+    "electronegativity": null,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 11
+  },
+  {
+    "number": 97,
+    "symbol": "Bk",
+    "name": "Berkelium",
+    "mass": "[247]",
+    "electronConfig": "[Rn] 7s2 5f9",
+    "electronegativity": null,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 12
+  },
+  {
+    "number": 98,
+    "symbol": "Cf",
+    "name": "Californium",
+    "mass": "[251]",
+    "electronConfig": "[Rn] 7s2 5f10",
+    "electronegativity": null,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 13
+  },
+  {
+    "number": 99,
+    "symbol": "Es",
+    "name": "Einsteinium",
+    "mass": "[252]",
+    "electronConfig": "[Rn] 7s2 5f11",
+    "electronegativity": null,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 14
+  },
+  {
+    "number": 100,
+    "symbol": "Fm",
+    "name": "Fermium",
+    "mass": "[257]",
+    "electronConfig": "[Rn] 7s2 5f12",
+    "electronegativity": null,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 15
+  },
+  {
+    "number": 101,
+    "symbol": "Md",
+    "name": "Mendelevium",
+    "mass": "[258]",
+    "electronConfig": "[Rn] 7s2 5f13",
+    "electronegativity": null,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 16
+  },
+  {
+    "number": 102,
+    "symbol": "No",
+    "name": "Nobelium",
+    "mass": "[259]",
+    "electronConfig": "[Rn] 7s2 5f14",
+    "electronegativity": null,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 17
+  },
+  {
+    "number": 103,
+    "symbol": "Lr",
+    "name": "Lawrencium",
+    "mass": "[266]",
+    "electronConfig": "[Rn] 5f14 7s2 7p1",
+    "electronegativity": null,
+    "category": "actinide",
+    "period": 7,
+    "group": 3,
+    "displayPeriod": 9,
+    "displayGroup": 18
+  },
+  {
+    "number": 104,
+    "symbol": "Rf",
+    "name": "Rutherfordium",
+    "mass": "[267]",
+    "electronConfig": "[Rn] 7s2 5f14 6d2",
+    "electronegativity": null,
+    "category": "transition",
+    "period": 7,
+    "group": 4,
+    "displayPeriod": 7,
+    "displayGroup": 4
+  },
+  {
+    "number": 105,
+    "symbol": "Db",
+    "name": "Dubnium",
+    "mass": "[268]",
+    "electronConfig": "[Rn] 7s2 5f14 6d3",
+    "electronegativity": null,
+    "category": "transition",
+    "period": 7,
+    "group": 5,
+    "displayPeriod": 7,
+    "displayGroup": 5
+  },
+  {
+    "number": 106,
+    "symbol": "Sg",
+    "name": "Seaborgium",
+    "mass": "[269]",
+    "electronConfig": "[Rn] 7s2 5f14 6d4",
+    "electronegativity": null,
+    "category": "transition",
+    "period": 7,
+    "group": 6,
+    "displayPeriod": 7,
+    "displayGroup": 6
+  },
+  {
+    "number": 107,
+    "symbol": "Bh",
+    "name": "Bohrium",
+    "mass": "[270]",
+    "electronConfig": "[Rn] 7s2 5f14 6d5",
+    "electronegativity": null,
+    "category": "transition",
+    "period": 7,
+    "group": 7,
+    "displayPeriod": 7,
+    "displayGroup": 7
+  },
+  {
+    "number": 108,
+    "symbol": "Hs",
+    "name": "Hassium",
+    "mass": "[277]",
+    "electronConfig": "[Rn] 7s2 5f14 6d6",
+    "electronegativity": null,
+    "category": "transition",
+    "period": 7,
+    "group": 8,
+    "displayPeriod": 7,
+    "displayGroup": 8
+  },
+  {
+    "number": 109,
+    "symbol": "Mt",
+    "name": "Meitnerium",
+    "mass": "[278]",
+    "electronConfig": "[Rn] 7s2 5f14 6d7",
+    "electronegativity": null,
+    "category": "transition",
+    "period": 7,
+    "group": 9,
+    "displayPeriod": 7,
+    "displayGroup": 9
+  },
+  {
+    "number": 110,
+    "symbol": "Ds",
+    "name": "Darmstadtium",
+    "mass": "[281]",
+    "electronConfig": "[Rn] 7s2 5f14 6d8",
+    "electronegativity": null,
+    "category": "transition",
+    "period": 7,
+    "group": 10,
+    "displayPeriod": 7,
+    "displayGroup": 10
+  },
+  {
+    "number": 111,
+    "symbol": "Rg",
+    "name": "Roentgenium",
+    "mass": "[282]",
+    "electronConfig": "[Rn] 7s2 5f14 6d9",
+    "electronegativity": null,
+    "category": "transition",
+    "period": 7,
+    "group": 11,
+    "displayPeriod": 7,
+    "displayGroup": 11
+  },
+  {
+    "number": 112,
+    "symbol": "Cn",
+    "name": "Copernicium",
+    "mass": "[285]",
+    "electronConfig": "[Rn] 7s2 5f14 6d10",
+    "electronegativity": null,
+    "category": "transition",
+    "period": 7,
+    "group": 12,
+    "displayPeriod": 7,
+    "displayGroup": 12
+  },
+  {
+    "number": 113,
+    "symbol": "Nh",
+    "name": "Nihonium",
+    "mass": "[286]",
+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p1",
+    "electronegativity": null,
+    "category": "post-transition",
+    "period": 7,
+    "group": 13,
+    "displayPeriod": 7,
+    "displayGroup": 13
+  },
+  {
+    "number": 114,
+    "symbol": "Fl",
+    "name": "Flerovium",
+    "mass": "[289]",
+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p2",
+    "electronegativity": null,
+    "category": "post-transition",
+    "period": 7,
+    "group": 14,
+    "displayPeriod": 7,
+    "displayGroup": 14
+  },
+  {
+    "number": 115,
+    "symbol": "Mc",
+    "name": "Moscovium",
+    "mass": "[290]",
+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p3",
+    "electronegativity": null,
+    "category": "post-transition",
+    "period": 7,
+    "group": 15,
+    "displayPeriod": 7,
+    "displayGroup": 15
+  },
+  {
+    "number": 116,
+    "symbol": "Lv",
+    "name": "Livermorium",
+    "mass": "[293]",
+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p4",
+    "electronegativity": null,
+    "category": "post-transition",
+    "period": 7,
+    "group": 16,
+    "displayPeriod": 7,
+    "displayGroup": 16
+  },
+  {
+    "number": 117,
+    "symbol": "Ts",
+    "name": "Tennessine",
+    "mass": "[294]",
+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p5",
+    "electronegativity": null,
+    "category": "halogen",
+    "period": 7,
+    "group": 17,
+    "displayPeriod": 7,
+    "displayGroup": 17
+  },
+  {
+    "number": 118,
+    "symbol": "Og",
+    "name": "Oganesson",
+    "mass": "[294]",
+    "electronConfig": "[Rn] 7s2 5f14 6d10 7p6",
+    "electronegativity": null,
+    "category": "noble gas",
+    "period": 7,
+    "group": 18,
+    "displayPeriod": 7,
+    "displayGroup": 18
+  }
+];
+
+    // RENDER
+    const grid = document.getElementById('grid');
+    const searchInput = document.getElementById('search');
+    const filterSelect = document.getElementById('filter');
+    const themeBtn = document.getElementById('themeBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const resultCount = document.getElementById('resultCount');
+    const modal = document.getElementById('modal');
+    const modalCard = document.getElementById('modalCard');
+
+    const toClass = (category) => `c-${category.replace(/\s+/g, '-')}`;
+
+    function renderTable() {
+      const query = searchInput.value.trim().toLowerCase();
+      const filter = filterSelect.value;
+      grid.innerHTML = '';
+
+      const visible = elements.filter((el) => {
+        const matchText = !query || el.name.toLowerCase().includes(query) || el.symbol.toLowerCase().includes(query);
+        const matchFilter = filter === 'all' || el.category === filter;
+        return matchText && matchFilter;
+      });
+
+      const lanthLabel = document.createElement('div');
+      lanthLabel.className = 'row-label';
+      lanthLabel.style.gridColumn = '1 / span 3';
+      lanthLabel.style.gridRow = '8';
+      lanthLabel.textContent = 'Lanthanides';
+      grid.appendChild(lanthLabel);
+
+      const actLabel = document.createElement('div');
+      actLabel.className = 'row-label';
+      actLabel.style.gridColumn = '1 / span 3';
+      actLabel.style.gridRow = '9';
+      actLabel.textContent = 'Actinides';
+      grid.appendChild(actLabel);
+
+      visible.forEach((el) => {
+        const cell = document.createElement('button');
+        cell.className = `element ${toClass(el.category)}`;
+        cell.style.gridColumn = String(el.displayGroup);
+        cell.style.gridRow = String(el.displayPeriod);
+        cell.innerHTML = `<div class="num">${el.number}</div><div class="sym">${el.symbol}</div><div class="name">${el.name}</div>`;
+        cell.addEventListener('click', () => openModal(el));
+        grid.appendChild(cell);
+      });
+
+      resultCount.textContent = `Hiển thị ${visible.length} / ${elements.length} nguyên tố`;
+    }
+
+    // EVENT
+    function openModal(el) {
+      modalCard.innerHTML = `
+        <h2>${el.name} (${el.symbol})</h2>
+        <div class="detail">
+          <div class="muted">Atomic number (Z)</div><div>${el.number}</div>
+          <div class="muted">Atomic mass</div><div>${el.mass}</div>
+          <div class="muted">Electron configuration</div><div>${el.electronConfig}</div>
+          <div class="muted">Electronegativity</div><div>${el.electronegativity ?? 'N/A'}</div>
+          <div class="muted">Category</div><div>${el.category}</div>
+          <div class="muted">Period / Group</div><div>${el.period} / ${el.group}</div>
+        </div>`;
+      modal.classList.add('show');
+    }
+
+    function setTheme(isDark) {
+      document.body.classList.toggle('dark', isDark);
+      themeBtn.textContent = isDark ? '☀️ Light mode' : '🌙 Dark mode';
+      localStorage.setItem('periodic-theme', isDark ? 'dark' : 'light');
+    }
+
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('show'); });
+    searchInput.addEventListener('input', renderTable);
+    filterSelect.addEventListener('change', renderTable);
+    resetBtn.addEventListener('click', () => { searchInput.value = ''; filterSelect.value = 'all'; renderTable(); });
+    themeBtn.addEventListener('click', () => setTheme(!document.body.classList.contains('dark')));
+
+    setTheme(localStorage.getItem('periodic-theme') === 'dark');
+    renderTable();
+  </script>
+</body>
+</html>
