@@ -51,6 +51,8 @@ const searchInput = document.getElementById('search');
 const categoryFilter = document.getElementById('category-filter');
 const countInfo = document.getElementById('count-info');
 
+let lockedElement = null;
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -130,7 +132,23 @@ function buildGridSkeleton() {
   periodicGrid.appendChild(actinideLabel);
 }
 
-function buildDetailPanel(element) {
+function animateDetailPanel() {
+  detailPanel.classList.remove('panel-transition');
+  void detailPanel.offsetWidth;
+  detailPanel.classList.add('panel-transition');
+}
+
+function setActiveElementClass() {
+  const tiles = periodicGrid.querySelectorAll('.element');
+  tiles.forEach((tile) => tile.classList.remove('active-element'));
+
+  if (!lockedElement) return;
+
+  const activeTile = periodicGrid.querySelector(`.element[data-atomic-number="${lockedElement.atomicNumber}"]`);
+  if (activeTile) activeTile.classList.add('active-element');
+}
+
+function buildDetailPanel(element, animate = false) {
   detailPanel.innerHTML = `
     <h2>${escapeHtml(element.name)} (${escapeHtml(element.symbol)})</h2>
     <div class="detail-grid">
@@ -148,6 +166,8 @@ function buildDetailPanel(element) {
       <div class="label">Boiling Point</div><div>${formatValue(element.boilingPoint, ' °C')}</div>
     </div>
   `;
+
+  if (animate) animateDetailPanel();
 }
 
 function renderElements(elements) {
@@ -172,6 +192,7 @@ function renderElements(elements) {
     tile.className = `element ${CATEGORY_CLASS[element.category] || 'nonmetal'}`;
     tile.style.gridRow = String(row);
     tile.style.gridColumn = String(col);
+    tile.dataset.atomicNumber = String(element.atomicNumber);
     tile.innerHTML = `
       <span class="atomic-number">${element.atomicNumber}</span>
       <span class="symbol">${escapeHtml(element.symbol)}</span>
@@ -179,17 +200,42 @@ function renderElements(elements) {
       <span class="mass">${escapeHtml(String(element.atomicMass))}</span>
     `;
 
-    tile.addEventListener('mouseenter', () => buildDetailPanel(element));
-    tile.addEventListener('focus', () => buildDetailPanel(element));
-    tile.addEventListener('click', () => buildDetailPanel(element));
+    tile.addEventListener('mouseenter', () => {
+      if (lockedElement === null) {
+        buildDetailPanel(element);
+      }
+    });
+
+    tile.addEventListener('focus', () => {
+      if (lockedElement === null) {
+        buildDetailPanel(element);
+      }
+    });
+
+    tile.addEventListener('click', () => {
+      if (lockedElement && lockedElement.atomicNumber === element.atomicNumber) {
+        lockedElement = null;
+        tile.classList.remove('active-element');
+        return;
+      }
+
+      lockedElement = element;
+      buildDetailPanel(element, true);
+      setActiveElementClass();
+    });
 
     periodicGrid.appendChild(tile);
   }
 
+  setActiveElementClass();
   countInfo.textContent = `${filtered.length} / ${elements.length} elements shown`;
 }
 
 async function initPeriodicTable() {
+  if (!periodicGrid || !detailPanel || !searchInput || !categoryFilter || !countInfo) {
+    return;
+  }
+
   const response = await fetch('periodic-data.json', { cache: 'no-store' });
   const elements = await response.json();
 
