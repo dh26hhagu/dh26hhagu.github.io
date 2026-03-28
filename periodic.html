@@ -134,14 +134,14 @@
 
     .group-label { flex-direction: column; line-height: 1.1; }
     .group-label small { font-size: 0.68rem; }
-    
+
     .f-block-label {
       justify-content: flex-start;
       padding-left: 12px;
       font-weight: 600;
       letter-spacing: 0.02em;
     }
-    
+
     .element {
       border: 1px solid rgba(255, 255, 255, 0.22);
       border-radius: 10px;
@@ -166,6 +166,14 @@
       box-shadow: 0 14px 25px rgba(0, 0, 0, 0.4);
       filter: brightness(1.03);
       outline: none;
+    }
+
+
+    .element.active-element {
+      border-color: #f8fafc;
+      box-shadow: 0 0 0 2px rgba(248, 250, 252, 0.95), 0 0 20px rgba(56, 189, 248, 0.9);
+      transform: scale(1.1);
+      z-index: 25;
     }
 
     .atomic-number { font-size: 0.7rem; font-weight: 700; justify-self: start; }
@@ -195,6 +203,15 @@
     }
 
     .detail-panel h2 { margin-top: 0; margin-bottom: 10px; }
+
+    .detail-panel.panel-transition {
+      animation: panel-fade 220ms ease;
+    }
+
+    @keyframes panel-fade {
+      from { opacity: 0.6; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     .detail-grid {
       display: grid;
