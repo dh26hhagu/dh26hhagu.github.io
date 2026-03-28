@@ -52,7 +52,7 @@ const categoryFilter = document.getElementById('category-filter');
 const countInfo = document.getElementById('count-info');
 
 let lockedElement = null;
-
+let elementsByAtomicNumber = new Map();
 function escapeHtml(value) {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -170,6 +170,32 @@ function buildDetailPanel(element, animate = false) {
   if (animate) animateDetailPanel();
 }
 
+function getElementFromTile(tile) {
+  if (!tile?.dataset?.atomicNumber) return null;
+  return elementsByAtomicNumber.get(Number(tile.dataset.atomicNumber)) || null;
+}
+
+function handleTileHover(tile) {
+  if (lockedElement !== null) return;
+  const element = getElementFromTile(tile);
+  if (!element) return;
+  buildDetailPanel(element);
+}
+
+function handleTileClick(tile) {
+  const element = getElementFromTile(tile);
+  if (!element) return;
+
+  if (lockedElement && lockedElement.atomicNumber === element.atomicNumber) {
+    lockedElement = null;
+    setActiveElementClass();
+    return;
+  }
+
+  lockedElement = element;
+  buildDetailPanel(element, true);
+  setActiveElementClass();
+}
 function renderElements(elements) {
   buildGridSkeleton();
 
@@ -185,6 +211,12 @@ function renderElements(elements) {
     return matchesSearch && matchesCategory;
   });
 
+  const visibleAtomicNumbers = new Set(filtered.map((element) => element.atomicNumber));
+  if (lockedElement && !visibleAtomicNumbers.has(lockedElement.atomicNumber)) {
+    lockedElement = null;
+  }
+
+
   for (const element of filtered) {
     const { row, col } = displayPosition(element);
     const tile = document.createElement('button');
@@ -193,6 +225,9 @@ function renderElements(elements) {
     tile.style.gridRow = String(row);
     tile.style.gridColumn = String(col);
     tile.dataset.atomicNumber = String(element.atomicNumber);
+    tile.dataset.symbol = element.symbol;
+    tile.dataset.name = element.name;
+    tile.dataset.category = element.category;
     tile.innerHTML = `
       <span class="atomic-number">${element.atomicNumber}</span>
       <span class="symbol">${escapeHtml(element.symbol)}</span>
@@ -230,6 +265,26 @@ function renderElements(elements) {
   setActiveElementClass();
   countInfo.textContent = `${filtered.length} / ${elements.length} elements shown`;
 }
+function bindGridInteractions() {
+  periodicGrid.addEventListener('mouseover', (event) => {
+    const tile = event.target.closest('.element');
+    if (!tile || !periodicGrid.contains(tile)) return;
+    handleTileHover(tile);
+  });
+
+  periodicGrid.addEventListener('focusin', (event) => {
+    const tile = event.target.closest('.element');
+    if (!tile || !periodicGrid.contains(tile)) return;
+    handleTileHover(tile);
+  });
+
+  periodicGrid.addEventListener('click', (event) => {
+    const tile = event.target.closest('.element');
+    if (!tile || !periodicGrid.contains(tile)) return;
+    if (event.button !== 0) return;
+    handleTileClick(tile);
+  });
+}
 
 async function initPeriodicTable() {
   if (!periodicGrid || !detailPanel || !searchInput || !categoryFilter || !countInfo) {
@@ -238,7 +293,9 @@ async function initPeriodicTable() {
 
   const response = await fetch('periodic-data.json', { cache: 'no-store' });
   const elements = await response.json();
+ elementsByAtomicNumber = new Map(elements.map((element) => [element.atomicNumber, element]));
 
+  bindGridInteractions();
   renderElements(elements);
   buildDetailPanel(elements[0]);
 
