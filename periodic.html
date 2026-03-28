@@ -239,6 +239,19 @@
       .layout { grid-template-columns: 1fr; }
       .detail-panel { position: static; }
     }
+    .element.active {
+  outline: 2px solid #fff;
+  transform: scale(1.1);
+  z-index: 10;
+}
+.fade {
+  animation: fade 0.2s;
+}
+
+@keyframes fade {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
   </style>
 </head>
 <body>
