@@ -28,7 +28,7 @@ const CATEGORY_CLASS = {
   nonmetal: 'nonmetal',
   halogen: 'halogen',
   'noble gas': 'noble-gas',
-  lanthanide: 'lanthanide',
+ lanthanide: 'lanthanide',
   actinide: 'actinide'
 };
 
@@ -53,6 +53,8 @@ const countInfo = document.getElementById('count-info');
 
 let lockedElement = null;
 let elementsByAtomicNumber = new Map();
+let allElements = [];
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -69,14 +71,14 @@ function formatValue(value, suffix = '') {
 
 function electronConfigToHtml(configuration) {
   let html = '';
-  for (const char of configuration) {
+  for (const char of configuration || '') {
     if (SUPERSCRIPT_TO_NORMAL[char]) {
       html += `<sup>${SUPERSCRIPT_TO_NORMAL[char]}</sup>`;
     } else {
       html += escapeHtml(char);
     }
   }
-  return html;
+  return html || 'Unknown';
 }
 
 function displayPosition(element) {
@@ -104,7 +106,7 @@ function buildGridSkeleton() {
     cell.className = 'group-label';
     cell.style.gridRow = '1';
     cell.style.gridColumn = String(group + 1);
-    cell.innerHTML = `<div>${group}</div><small>${OLD_GROUP_LABELS[group]}</small>`;
+    cell.innerHTML = `<div>${group}</div><small>${OLD_GROUP_LABELS[group] || ''}</small>`;
     periodicGrid.appendChild(cell);
   }
 
@@ -149,17 +151,21 @@ function setActiveElementClass() {
 }
 
 function buildDetailPanel(element, animate = false) {
+  if (!element) return;
+
+  const groupLabel = OLD_GROUP_LABELS[element.group] ? ` (${OLD_GROUP_LABELS[element.group]})` : '';
+
   detailPanel.innerHTML = `
     <h2>${escapeHtml(element.name)} (${escapeHtml(element.symbol)})</h2>
     <div class="detail-grid">
-      <div class="label">Atomic Number</div><div>${element.atomicNumber}</div>
+      <div class="label">Atomic Number</div><div>${formatValue(element.atomicNumber)}</div>
       <div class="label">Symbol</div><div>${escapeHtml(element.symbol)}</div>
       <div class="label">Name</div><div>${escapeHtml(element.name)}</div>
-      <div class="label">Atomic Mass</div><div>${escapeHtml(String(element.atomicMass))}</div>
-      <div class="label">Group</div><div>${element.group} (${OLD_GROUP_LABELS[element.group]})</div>
-      <div class="label">Period</div><div>${element.period}</div>
-      <div class="label">Category</div><div>${escapeHtml(element.category)}</div>
-      <div class="label">Block</div><div>${escapeHtml(element.block)}</div>
+      <div class="label">Atomic Mass</div><div>${escapeHtml(String(element.atomicMass ?? 'Unknown'))}</div>
+      <div class="label">Group</div><div>${formatValue(element.group)}${groupLabel}</div>
+      <div class="label">Period</div><div>${formatValue(element.period)}</div>
+      <div class="label">Category</div><div>${escapeHtml(element.category || 'Unknown')}</div>
+      <div class="label">Block</div><div>${escapeHtml(element.block || 'Unknown')}</div>
       <div class="label">Electron Configuration</div><div>${electronConfigToHtml(element.electronConfiguration)}</div>
       <div class="label">Electronegativity (Pauling)</div><div>${formatValue(element.electronegativity)}</div>
       <div class="label">Melting Point</div><div>${formatValue(element.meltingPoint, ' °C')}</div>
@@ -175,8 +181,22 @@ function getElementFromTile(tile) {
   return elementsByAtomicNumber.get(Number(tile.dataset.atomicNumber)) || null;
 }
 
+function getDefaultDetailElement() {
+  return allElements[0] || null;
+}
+
+function restoreDetailPanel() {
+  if (lockedElement) {
+    buildDetailPanel(lockedElement);
+    return;
+  }
+
+  const fallbackElement = getDefaultDetailElement();
+  if (fallbackElement) buildDetailPanel(fallbackElement);
+}
+
 function handleTileHover(tile) {
-  if (lockedElement !== null) return;
+  if (lockedElement) return;
   const element = getElementFromTile(tile);
   if (!element) return;
   buildDetailPanel(element);
@@ -189,6 +209,7 @@ function handleTileClick(tile) {
   if (lockedElement && lockedElement.atomicNumber === element.atomicNumber) {
     lockedElement = null;
     setActiveElementClass();
+    restoreDetailPanel();
     return;
   }
 
@@ -196,26 +217,32 @@ function handleTileClick(tile) {
   buildDetailPanel(element, true);
   setActiveElementClass();
 }
-function renderElements(elements) {
-  buildGridSkeleton();
 
+function getFilteredElements(elements) {
   const query = searchInput.value.trim().toLowerCase();
   const category = categoryFilter.value;
-  const filtered = elements.filter((element) => {
+
+  return elements.filter((element) => {
     const matchesSearch =
       query.length === 0 ||
       element.name.toLowerCase().includes(query) ||
       element.symbol.toLowerCase().includes(query) ||
       String(element.atomicNumber).includes(query);
     const matchesCategory = category === 'all' || element.category === category;
+
     return matchesSearch && matchesCategory;
   });
+}
 
+function renderElements(elements) {
+  buildGridSkeleton();
+
+  const filtered = getFilteredElements(elements);
   const visibleAtomicNumbers = new Set(filtered.map((element) => element.atomicNumber));
+
   if (lockedElement && !visibleAtomicNumbers.has(lockedElement.atomicNumber)) {
     lockedElement = null;
   }
-
 
   for (const element of filtered) {
     const { row, col } = displayPosition(element);
@@ -228,43 +255,33 @@ function renderElements(elements) {
     tile.dataset.symbol = element.symbol;
     tile.dataset.name = element.name;
     tile.dataset.category = element.category;
+    tile.setAttribute('aria-label', `${element.name} (${element.symbol}), atomic number ${element.atomicNumber}`);
+
     tile.innerHTML = `
       <span class="atomic-number">${element.atomicNumber}</span>
       <span class="symbol">${escapeHtml(element.symbol)}</span>
       <span class="name">${escapeHtml(element.name)}</span>
-      <span class="mass">${escapeHtml(String(element.atomicMass))}</span>
+      <span class="mass">${escapeHtml(String(element.atomicMass ?? 'Unknown'))}</span>
     `;
-
-    tile.addEventListener('mouseenter', () => {
-      if (lockedElement === null) {
-        buildDetailPanel(element);
-      }
-    });
-
-    tile.addEventListener('focus', () => {
-      if (lockedElement === null) {
-        buildDetailPanel(element);
-      }
-    });
-
-    tile.addEventListener('click', () => {
-      if (lockedElement && lockedElement.atomicNumber === element.atomicNumber) {
-        lockedElement = null;
-        tile.classList.remove('active-element');
-        return;
-      }
-
-      lockedElement = element;
-      buildDetailPanel(element, true);
-      setActiveElementClass();
-    });
 
     periodicGrid.appendChild(tile);
   }
 
   setActiveElementClass();
   countInfo.textContent = `${filtered.length} / ${elements.length} elements shown`;
+
+  if (filtered.length === 0) {
+    detailPanel.innerHTML = '<h2>No elements found</h2><p>Try a different search keyword or category.</p>';
+    return;
+  }
+
+  if (lockedElement) {
+    buildDetailPanel(lockedElement);
+  } else {
+    buildDetailPanel(filtered[0]);
+  }
 }
+
 function bindGridInteractions() {
   periodicGrid.addEventListener('mouseover', (event) => {
     const tile = event.target.closest('.element');
@@ -278,10 +295,13 @@ function bindGridInteractions() {
     handleTileHover(tile);
   });
 
+  periodicGrid.addEventListener('mouseleave', () => {
+    if (!lockedElement) restoreDetailPanel();
+  });
+
   periodicGrid.addEventListener('click', (event) => {
     const tile = event.target.closest('.element');
     if (!tile || !periodicGrid.contains(tile)) return;
-    if (event.button !== 0) return;
     handleTileClick(tile);
   });
 }
@@ -291,16 +311,29 @@ async function initPeriodicTable() {
     return;
   }
 
-  const response = await fetch('periodic-data.json', { cache: 'no-store' });
-  const elements = await response.json();
- elementsByAtomicNumber = new Map(elements.map((element) => [element.atomicNumber, element]));
+  try {
+    const response = await fetch('periodic-data.json', { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`Unable to load data (${response.status})`);
+    }
 
-  bindGridInteractions();
-  renderElements(elements);
-  buildDetailPanel(elements[0]);
+    const elements = await response.json();
+    if (!Array.isArray(elements) || elements.length === 0) {
+      throw new Error('Periodic data is empty or invalid.');
+    }
 
-  searchInput.addEventListener('input', () => renderElements(elements));
-  categoryFilter.addEventListener('change', () => renderElements(elements));
+    allElements = elements;
+    elementsByAtomicNumber = new Map(elements.map((element) => [element.atomicNumber, element]));
+
+    bindGridInteractions();
+    renderElements(elements);
+
+    searchInput.addEventListener('input', () => renderElements(elements));
+    categoryFilter.addEventListener('change', () => renderElements(elements));
+  } catch (error) {
+    detailPanel.innerHTML = `<h2>Could not load periodic table</h2><p>${escapeHtml(error.message)}</p>`;
+    countInfo.textContent = '0 / 0 elements shown';
+  }
 }
-
 initPeriodicTable();
+;
