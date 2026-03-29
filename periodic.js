@@ -50,7 +50,8 @@ function format(value, suffix='') {
   return value + suffix;
 }
 
-function capitalizeWords(str = '') {
+function capitalizeWords(str) {
+  if (!str) return '';
   return str.replace(/\b\w/g, c => c.toUpperCase());
 }
 
@@ -76,11 +77,8 @@ function getPosition(el) {
   }
   return { row: el.period + 1, col: el.group + 1 };
 }
-
 // ===== BUILD GRID =====
 function buildGridSkeleton() {
-  periodicGrid.innerHTML = '';
-
   // Corner
   const corner = document.createElement('div');
   corner.className = 'corner-cell';
@@ -95,7 +93,7 @@ function buildGridSkeleton() {
     cell.className = 'group-label';
     cell.style.gridRow = '1';
     cell.style.gridColumn = g + 1;
-    cell.innerHTML = `<div>${g}</div><small>${OLD_GROUP_LABELS[g]}</small>`;
+     cell.innerHTML = `<div>${g}</div><small>${OLD_GROUP_LABELS[g]}</small>`;
     periodicGrid.appendChild(cell);
   }
 
@@ -200,15 +198,7 @@ function bindEvents() {
     if (!tile || lockedElement) return;
 
     const el = elementsMap.get(Number(tile.dataset.id));
-    if (el) updateDetail(el);
-  });
 
-  // CLICK (LOCK)
-  periodicGrid.addEventListener('click', e => {
-    const tile = e.target.closest('.element');
-    if (!tile) return;
-
-    const el = elementsMap.get(Number(tile.dataset.id));
     if (!el) return;
 
     // toggle
