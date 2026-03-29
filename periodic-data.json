@@ -9,8 +9,8 @@
     "category": "nonmetal",
     "electronConfiguration": "1s¹",
     "electronegativity": 2.2,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -259.16,
+    "boilingPoint": -252.879,
     "block": "s"
   },
   {
@@ -23,8 +23,8 @@
     "category": "noble gas",
     "electronConfiguration": "1s²",
     "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -272.2,
+    "boilingPoint": -268.93,
     "block": "p"
   },
   {
@@ -37,8 +37,8 @@
     "category": "alkali metal",
     "electronConfiguration": "1s² 2s¹",
     "electronegativity": 0.98,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 180.54,
+    "boilingPoint": 1342,
     "block": "s"
   },
   {
@@ -51,8 +51,8 @@
     "category": "alkaline earth metal",
     "electronConfiguration": "1s² 2s²",
     "electronegativity": 1.57,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1287,
+    "boilingPoint": 2469,
     "block": "s"
   },
   {
@@ -65,8 +65,8 @@
     "category": "metalloid",
     "electronConfiguration": "1s² 2s² 2p¹",
     "electronegativity": 2.04,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 2075,
+    "boilingPoint": 4000,
     "block": "p"
   },
   {
@@ -79,8 +79,8 @@
     "category": "nonmetal",
     "electronConfiguration": "1s² 2s² 2p²",
     "electronegativity": 2.55,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 3549.85,
+    "boilingPoint": 3824.85,
     "block": "p"
   },
   {
@@ -93,8 +93,8 @@
     "category": "nonmetal",
     "electronConfiguration": "1s² 2s² 2p³",
     "electronegativity": 3.04,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -210.0,
+    "boilingPoint": -195.79,
     "block": "p"
   },
   {
@@ -107,8 +107,8 @@
     "category": "nonmetal",
     "electronConfiguration": "1s² 2s² 2p⁴",
     "electronegativity": 3.44,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -218.79,
+    "boilingPoint": -182.95,
     "block": "p"
   },
   {
@@ -121,8 +121,8 @@
     "category": "halogen",
     "electronConfiguration": "1s² 2s² 2p⁵",
     "electronegativity": 3.98,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -219.67,
+    "boilingPoint": -188.11,
     "block": "p"
   },
   {
@@ -135,8 +135,8 @@
     "category": "noble gas",
     "electronConfiguration": "1s² 2s² 2p⁶",
     "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -248.59,
+    "boilingPoint": -246.08,
     "block": "p"
   },
   {
@@ -149,8 +149,8 @@
     "category": "alkali metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s¹",
     "electronegativity": 0.93,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 97.72,
+    "boilingPoint": 883,
     "block": "s"
   },
   {
@@ -163,8 +163,8 @@
     "category": "alkaline earth metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s²",
     "electronegativity": 1.31,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 650,
+    "boilingPoint": 1091,
     "block": "s"
   },
   {
@@ -177,8 +177,8 @@
     "category": "post-transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p¹",
     "electronegativity": 1.61,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 660.32,
+    "boilingPoint": 2519,
     "block": "p"
   },
   {
@@ -191,8 +191,8 @@
     "category": "metalloid",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p²",
     "electronegativity": 1.9,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1414,
+    "boilingPoint": 3265,
     "block": "p"
   },
   {
@@ -205,8 +205,8 @@
     "category": "nonmetal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p³",
     "electronegativity": 2.19,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 44.15,
+    "boilingPoint": 280.5,
     "block": "p"
   },
   {
@@ -219,8 +219,8 @@
     "category": "nonmetal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁴",
     "electronegativity": 2.58,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 115.21,
+    "boilingPoint": 444.6,
     "block": "p"
   },
   {
@@ -233,8 +233,8 @@
     "category": "halogen",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁵",
     "electronegativity": 3.16,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -101.5,
+    "boilingPoint": -34.04,
     "block": "p"
   },
   {
@@ -247,8 +247,8 @@
     "category": "noble gas",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶",
     "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -189.34,
+    "boilingPoint": -185.85,
     "block": "p"
   },
   {
@@ -261,8 +261,8 @@
     "category": "alkali metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹",
     "electronegativity": 0.82,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 63.5,
+    "boilingPoint": 759,
     "block": "s"
   },
   {
@@ -275,8 +275,8 @@
     "category": "alkaline earth metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s²",
     "electronegativity": 1.0,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 842,
+    "boilingPoint": 1484,
     "block": "s"
   },
   {
@@ -289,8 +289,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹",
     "electronegativity": 1.36,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1541,
+    "boilingPoint": 2836,
     "block": "d"
   },
   {
@@ -303,8 +303,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d²",
     "electronegativity": 1.54,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1668,
+    "boilingPoint": 3287,
     "block": "d"
   },
   {
@@ -317,8 +317,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d³",
     "electronegativity": 1.63,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1910,
+    "boilingPoint": 3407,
     "block": "d"
   },
   {
@@ -331,8 +331,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁵ 4s¹",
     "electronegativity": 1.66,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1907,
+    "boilingPoint": 2671,
     "block": "d"
   },
   {
@@ -345,8 +345,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁵",
     "electronegativity": 1.55,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1246,
+    "boilingPoint": 2061,
     "block": "d"
   },
   {
@@ -359,8 +359,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁶",
     "electronegativity": 1.83,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1538,
+    "boilingPoint": 2862,
     "block": "d"
   },
   {
@@ -373,8 +373,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁷",
     "electronegativity": 1.88,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1495,
+    "boilingPoint": 2927,
     "block": "d"
   },
   {
@@ -387,8 +387,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁸",
     "electronegativity": 1.91,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1455,
+    "boilingPoint": 2913,
     "block": "d"
   },
   {
@@ -401,8 +401,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹⁰ 4s¹",
     "electronegativity": 1.9,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1084.62,
+    "boilingPoint": 2562,
     "block": "d"
   },
   {
@@ -415,8 +415,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰",
     "electronegativity": 1.65,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 419.53,
+    "boilingPoint": 907,
     "block": "d"
   },
   {
@@ -429,8 +429,8 @@
     "category": "post-transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p¹",
     "electronegativity": 1.81,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 29.76,
+    "boilingPoint": 2403,
     "block": "p"
   },
   {
@@ -443,8 +443,8 @@
     "category": "metalloid",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p²",
     "electronegativity": 2.01,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 938.25,
+    "boilingPoint": 2820,
     "block": "p"
   },
   {
@@ -471,8 +471,8 @@
     "category": "nonmetal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁴",
     "electronegativity": 2.55,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 221,
+    "boilingPoint": 685,
     "block": "p"
   },
   {
@@ -485,8 +485,8 @@
     "category": "halogen",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁵",
     "electronegativity": 2.96,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -7.2,
+    "boilingPoint": 58.8,
     "block": "p"
   },
   {
@@ -499,8 +499,8 @@
     "category": "noble gas",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶",
     "electronegativity": 3.0,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -157.36,
+    "boilingPoint": -153.22,
     "block": "p"
   },
   {
@@ -513,8 +513,8 @@
     "category": "alkali metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s¹",
     "electronegativity": 0.82,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 39.31,
+    "boilingPoint": 688,
     "block": "s"
   },
   {
@@ -527,8 +527,8 @@
     "category": "alkaline earth metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s²",
     "electronegativity": 0.95,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 777,
+    "boilingPoint": 1382,
     "block": "s"
   },
   {
@@ -541,8 +541,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹",
     "electronegativity": 1.22,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1526,
+    "boilingPoint": 3345,
     "block": "d"
   },
   {
@@ -555,8 +555,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d²",
     "electronegativity": 1.33,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1855,
+    "boilingPoint": 4409,
     "block": "d"
   },
   {
@@ -569,8 +569,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 4d⁴ 5s¹",
     "electronegativity": 1.6,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 2477,
+    "boilingPoint": 4744,
     "block": "d"
   },
   {
@@ -583,8 +583,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 4d⁵ 5s¹",
     "electronegativity": 2.16,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 2623,
+    "boilingPoint": 4639,
     "block": "d"
   },
   {
@@ -597,8 +597,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d⁵",
     "electronegativity": 1.9,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 2157,
+    "boilingPoint": 4265,
     "block": "d"
   },
   {
@@ -611,8 +611,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 4d⁷ 5s¹",
     "electronegativity": 2.2,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 2334,
+    "boilingPoint": 4150,
     "block": "d"
   },
   {
@@ -625,8 +625,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 4d⁸ 5s¹",
     "electronegativity": 2.28,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1964,
+    "boilingPoint": 3695,
     "block": "d"
   },
   {
@@ -639,8 +639,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 4d¹⁰",
     "electronegativity": 2.2,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1554.9,
+    "boilingPoint": 2963,
     "block": "d"
   },
   {
@@ -653,8 +653,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 4d¹⁰ 5s¹",
     "electronegativity": 1.93,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 961.78,
+    "boilingPoint": 2162,
     "block": "d"
   },
   {
@@ -667,8 +667,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰",
     "electronegativity": 1.69,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 321.07,
+    "boilingPoint": 767,
     "block": "d"
   },
   {
@@ -681,8 +681,8 @@
     "category": "post-transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p¹",
     "electronegativity": 1.78,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 156.6,
+    "boilingPoint": 2072,
     "block": "p"
   },
   {
@@ -695,8 +695,8 @@
     "category": "post-transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p²",
     "electronegativity": 1.96,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 231.93,
+    "boilingPoint": 2602,
     "block": "p"
   },
   {
@@ -709,8 +709,8 @@
     "category": "metalloid",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p³",
     "electronegativity": 2.05,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 630.63,
+    "boilingPoint": 1587,
     "block": "p"
   },
   {
@@ -723,8 +723,8 @@
     "category": "metalloid",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁴",
     "electronegativity": 2.1,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 449.51,
+    "boilingPoint": 988,
     "block": "p"
   },
   {
@@ -737,8 +737,8 @@
     "category": "halogen",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁵",
     "electronegativity": 2.66,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 113.7,
+    "boilingPoint": 184.3,
     "block": "p"
   },
   {
@@ -751,8 +751,8 @@
     "category": "noble gas",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶",
     "electronegativity": 2.6,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -111.75,
+    "boilingPoint": -108.12,
     "block": "p"
   },
   {
@@ -765,8 +765,8 @@
     "category": "alkali metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s¹",
     "electronegativity": 0.79,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 28.44,
+    "boilingPoint": 671,
     "block": "s"
   },
   {
@@ -779,8 +779,8 @@
     "category": "alkaline earth metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s²",
     "electronegativity": 0.89,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 727,
+    "boilingPoint": 1870,
     "block": "s"
   },
   {
@@ -793,8 +793,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 5d¹ 6s²",
     "electronegativity": 1.1,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 920,
+    "boilingPoint": 3464,
     "block": "f"
   },
   {
@@ -807,8 +807,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 4f¹ 5d¹ 6s²",
     "electronegativity": 1.12,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 798,
+    "boilingPoint": 3443,
     "block": "f"
   },
   {
@@ -821,8 +821,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f³",
     "electronegativity": 1.13,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 931,
+    "boilingPoint": 3520,
     "block": "f"
   },
   {
@@ -835,8 +835,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f⁴",
     "electronegativity": 1.14,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1024,
+    "boilingPoint": 3074,
     "block": "f"
   },
   {
@@ -849,8 +849,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f⁵",
     "electronegativity": 1.13,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1042,
+    "boilingPoint": 3000,
     "block": "f"
   },
   {
@@ -863,8 +863,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f⁶",
     "electronegativity": 1.17,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1072,
+    "boilingPoint": 1794,
     "block": "f"
   },
   {
@@ -877,8 +877,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f⁷",
     "electronegativity": 1.2,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 822,
+    "boilingPoint": 1529,
     "block": "f"
   },
   {
@@ -891,8 +891,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 4f⁷ 5d¹ 6s²",
     "electronegativity": 1.2,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1313,
+    "boilingPoint": 3273,
     "block": "f"
   },
   {
@@ -905,8 +905,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f⁹",
     "electronegativity": 1.1,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1356,
+    "boilingPoint": 3230,
     "block": "f"
   },
   {
@@ -919,8 +919,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁰",
     "electronegativity": 1.22,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1412,
+    "boilingPoint": 2567,
     "block": "f"
   },
   {
@@ -933,8 +933,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹¹",
     "electronegativity": 1.23,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1474,
+    "boilingPoint": 2700,
     "block": "f"
   },
   {
@@ -947,8 +947,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹²",
     "electronegativity": 1.24,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1529,
+    "boilingPoint": 2868,
     "block": "f"
   },
   {
@@ -961,8 +961,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹³",
     "electronegativity": 1.25,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1545,
+    "boilingPoint": 1950,
     "block": "f"
   },
   {
@@ -975,8 +975,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴",
     "electronegativity": 1.1,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 824,
+    "boilingPoint": 1196,
     "block": "f"
   },
   {
@@ -989,8 +989,8 @@
     "category": "lanthanide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹",
     "electronegativity": 1.27,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1663,
+    "boilingPoint": 3402,
     "block": "f"
   },
   {
@@ -1003,8 +1003,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d²",
     "electronegativity": 1.3,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 2233,
+    "boilingPoint": 4603,
     "block": "d"
   },
   {
@@ -1017,8 +1017,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d³",
     "electronegativity": 1.5,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 3017,
+    "boilingPoint": 5458,
     "block": "d"
   },
   {
@@ -1031,8 +1031,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d⁴",
     "electronegativity": 2.36,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 3422,
+    "boilingPoint": 5555,
     "block": "d"
   },
   {
@@ -1045,8 +1045,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d⁵",
     "electronegativity": 1.9,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 3186,
+    "boilingPoint": 5596,
     "block": "d"
   },
   {
@@ -1059,8 +1059,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d⁶",
     "electronegativity": 2.2,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 3033,
+    "boilingPoint": 5012,
     "block": "d"
   },
   {
@@ -1073,8 +1073,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d⁷",
     "electronegativity": 2.2,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 2446,
+    "boilingPoint": 4428,
     "block": "d"
   },
   {
@@ -1087,8 +1087,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 4f¹⁴ 5d⁹ 6s¹",
     "electronegativity": 2.28,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1768.3,
+    "boilingPoint": 3825,
     "block": "d"
   },
   {
@@ -1101,8 +1101,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 4f¹⁴ 5d¹⁰ 6s¹",
     "electronegativity": 2.54,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1064.18,
+    "boilingPoint": 2856,
     "block": "d"
   },
   {
@@ -1115,8 +1115,8 @@
     "category": "transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰",
     "electronegativity": 2.0,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -38.83,
+    "boilingPoint": 356.73,
     "block": "d"
   },
   {
@@ -1129,8 +1129,8 @@
     "category": "post-transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p¹",
     "electronegativity": 1.62,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 304,
+    "boilingPoint": 1473,
     "block": "p"
   },
   {
@@ -1143,8 +1143,8 @@
     "category": "post-transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p²",
     "electronegativity": 2.33,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 327.46,
+    "boilingPoint": 1749,
     "block": "p"
   },
   {
@@ -1157,8 +1157,8 @@
     "category": "post-transition metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p³",
     "electronegativity": 2.02,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 271.4,
+    "boilingPoint": 1564,
     "block": "p"
   },
   {
@@ -1171,8 +1171,8 @@
     "category": "metalloid",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁴",
     "electronegativity": 2.0,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 254,
+    "boilingPoint": 962,
     "block": "p"
   },
   {
@@ -1199,8 +1199,8 @@
     "category": "noble gas",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶",
     "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": -71,
+    "boilingPoint": -61.7,
     "block": "p"
   },
   {
@@ -1213,7 +1213,7 @@
     "category": "alkali metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s¹",
     "electronegativity": 0.7,
-    "meltingPoint": null,
+    "meltingPoint": 27,
     "boilingPoint": null,
     "block": "s"
   },
@@ -1227,8 +1227,8 @@
     "category": "alkaline earth metal",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s²",
     "electronegativity": 0.9,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 700,
+    "boilingPoint": 1737,
     "block": "s"
   },
   {
@@ -1241,8 +1241,8 @@
     "category": "actinide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 6d¹ 7s²",
     "electronegativity": 1.1,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1050,
+    "boilingPoint": 3200,
     "block": "f"
   },
   {
@@ -1255,8 +1255,8 @@
     "category": "actinide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 6d² 7s²",
     "electronegativity": 1.3,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1750,
+    "boilingPoint": 4788,
     "block": "f"
   },
   {
@@ -1269,7 +1269,7 @@
     "category": "actinide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 5f² 6d¹ 7s²",
     "electronegativity": 1.5,
-    "meltingPoint": null,
+    "meltingPoint": 1572,
     "boilingPoint": null,
     "block": "f"
   },
@@ -1283,8 +1283,8 @@
     "category": "actinide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 5f³ 6d¹ 7s²",
     "electronegativity": 1.38,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1132.2,
+    "boilingPoint": 4131,
     "block": "f"
   },
   {
@@ -1297,8 +1297,8 @@
     "category": "actinide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 5f⁴ 6d¹ 7s²",
     "electronegativity": 1.36,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 639,
+    "boilingPoint": 3902,
     "block": "f"
   },
   {
@@ -1311,8 +1311,8 @@
     "category": "actinide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f⁶",
     "electronegativity": 1.28,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 640,
+    "boilingPoint": 3228,
     "block": "f"
   },
   {
@@ -1325,8 +1325,8 @@
     "category": "actinide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f⁷",
     "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1176,
+    "boilingPoint": 2607,
     "block": "f"
   },
   {
@@ -1339,8 +1339,8 @@
     "category": "actinide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 5f⁷ 6d¹ 7s²",
     "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
+    "meltingPoint": 1345,
+    "boilingPoint": 3110,
     "block": "f"
   },
   {
@@ -1366,119 +1366,6 @@
     "period": 7,
     "category": "actinide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁰",
-    "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
-    "block": "f"
-  },
-  {
-    "atomicNumber": 99,
-    "symbol": "Es",
-    "name": "Einsteinium",
-    "atomicMass": "[252]",
-    "group": 3,
-    "period": 7,
-    "category": "actinide",
-    "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹¹",
-    "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
-    "block": "f"
-  },
-  {
-    "atomicNumber": 100,
-    "symbol": "Fm",
-    "name": "Fermium",
-    "atomicMass": "[257]",
-    "group": 3,
-    "period": 7,
-    "category": "actinide",
-    "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹²",
-    "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
-    "block": "f"
-  },
-  {
-    "atomicNumber": 101,
-    "symbol": "Md",
-    "name": "Mendelevium",
-    "atomicMass": "[258]",
-    "group": 3,
-    "period": 7,
-    "category": "actinide",
-    "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹³",
-    "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
-    "block": "f"
-  },
-  {
-    "atomicNumber": 102,
-    "symbol": "No",
-    "name": "Nobelium",
-    "atomicMass": "[259]",
-    "group": 3,
-    "period": 7,
-    "category": "actinide",
-    "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁴",
-    "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
-    "block": "f"
-  },
-  {
-    "atomicNumber": 103,
-    "symbol": "Lr",
-    "name": "Lawrencium",
-    "atomicMass": "[266]",
-    "group": 3,
-    "period": 7,
-    "category": "actinide",
-    "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 5f¹⁴ 7s² 7p¹",
-    "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
-    "block": "f"
-  },
-  {
-    "atomicNumber": 104,
-    "symbol": "Rf",
-    "name": "Rutherfordium",
-    "atomicMass": "[267]",
-    "group": 4,
-    "period": 7,
-    "category": "transition metal",
-    "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁴ 6d²",
-    "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
-    "block": "d"
-  },
-  {
-    "atomicNumber": 105,
-    "symbol": "Db",
-    "name": "Dubnium",
-    "atomicMass": "[268]",
-    "group": 5,
-    "period": 7,
-    "category": "transition metal",
-    "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁴ 6d³",
-    "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
-    "block": "d"
-  },
-  {
-    "atomicNumber": 106,
-    "symbol": "Sg",
-    "name": "Seaborgium",
-    "atomicMass": "[269]",
-    "group": 6,
-    "period": 7,
-    "category": "transition metal",
-    "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁴ 6d⁴",
-@@ -1629,26 +1629,26 @@
     "name": "Tennessine",
     "atomicMass": "[294]",
     "group": 17,
