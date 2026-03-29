@@ -1366,29 +1366,3 @@
     "period": 7,
     "category": "actinide",
     "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁰",
-    "name": "Tennessine",
-    "atomicMass": "[294]",
-    "group": 17,
-    "period": 7,
-    "category": "halogen",
-    "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁴ 6d¹⁰ 7p⁵",
-    "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
-    "block": "p"
-  },
-  {
-    "atomicNumber": 118,
-    "symbol": "Og",
-    "name": "Oganesson",
-    "atomicMass": "[294]",
-    "group": 18,
-    "period": 7,
-    "category": "noble gas",
-    "electronConfiguration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁴ 6d¹⁰ 7p⁶",
-    "electronegativity": null,
-    "meltingPoint": null,
-    "boilingPoint": null,
-    "block": "p"
-  }
-]
