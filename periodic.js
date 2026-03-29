@@ -67,6 +67,16 @@ function electronConfigToHtml(config='') {
   return result || 'Unknown';
 }
 
+function fitTextToBox(element) {
+  let fontSize = 14;
+  element.style.fontSize = fontSize + 'px';
+
+  while (element.scrollWidth > element.clientWidth && fontSize > 6) {
+    fontSize--;
+    element.style.fontSize = fontSize + 'px';
+  }
+}
+
 // ===== GRID POSITION =====
 function getPosition(el) {
   if (el.atomicNumber >= 57 && el.atomicNumber <= 71) {
@@ -172,13 +182,17 @@ function render() {
     tile.innerHTML = `
       <span class="atomic-number">${el.atomicNumber}</span>
       <strong class="symbol">${el.symbol}</strong>
-      <small class="name">${el.name}</small>
+      <small class="element-name">${el.name}</small>
     `;
 
     periodicGrid.appendChild(tile);
   });
 
   countInfo.textContent = `${filtered.length}/118`;
+
+  document.querySelectorAll('.element-name').forEach(el => {
+    fitTextToBox(el);
+  });
 
   // Reset lock nếu bị filter mất
   if (lockedElement && !filtered.find(e => e.atomicNumber === lockedElement.atomicNumber)) {
