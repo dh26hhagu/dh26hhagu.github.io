@@ -53,6 +53,7 @@ function format(value, suffix='') {
 function capitalizeWords(str = '') {
   return str.replace(/\b\w/g, c => c.toUpperCase());
 }
+
 function electronConfigToHtml(config='') {
   let result = '';
   for (let c of config) {
@@ -119,7 +120,7 @@ function updateDetail(el, animate=false) {
       <div>Atomic Number</div><div>${el.atomicNumber}</div>
       <div>Group</div><div>${el.group} (${OLD_GROUP_LABELS[el.group]})</div>
       <div>Period</div><div>${el.period}</div>
-<div>Category</div><div>${escapeHtml(capitalizeWords(el.category))}</div>
+      <div>Category</div><div>${escapeHtml(capitalizeWords(el.category))}</div>
       <div>Electron</div><div>${electronConfigToHtml(el.electronConfiguration)}</div>
       <div>Electronegativity</div><div>${format(el.electronegativity)}</div>
       <div>Melting</div><div>${format(el.meltingPoint,' °C')}</div>
