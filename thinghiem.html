@@ -6,14 +6,20 @@
     <title>Tổng hợp thí nghiệm</title>
     <style>
         :root {
-            --bg: #f3f6ff;
+            --bg: #eef2ff;
             --surface: #ffffff;
-            --primary: #1a5dcc;
-            --primary-600: #154aa4;
-            --text: #1e293b;
+            --surface-2: #f8faff;
+            --primary: #4f46e5;
+            --primary-2: #7c3aed;
+            --primary-soft: rgba(79, 70, 229, 0.14);
+            --text: #0f172a;
             --muted: #64748b;
-            --shadow: 0 18px 40px rgba(26, 93, 204, 0.15);
-            --radius: 18px;
+            --border: rgba(15, 23, 42, 0.08);
+            --shadow-sm: 0 10px 24px rgba(15, 23, 42, 0.08);
+            --shadow-md: 0 16px 36px rgba(79, 70, 229, 0.18);
+            --radius-xl: 24px;
+            --radius-lg: 18px;
+            --radius-md: 14px;
         }
 
         * {
@@ -22,14 +28,21 @@
             box-sizing: border-box;
         }
 
+        html,
+        body {
+            min-height: 100%;
+        }
+
         body {
             font-family: "Inter", "Segoe UI", Arial, sans-serif;
             color: var(--text);
             background:
-                radial-gradient(circle at top right, #dbe7ff 0%, #f3f6ff 45%),
-                var(--bg);
-            min-height: 100vh;
+                radial-gradient(circle at 10% 5%, #dbe5ff 0%, transparent 42%),
+                radial-gradient(circle at 90% 0%, #ede9fe 0%, transparent 36%),
+                linear-gradient(180deg, #f6f9ff 0%, var(--bg) 100%);
             line-height: 1.6;
+            opacity: 0;
+            animation: pageFade 0.7s ease forwards;
         }
 
         a {
@@ -38,40 +51,48 @@
         }
 
         .container {
-            width: min(1120px, 92vw);
+            width: min(1140px, 92vw);
             margin: 0 auto;
         }
 
-        header {
-            position: relative;
-            overflow: hidden;
-            isolation: isolate;
-        }
-
         .hero {
+            position: relative;
             min-height: 320px;
             display: grid;
             place-items: center;
             text-align: center;
-            background: linear-gradient(rgba(9, 34, 87, 0.58), rgba(9, 34, 87, 0.52)),
+            background: linear-gradient(130deg, rgba(46, 55, 170, 0.72), rgba(120, 60, 204, 0.62)),
                         url("hoahoc2.jpg") center/cover no-repeat;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(8, 15, 48, 0.48), transparent 35%);
+            z-index: -1;
         }
 
         .hero-content {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            border-radius: 24px;
-            padding: 2rem 2.4rem;
-            box-shadow: 0 16px 35px rgba(0, 0, 0, 0.18);
-            transform: translateY(12px);
+            width: min(860px, 92vw);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 40px rgba(10, 26, 81, 0.2);
+            padding: clamp(1.3rem, 2.8vw, 2rem) clamp(1rem, 3vw, 2.4rem);
+            transform: translateY(14px);
             opacity: 0;
-            animation: fadeUp 0.8s ease forwards;
+            animation: fadeUp 0.7s ease forwards;
+            animation-delay: 0.08s;
         }
 
         .hero h1 {
-            font-size: clamp(1.8rem, 4vw, 2.7rem);
-            color: var(--primary);
+            font-size: clamp(1.8rem, 4vw, 2.75rem);
+            line-height: 1.15;
+            color: #2d3db8;
             margin-bottom: 0.35rem;
         }
 
@@ -83,35 +104,46 @@
         .nav-wrap {
             position: sticky;
             top: 0;
-            z-index: 50;
-            background: rgba(255, 255, 255, 0.75);
+            z-index: 60;
+            background: rgba(255, 255, 255, 0.82);
+            border-bottom: 1px solid var(--border);
             backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
         }
 
         .navbar {
-            min-height: 76px;
+            min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
+            padding: 0.9rem 0;
         }
 
-        .brand {
+        .home-btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.5rem;
+            padding: 0.62rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(79, 70, 229, 0.26);
+            background: linear-gradient(125deg, #ffffff, #edf2ff);
+            color: #3442ad;
             font-weight: 700;
-            color: var(--primary);
-            letter-spacing: 0.2px;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.16);
         }
 
-        .brand-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #60a5fa, var(--primary));
-            box-shadow: 0 0 0 6px rgba(26, 93, 204, 0.12);
+        .home-btn:hover,
+        .home-btn:focus-visible {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 14px 26px rgba(79, 70, 229, 0.23);
+            border-color: rgba(79, 70, 229, 0.45);
+            outline: none;
+        }
+
+        .home-btn .arrow {
+            font-size: 1.03rem;
+            line-height: 1;
         }
 
         .nav-center {
@@ -128,7 +160,7 @@
         .nav-main {
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.32rem;
             padding: 0.65rem 0.95rem;
             border-radius: 12px;
             color: #334155;
@@ -138,7 +170,7 @@
 
         .nav-main:hover,
         .nav-main:focus-visible {
-            background: rgba(26, 93, 204, 0.1);
+            background: rgba(79, 70, 229, 0.1);
             color: var(--primary);
             transform: translateY(-1px);
             outline: none;
@@ -149,21 +181,26 @@
             background: transparent;
             color: var(--primary);
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             line-height: 1;
-            padding: 0.2rem;
+            padding: 0.25rem;
+            transition: transform 0.18s ease;
+        }
+
+        .nav-arrow[aria-expanded="true"] {
+            transform: rotate(180deg);
         }
 
         .nav-dropdown {
             display: none;
             position: absolute;
-            top: calc(100% + 8px);
+            top: calc(100% + 10px);
             left: 0;
             min-width: 190px;
-            border-radius: 14px;
+            border-radius: var(--radius-md);
             background: var(--surface);
-            border: 1px solid rgba(15, 23, 42, 0.08);
-            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
+            border: 1px solid var(--border);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
             overflow: hidden;
             transform-origin: top left;
             animation: dropdownIn 0.22s ease;
@@ -175,101 +212,139 @@
 
         .nav-dropdown a {
             display: block;
-            padding: 0.7rem 0.95rem;
+            padding: 0.72rem 0.95rem;
             font-weight: 500;
             color: #334155;
-            transition: background 0.2s ease;
+            transition: background 0.2s ease, color 0.2s ease;
         }
 
         .nav-dropdown a:hover,
         .nav-dropdown a:focus-visible {
-            background: #eef4ff;
+            background: #eef2ff;
             color: var(--primary);
             outline: none;
         }
 
         .nav-search {
-            flex: 0 1 300px;
+            flex: 0 1 320px;
+            position: relative;
         }
 
         .nav-search input {
             width: 100%;
             border: 1px solid rgba(100, 116, 139, 0.35);
             border-radius: 999px;
-            padding: 0.67rem 1rem;
+            padding: 0.72rem 1.1rem;
             font-size: 0.95rem;
             color: #0f172a;
             background: #fff;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
         }
 
         .nav-search input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(26, 93, 204, 0.14);
+            box-shadow: 0 0 0 4px var(--primary-soft), 0 10px 20px rgba(79, 70, 229, 0.15);
+            transform: translateY(-1px);
             outline: none;
         }
 
         main {
-            padding: 2.3rem 0 3rem;
+            padding: 2.2rem 0 3rem;
         }
 
-        .intro {
-            margin-bottom: 1.3rem;
-        }
-
-        .intro h2 {
-            color: var(--primary);
-            font-size: clamp(1.4rem, 2.5vw, 1.9rem);
-            margin-bottom: 0.45rem;
-        }
-
-        .intro p {
-            color: var(--muted);
-            max-width: 70ch;
+        .section-card {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            border-radius: var(--radius-xl);
+            backdrop-filter: blur(8px);
+            padding: clamp(1.1rem, 2vw, 1.4rem);
+            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.12);
         }
 
         .card-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 1.1rem;
-}
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-top: 0.2rem;
+        }
 
         .card {
-            display: block;
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 1.25rem 1.15rem;
-            border: 1px solid rgba(15, 23, 42, 0.06);
-            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.72rem;
+            background: linear-gradient(180deg, #ffffff, var(--surface-2));
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.26s ease, box-shadow 0.26s ease, border-color 0.26s ease;
+            overflow: hidden;
             opacity: 0;
             transform: translateY(10px);
-            animation: fadeUp 0.48s ease forwards;
+            animation: fadeUp 0.46s ease forwards;
+            min-height: 170px;
         }
 
         .card:hover,
         .card:focus-visible {
-            transform: translateY(-5px);
-            border-color: rgba(26, 93, 204, 0.3);
-            box-shadow: var(--shadow);
+            transform: translateY(-5px) scale(1.04);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(79, 70, 229, 0.35);
             outline: none;
         }
 
+        .card-thumb {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            display: block;
+            background: linear-gradient(135deg, #e0e7ff, #ede9fe);
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            padding: 1rem;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 0.34rem 0.62rem;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.72);
+            color: #fff;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.1px;
+            backdrop-filter: blur(4px);
+        }
+
         .card h3 {
-            color: #1d4fb7;
-            margin-bottom: 0.45rem;
-            font-size: 1.1rem;
+            color: #1e2f9a;
+            font-size: 1.03rem;
+            line-height: 1.35;
+            font-weight: 800;
+            margin: 0;
         }
 
         .card p {
             color: var(--muted);
-            font-size: 0.95rem;
+            font-size: 0.93rem;
+            margin: 0;
+        }
+
+        .card-channel {
+            color: #6b7280;
+            font-size: 0.84rem;
+            font-weight: 500;
         }
 
         .hidden-empty {
             color: var(--muted);
-            margin-top: 0.8rem;
+            margin-top: 1rem;
             font-size: 0.95rem;
             display: none;
         }
@@ -277,10 +352,16 @@
         footer {
             margin-top: 1rem;
             border-top: 1px solid rgba(100, 116, 139, 0.2);
-            padding: 1.2rem 0 1.6rem;
+            padding: 1.2rem 0 1.7rem;
             color: var(--muted);
             text-align: center;
             font-size: 0.9rem;
+        }
+
+        @keyframes pageFade {
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes fadeUp {
@@ -301,32 +382,26 @@
             }
         }
 
-        @media (max-width: 920px) {
+        @media (max-width: 930px) {
             .navbar {
                 flex-wrap: wrap;
                 justify-content: center;
-                padding: 0.9rem 0;
-            }
-
-            .brand {
-                width: 100%;
-                justify-content: center;
+                gap: 0.8rem;
             }
 
             .nav-search {
-                width: min(420px, 100%);
+                width: min(480px, 100%);
                 flex-basis: 100%;
             }
         }
 
         @media (max-width: 580px) {
             .hero {
-                min-height: 280px;
+                min-height: 270px;
             }
 
             .hero-content {
-                width: min(94vw, 560px);
-                padding: 1.5rem 1.2rem;
+                border-radius: 18px;
             }
 
             .nav-center {
@@ -337,6 +412,10 @@
                 left: 50%;
                 transform: translateX(-50%);
                 transform-origin: top center;
+            }
+
+            .card-container {
+                grid-template-columns: 1fr;
             }
 
             main {
@@ -350,7 +429,7 @@
 <body>
     <header>
         <div class="hero">
-            <div class="hero-content container">
+            <div class="hero-content">
                 <h1>Tổng hợp thí nghiệm Hóa học</h1>
                 <p>Kho tài liệu trực quan cho học sinh THPT theo từng khối lớp.</p>
             </div>
@@ -359,9 +438,9 @@
 
     <div class="nav-wrap">
         <nav class="container navbar" aria-label="Điều hướng chính">
-            <a href="index.html" class="brand" aria-label="Trang chủ thí nghiệm">
-                <span class="brand-dot" aria-hidden="true"></span>
-                Thí nghiệm THPT
+            <a href="index.html" class="home-btn" aria-label="Quay về trang chủ">
+                <span class="arrow" aria-hidden="true">←</span>
+                <span>Trang chủ</span>
             </a>
 
             <div class="nav-center">
@@ -384,7 +463,7 @@
     </div>
 
     <main class="container">
-        <section>
+        <section class="section-card">
             <div class="card-container" id="cardContainer"></div>
             <p class="hidden-empty" id="emptyMessage">Không tìm thấy nội dung phù hợp. Hãy thử từ khóa khác.</p>
         </section>
@@ -395,9 +474,8 @@
     </footer>
 
     <script>
-        // Dữ liệu hiển thị mặc định khi chưa gõ tìm kiếm
         const CATEGORY_DATA = [
-		{
+            {
                 title: "Toàn bộ thí nghiệm",
                 link: "toanbo.html"
             },
@@ -415,7 +493,6 @@
             }
         ];
 
-        // Hàm bỏ dấu tiếng Việt
         function removeVietnameseTones(str) {
             return (str || "")
                 .normalize("NFD")
@@ -432,8 +509,7 @@
                 .replace(/>/g, "&gt;");
         }
 
-        // Hàm vẽ thẻ kết quả
-        function renderCards(items, type = 'category') {
+        function renderCards(items, type = "category") {
             const container = document.getElementById("cardContainer");
             const emptyMessage = document.getElementById("emptyMessage");
 
@@ -449,7 +525,7 @@
             items.forEach((item, index) => {
                 const card = document.createElement("a");
                 card.className = "card";
-                card.style.animationDelay = `${index * 50}ms`; // Hiệu ứng load mượt mà
+                card.style.animationDelay = `${index * 55}ms`;
 
                 const destination = type === "experiment" ? (item.ytLink || item.link || "") : (item.link || "");
                 if (destination) {
@@ -463,47 +539,52 @@
                     card.target = "_blank";
                     card.rel = "noopener noreferrer";
                 }
-                
-                if (type === 'category') {
-                    // Cấu trúc thẻ dành cho hiển thị 3 lớp mặc định
+
+                if (type === "category") {
                     card.innerHTML = `
-                        <h3>${escapeHtml(item.title || "")}</h3>
-                        <p>${escapeHtml(item.description || "Khám phá nội dung theo từng lớp.")}</p>
+                        <div class="card-content">
+                            <h3>${escapeHtml(item.title || "")}</h3>
+                            <p>${escapeHtml(item.description || "Khám phá nội dung theo từng lớp.")}</p>
+                        </div>
                     `;
                 } else {
-                    // Cấu trúc thẻ dành cho kết quả tìm kiếm video từ file data.js
+                    const thumbnail = item.thumbnail || "";
+                    const channel = item.channel || "Kênh: Không rõ";
+                    const badge = item.badge || "Không rõ lớp";
                     card.innerHTML = `
-						<span style="background: #e91e63; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; float: right;">${escapeHtml(item.badge || "Không rõ lớp")}</span>
-                        <h3 style="text-align: left; margin-top: 10px; clear: both;">${escapeHtml(item.title || "Video thí nghiệm")}</h3>
-                        <p style="text-align: left; font-size: 14px; margin-top: 5px;">Nhấn để xem video tại trang ${escapeHtml(item.badge || "nguồn")}</p>
+                        <span class="card-badge">${escapeHtml(badge)}</span>
+                        ${thumbnail ? `<img class="card-thumb" src="${escapeHtml(thumbnail)}" alt="Thumbnail ${escapeHtml(item.title || "video")}" loading="lazy">` : ""}
+                        <div class="card-content">
+                            <h3>${escapeHtml(item.title || "Video thí nghiệm")}</h3>
+                            <p>Nhấn để xem video tại trang ${escapeHtml(badge)}</p>
+                            <p class="card-channel">${escapeHtml(channel)}</p>
+                        </div>
                     `;
                 }
+
                 container.appendChild(card);
             });
         }
 
-        // Xử lý logic tìm kiếm
         function searchExperiment(value) {
             const normalizedInput = removeVietnameseTones(value.trim());
-            // Nếu ô tìm kiếm trống, hiện lại danh mục mặc định
+
             if (!normalizedInput) {
-                renderCards(CATEGORY_DATA, 'category');
+                renderCards(CATEGORY_DATA, "category");
                 return;
             }
 
-            // Kiểm tra xem dữ liệu ALL_EXPERIMENTS từ file data.js đã được tải chưa
-            if (typeof ALL_EXPERIMENTS !== 'undefined') {
+            if (typeof ALL_EXPERIMENTS !== "undefined") {
                 const filtered = ALL_EXPERIMENTS.filter((item) => {
                     const normalizedText = removeVietnameseTones(`${item.title} ${item.keywords} ${item.badge}`);
                     return normalizedText.includes(normalizedInput);
                 });
-                renderCards(filtered, 'experiment');
+                renderCards(filtered, "experiment");
             } else {
                 console.error("Lỗi: Không tìm thấy dữ liệu ALL_EXPERIMENTS. Bạn hãy chắc chắn file data.js đã nằm cùng thư mục.");
             }
         }
 
-        // Xử lý bật/tắt menu dropdown
         const menuToggle = document.getElementById("menuToggle");
         const experimentMenu = document.getElementById("experimentMenu");
 
@@ -511,22 +592,22 @@
             event.stopPropagation();
             const isOpen = experimentMenu.classList.toggle("open");
             menuToggle.setAttribute("aria-expanded", String(isOpen));
+            experimentMenu.setAttribute("aria-hidden", String(!isOpen));
         });
 
         document.addEventListener("click", (event) => {
             if (!event.target.closest(".nav-item")) {
                 experimentMenu.classList.remove("open");
                 menuToggle.setAttribute("aria-expanded", "false");
+                experimentMenu.setAttribute("aria-hidden", "true");
             }
         });
 
-        // Lắng nghe thao tác gõ phím trên thanh tìm kiếm
         document.getElementById("searchInput").addEventListener("input", (event) => {
             searchExperiment(event.target.value);
         });
 
-        // Gọi hàm vẽ 3 thẻ Lớp 10, 11, 12 ngay khi tải trang lần đầu
-        renderCards(CATEGORY_DATA, 'category');
+        renderCards(CATEGORY_DATA, "category");
     </script>
     <script src="ui-enhance.js"></script>
 </body>
