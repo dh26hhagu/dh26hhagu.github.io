@@ -19,9 +19,10 @@ const CATEGORY_CLASS = {
   actinide: 'actinide'
 };
 
+const VALID_CATEGORIES = new Set(Object.keys(CATEGORY_CLASS));
 const SUPERSCRIPT_MAP = {
-  '⁰': '0','¹': '1','²': '2','³': '3','⁴': '4',
-  '⁵': '5','⁶': '6','⁷': '7','⁸': '8','⁹': '9'
+  '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4',
+  '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9'
 };
 
 // ===== DOM =====
@@ -35,29 +36,29 @@ const countInfo = document.getElementById('count-info');
 let elements = [];
 let elementsMap = new Map();
 let lockedElement = null;
+let hoveredTile = null;
 
 // ===== UTILS =====
 const escapeHtml = (str) =>
   String(str ?? '')
-    .replaceAll('&','&amp;')
-    .replaceAll('<','&lt;')
-    .replaceAll('>','&gt;')
-    .replaceAll('"','&quot;')
-    .replaceAll("'","&#39;");
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 
-function format(value, suffix='') {
+function format(value, suffix = '') {
   if (value === null || value === undefined || value === '') return 'Unknown';
-  return value + suffix;
+  return `${value}${suffix}`;
 }
 
 function capitalizeWords(str) {
-  if (!str) return '';
-  return str.replace(/\b\w/g, c => c.toUpperCase());
+  return (str || '').replace(/\b\w/g, c => c.toUpperCase());
 }
 
-function electronConfigToHtml(config='') {
+function electronConfigToHtml(config = '') {
   let result = '';
-  for (let c of config) {
+  for (const c of config) {
     if (SUPERSCRIPT_MAP[c]) {
       result += `<sup>${SUPERSCRIPT_MAP[c]}</sup>`;
     } else {
@@ -67,14 +68,73 @@ function electronConfigToHtml(config='') {
   return result || 'Unknown';
 }
 
-function fitTextToBox(element) {
-  let fontSize = 14;
-  element.style.fontSize = fontSize + 'px';
+function fitTextToBox(el) {
+  let size = 14;
+  el.style.fontSize = `${size}px`;
 
-  while (element.scrollWidth > element.clientWidth && fontSize > 6) {
-    fontSize--;
-    element.style.fontSize = fontSize + 'px';
+  while (el.scrollWidth > el.clientWidth && size > 6) {
+    size--;
+    el.style.fontSize = `${size}px`;
   }
+}
+
+function normalizeCategory(value) {
+  return String(value ?? '').trim().toLowerCase();
+}
+
+// ===== DATA VALIDATION =====
+function validateAndNormalizeData(rawData) {
+  if (!Array.isArray(rawData)) {
+    throw new Error('Invalid periodic-data.json format: expected an array.');
+  }
+
+  const numbers = new Set();
+  const normalized = rawData.map((item) => {
+    const entry = {
+      ...item,
+      category: normalizeCategory(item.category),
+      meltingPoint: item.meltingPoint ?? null,
+      boilingPoint: item.boilingPoint ?? null
+    };
+
+    if (!Number.isInteger(entry.atomicNumber) || entry.atomicNumber < 1 || entry.atomicNumber > 118) {
+      throw new Error(`Invalid atomicNumber: ${entry.atomicNumber}`);
+    }
+    if (numbers.has(entry.atomicNumber)) {
+      throw new Error(`Duplicate atomicNumber detected: ${entry.atomicNumber}`);
+    }
+    numbers.add(entry.atomicNumber);
+
+    if (!/^[A-Z][a-z]?$/.test(String(entry.symbol))) {
+      throw new Error(`Invalid symbol for atomic number ${entry.atomicNumber}: ${entry.symbol}`);
+    }
+    if (!/^[A-Za-z]+(?:[ -][A-Za-z]+)*$/.test(String(entry.name))) {
+      throw new Error(`Invalid name for atomic number ${entry.atomicNumber}: ${entry.name}`);
+    }
+    if (!(typeof entry.atomicMass === 'number' || typeof entry.atomicMass === 'string')) {
+      throw new Error(`Invalid atomicMass for atomic number ${entry.atomicNumber}`);
+    }
+    if (!(entry.group === null || (Number.isInteger(entry.group) && entry.group >= 1 && entry.group <= 18))) {
+      throw new Error(`Invalid group for atomic number ${entry.atomicNumber}: ${entry.group}`);
+    }
+    if (!Number.isInteger(entry.period) || entry.period < 1 || entry.period > 7) {
+      throw new Error(`Invalid period for atomic number ${entry.atomicNumber}: ${entry.period}`);
+    }
+    if (!['s', 'p', 'd', 'f'].includes(entry.block)) {
+      throw new Error(`Invalid block for atomic number ${entry.atomicNumber}: ${entry.block}`);
+    }
+    if (!VALID_CATEGORIES.has(entry.category)) {
+      throw new Error(`Invalid category for atomic number ${entry.atomicNumber}: ${entry.category}`);
+    }
+
+    return entry;
+  });
+
+  for (let i = 1; i <= 118; i += 1) {
+    if (!numbers.has(i)) throw new Error(`Missing atomicNumber ${i}`);
+  }
+
+  return normalized.sort((a, b) => a.atomicNumber - b.atomicNumber);
 }
 
 // ===== GRID POSITION =====
@@ -85,152 +145,215 @@ function getPosition(el) {
   if (el.atomicNumber >= 89 && el.atomicNumber <= 103) {
     return { row: 10, col: el.atomicNumber - 86 };
   }
+
+  if (el.group === null) return null;
+
   return { row: el.period + 1, col: el.group + 1 };
 }
+
 // ===== BUILD GRID =====
-function buildGridSkeleton() {
-  // Corner
+function buildGridSkeleton(fragment) {
   const corner = document.createElement('div');
   corner.className = 'corner-cell';
   corner.innerHTML = '<span>Period</span><span>Group</span>';
   corner.style.gridRow = '1';
   corner.style.gridColumn = '1';
-  periodicGrid.appendChild(corner);
+  fragment.appendChild(corner);
 
-  // Groups
-  for (let g = 1; g <= 18; g++) {
+  for (let g = 1; g <= 18; g += 1) {
     const cell = document.createElement('div');
     cell.className = 'group-label';
     cell.style.gridRow = '1';
-    cell.style.gridColumn = g + 1;
-     cell.innerHTML = `<div>${g}</div><small>${OLD_GROUP_LABELS[g]}</small>`;
-    periodicGrid.appendChild(cell);
+    cell.style.gridColumn = String(g + 1);
+    cell.innerHTML = `<div>${g}</div><small>${OLD_GROUP_LABELS[g]}</small>`;
+    fragment.appendChild(cell);
   }
 
-  // Periods
-  for (let p = 1; p <= 7; p++) {
+  for (let p = 1; p <= 7; p += 1) {
     const cell = document.createElement('div');
     cell.className = 'period-label';
-    cell.style.gridRow = p + 1;
+    cell.style.gridRow = String(p + 1);
     cell.style.gridColumn = '1';
-    cell.textContent = p;
-    periodicGrid.appendChild(cell);
+    cell.textContent = String(p);
+    fragment.appendChild(cell);
   }
+
+  const lanthanideLabel = document.createElement('div');
+  lanthanideLabel.className = 'f-block-label';
+  lanthanideLabel.style.gridRow = '9';
+  lanthanideLabel.style.gridColumn = '1';
+  lanthanideLabel.textContent = 'Lanthanides';
+  fragment.appendChild(lanthanideLabel);
+
+  const actinideLabel = document.createElement('div');
+  actinideLabel.className = 'f-block-label';
+  actinideLabel.style.gridRow = '10';
+  actinideLabel.style.gridColumn = '1';
+  actinideLabel.textContent = 'Actinides';
+  fragment.appendChild(actinideLabel);
 }
 
 // ===== DETAIL PANEL =====
-function updateDetail(el, animate=false) {
-  if (!el) return;
+function updateDetail(el, animate = false) {
+  if (!el) {
+    detailPanel.innerHTML = '<h2>No match</h2><p>Try another search/filter.</p>';
+    return;
+  }
+
+  const groupText = el.group ? `${el.group} (${OLD_GROUP_LABELS[el.group]})` : 'N/A';
 
   detailPanel.innerHTML = `
     <h2>${escapeHtml(el.name)} (${escapeHtml(el.symbol)})</h2>
     <div class="detail-grid">
-      <div>Atomic Number</div><div>${el.atomicNumber}</div>
-      <div>Group</div><div>${el.group} (${OLD_GROUP_LABELS[el.group]})</div>
-      <div>Period</div><div>${el.period}</div>
-      <div>Category</div><div>${escapeHtml(capitalizeWords(el.category))}</div>
-      <div>Electron</div><div>${electronConfigToHtml(el.electronConfiguration)}</div>
-      <div>Electronegativity</div><div>${format(el.electronegativity)}</div>
-      <div>Melting</div><div>${format(el.meltingPoint,' °C')}</div>
-      <div>Boiling</div><div>${format(el.boilingPoint,' °C')}</div>
+      <div class="label">Atomic Number</div><div>${el.atomicNumber}</div>
+      <div class="label">Group</div><div>${groupText}</div>
+      <div class="label">Period</div><div>${el.period}</div>
+      <div class="label">Block</div><div>${escapeHtml(el.block.toUpperCase())}</div>
+      <div class="label">Category</div><div>${escapeHtml(capitalizeWords(el.category))}</div>
+      <div class="label">Atomic Mass</div><div>${escapeHtml(String(el.atomicMass))}</div>
+      <div class="label">Electron</div><div>${electronConfigToHtml(el.electronConfiguration)}</div>
+      <div class="label">Electronegativity</div><div>${format(el.electronegativity)}</div>
+      <div class="label">Melting</div><div>${format(el.meltingPoint, ' °C')}</div>
+      <div class="label">Boiling</div><div>${format(el.boilingPoint, ' °C')}</div>
     </div>
   `;
 
   if (animate) {
-    detailPanel.classList.remove('fade');
+    detailPanel.classList.remove('panel-transition');
     void detailPanel.offsetWidth;
-    detailPanel.classList.add('fade');
+    detailPanel.classList.add('panel-transition');
   }
 }
 
-// ===== ACTIVE STYLE =====
 function updateActiveTile() {
-  document.querySelectorAll('.element')
-    .forEach(el => el.classList.remove('active'));
+  periodicGrid.querySelectorAll('.element.active').forEach((node) => node.classList.remove('active'));
 
   if (!lockedElement) return;
 
-  const tile = document.querySelector(
-    `[data-id="${lockedElement.atomicNumber}"]`
-  );
+  const tile = periodicGrid.querySelector(`[data-id="${lockedElement.atomicNumber}"]`);
   if (tile) tile.classList.add('active');
 }
 
-// ===== RENDER =====
+function setHoveredTile(tile) {
+  if (hoveredTile === tile) return;
+
+  if (hoveredTile) hoveredTile.classList.remove('hovered');
+  hoveredTile = tile || null;
+  if (hoveredTile) hoveredTile.classList.add('hovered');
+}
+
 function render() {
-  buildGridSkeleton();
+  const q = searchInput.value.trim().toLowerCase();
+  const c = categoryFilter.value;
 
-  const filtered = elements.filter(el => {
-    const q = searchInput.value.toLowerCase();
-    const c = categoryFilter.value;
-
-    return (
-      (!q || el.name.toLowerCase().includes(q) || el.symbol.toLowerCase().includes(q)) &&
-      (c === 'all' || el.category === c)
-    );
+  const filtered = elements.filter((el) => {
+    const searchable = `${el.atomicNumber} ${el.name.toLowerCase()} ${el.symbol.toLowerCase()}`;
+    const matchesText = !q || searchable.includes(q);
+    const matchesCategory = c === 'all' || el.category === c;
+    return matchesText && matchesCategory;
   });
 
-  filtered.forEach(el => {
+  const fragment = document.createDocumentFragment();
+  buildGridSkeleton(fragment);
+
+  filtered.forEach((el) => {
     const pos = getPosition(el);
+    if (!pos) return;
 
     const tile = document.createElement('button');
+    tile.type = 'button';
     tile.className = `element ${CATEGORY_CLASS[el.category] || ''}`;
-    tile.style.gridRow = pos.row;
-    tile.style.gridColumn = pos.col;
-    tile.dataset.id = el.atomicNumber;
+    tile.style.gridRow = String(pos.row);
+    tile.style.gridColumn = String(pos.col);
+    tile.dataset.id = String(el.atomicNumber);
 
     tile.innerHTML = `
       <span class="atomic-number">${el.atomicNumber}</span>
-      <strong class="symbol">${el.symbol}</strong>
-      <small class="element-name">${el.name}</small>
+      <strong class="symbol">${escapeHtml(el.symbol)}</strong>
+      <small class="element-name">${escapeHtml(el.name)}</small>
+      <small class="mass">${escapeHtml(String(el.atomicMass))}</small>
     `;
 
-    periodicGrid.appendChild(tile);
+    fragment.appendChild(tile);
   });
 
+  periodicGrid.replaceChildren(fragment);
   countInfo.textContent = `${filtered.length}/118`;
 
-  document.querySelectorAll('.element-name').forEach(el => {
-    fitTextToBox(el);
-  });
+  periodicGrid.querySelectorAll('.element-name, .mass').forEach((node) => fitTextToBox(node));
 
-  // Reset lock nếu bị filter mất
-  if (lockedElement && !filtered.find(e => e.atomicNumber === lockedElement.atomicNumber)) {
+  if (lockedElement && !filtered.some((e) => e.atomicNumber === lockedElement.atomicNumber)) {
     lockedElement = null;
   }
 
+  if (!lockedElement && filtered.length) {
+    updateDetail(filtered[0]);
+  } else {
+    updateDetail(lockedElement);
+  }
+
+  setHoveredTile(null);
   updateActiveTile();
-  updateDetail(lockedElement || filtered[0]);
 }
 
 // ===== EVENTS =====
 function bindEvents() {
-
-  // HOVER (mượt, không bug)
-  periodicGrid.addEventListener('pointerover', e => {
+  periodicGrid.addEventListener('mouseover', (e) => {
     const tile = e.target.closest('.element');
-    if (!tile || lockedElement) return;
+    if (!tile || !periodicGrid.contains(tile) || lockedElement) return;
+    setHoveredTile(tile);
 
     const el = elementsMap.get(Number(tile.dataset.id));
-
     if (!el) return;
 
-    // toggle
-    if (lockedElement && lockedElement.atomicNumber === el.atomicNumber) {
+    console.log('hover working', el);
+    updateDetail(el, true);
+  });
+
+  periodicGrid.addEventListener('mouseout', (e) => {
+    const tile = e.target.closest('.element');
+    if (!tile || !periodicGrid.contains(tile)) return;
+
+    const related = e.relatedTarget?.closest?.('.element');
+    if (related === tile) return;
+
+    setHoveredTile(null);
+    if (!lockedElement) {
+      const first = elements.find((entry) => {
+        const q = searchInput.value.trim().toLowerCase();
+        const c = categoryFilter.value;
+        const searchable = `${entry.atomicNumber} ${entry.name.toLowerCase()} ${entry.symbol.toLowerCase()}`;
+        return (!q || searchable.includes(q)) && (c === 'all' || entry.category === c);
+      });
+      updateDetail(first || null);
+    }
+  });
+
+  periodicGrid.addEventListener('click', (e) => {
+    const tile = e.target.closest('.element');
+    if (!tile || !periodicGrid.contains(tile)) return;
+
+    const el = elementsMap.get(Number(tile.dataset.id));
+    if (!el) return;
+
+    if (lockedElement?.atomicNumber === el.atomicNumber) {
       lockedElement = null;
+      tile.classList.remove('active', 'hovered');
+      setHoveredTile(null);
+      updateDetail(el, true);
     } else {
       lockedElement = el;
+      setHoveredTile(tile);
+      updateDetail(el, true);
     }
 
     updateActiveTile();
-    updateDetail(lockedElement || el, true);
   });
 
-  // SEARCH debounce
-  let t;
+  let debounce;
   searchInput.addEventListener('input', () => {
-    clearTimeout(t);
-    t = setTimeout(render, 120);
+    clearTimeout(debounce);
+    debounce = setTimeout(render, 120);
   });
 
   categoryFilter.addEventListener('change', render);
@@ -242,14 +365,13 @@ async function init() {
     const res = await fetch('periodic-data.json');
     const data = await res.json();
 
-    elements = data;
-    elementsMap = new Map(data.map(e => [e.atomicNumber, e]));
+    elements = validateAndNormalizeData(data);
+    elementsMap = new Map(elements.map((e) => [e.atomicNumber, e]));
 
     bindEvents();
     render();
-
   } catch (err) {
-    detailPanel.innerHTML = "Lỗi load dữ liệu";
+    detailPanel.innerHTML = '<h2>Failed to load data</h2><p>Check periodic-data.json structure.</p>';
     console.error(err);
   }
 }
