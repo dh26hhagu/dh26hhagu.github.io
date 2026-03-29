@@ -6,12 +6,14 @@
   <title>Periodic Table - 118 Elements</title>
   <style>
     :root {
-      --bg: #0f172a;
+      --bg: #020617;
+      --bg-soft: #0f172a;
       --panel: #111827;
       --text: #e5e7eb;
       --muted: #94a3b8;
       --line: #1f2937;
       --tile-text: #0f172a;
+      --radius: 12px;
     }
 
     * { box-sizing: border-box; }
@@ -19,7 +21,7 @@
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(circle at top, #111827 0%, #020617 60%);
+      background: radial-gradient(circle at top, #111827 0%, var(--bg) 60%);
       color: var(--text);
       min-height: 100vh;
     }
@@ -27,12 +29,12 @@
     .page {
       max-width: 1700px;
       margin: 0 auto;
-      padding: 20px;
+      padding: clamp(12px, 2vw, 22px);
     }
 
     h1 {
       margin: 0 0 6px;
-      font-size: clamp(1.5rem, 1.8vw, 2.2rem);
+      font-size: clamp(1.4rem, 2vw, 2.2rem);
       letter-spacing: 0.02em;
     }
 
@@ -58,7 +60,7 @@
       border-radius: 10px;
       padding: 10px 12px;
       font-size: 0.95rem;
-      min-width: 210px;
+      min-width: min(100%, 250px);
     }
 
     .legend {
@@ -78,6 +80,7 @@
       background: rgba(15, 23, 42, 0.7);
       color: var(--muted);
       font-size: 0.85rem;
+      white-space: nowrap;
     }
 
     .legend-swatch {
@@ -85,11 +88,12 @@
       height: 14px;
       border-radius: 4px;
       border: 1px solid rgba(255, 255, 255, 0.2);
+      flex: 0 0 14px;
     }
 
     .layout {
       display: grid;
-      grid-template-columns: 1fr 330px;
+      grid-template-columns: minmax(0, 1fr) 330px;
       gap: 16px;
       align-items: start;
     }
@@ -108,6 +112,7 @@
       grid-template-columns: 72px repeat(18, minmax(62px, 1fr));
       grid-template-rows: 48px repeat(7, 84px) 84px 84px;
       gap: 6px;
+      align-items: stretch;
     }
 
     .corner-cell,
@@ -115,7 +120,7 @@
     .period-label,
     .f-block-label {
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: var(--radius);
       background: rgba(15, 23, 42, 0.8);
       color: var(--muted);
       display: flex;
@@ -124,6 +129,8 @@
       text-align: center;
       font-size: 0.78rem;
       padding: 4px;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .corner-cell {
@@ -144,60 +151,64 @@
 
     .element {
       border: 1px solid rgba(255, 255, 255, 0.22);
-      border-radius: 10px;
+      border-radius: var(--radius);
       color: var(--tile-text);
       padding: 5px;
       display: grid;
       grid-template-rows: auto 1fr auto auto;
       align-items: center;
+      justify-items: center;
       text-align: center;
       cursor: pointer;
-      transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+      transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease, border-color 180ms ease;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
       overflow: hidden;
       position: relative;
       background: #e2e8f0;
+      width: 100%;
+      height: 100%;
+      pointer-events: auto;
+      user-select: none;
     }
 
     .element > * {
       width: 100%;
       margin: 0;
-      justify-self: center;
-      align-self: center;
-      text-align: center;
       min-width: 0;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
-    .element:hover,
+    .element.hovered,
     .element:focus-visible {
-      transform: scale(1.15);
+      transform: scale(1.1);
       z-index: 20;
       box-shadow: 0 14px 25px rgba(0, 0, 0, 0.4);
       filter: brightness(1.03);
       outline: none;
     }
 
-
-    .element.active-element {
+    .element.active {
       border-color: #f8fafc;
-     box-shadow: 0 0 0 2px rgba(248, 250, 252, 0.95), 0 0 24px rgba(56, 189, 248, 0.95), 0 0 36px rgba(59, 130, 246, 0.45);
-      transform: scale(1.1);
+      box-shadow: 0 0 0 2px rgba(248, 250, 252, 0.95), 0 0 24px rgba(56, 189, 248, 0.95), 0 0 36px rgba(59, 130, 246, 0.45);
+      transform: scale(1.08);
       z-index: 25;
-      animation: active-glow 260ms ease;
     }
 
-    .atomic-number { font-size: 0.7rem; font-weight: 700; }
-    .symbol { font-size: 1.4rem; font-weight: 800; line-height: 1; }
+    .atomic-number { font-size: clamp(0.62rem, 0.8vw, 0.72rem); font-weight: 700; }
+    .symbol { font-size: clamp(1.02rem, 1.6vw, 1.35rem); font-weight: 800; line-height: 1; }
     .element-name {
-      white-space: nowrap;
-      overflow: hidden;
-      text-align: center;
       display: block;
-      width: 100%;
-      max-width: 100%;
+      text-align: center;
       line-height: 1.1;
+      font-size: 0.8rem;
     }
-    .mass { font-size: 0.64rem; opacity: 0.9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .mass {
+      font-size: clamp(0.58rem, 0.8vw, 0.64rem);
+      opacity: 0.95;
+      text-overflow: clip;
+    }
 
     .alkali-metal { background: #fca5a5; }
     .alkaline-earth-metal { background: #fdba74; }
@@ -220,21 +231,18 @@
       min-height: 380px;
     }
 
-    .detail-panel h2 { margin-top: 0; margin-bottom: 10px; }
-    .detail-panel.panel-transition {
-      animation: panel-fade 220ms ease;
+    .detail-panel h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      overflow-wrap: anywhere;
     }
+
+    .detail-panel.panel-transition { animation: panel-fade 220ms ease; }
 
     @keyframes panel-fade {
       from { opacity: 0.6; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-     @keyframes active-glow {
-      from { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.0); }
-      to { box-shadow: 0 0 0 2px rgba(248, 250, 252, 0.95), 0 0 24px rgba(56, 189, 248, 0.95), 0 0 36px rgba(59, 130, 246, 0.45); }
-    }
-
 
     .detail-grid {
       display: grid;
@@ -243,7 +251,10 @@
       font-size: 0.9rem;
     }
 
-    .detail-grid .label { color: var(--muted); }
+    .detail-grid > div {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
 
     .count-info {
       margin-top: 8px;
@@ -255,27 +266,26 @@
       .layout { grid-template-columns: 1fr; }
       .detail-panel { position: static; }
     }
-    .element.active {
-  outline: 2px solid #fff;
-  transform: scale(1.1);
-  z-index: 10;
-}
-.fade {
-  animation: fade 0.2s;
-}
 
-@keyframes fade {
-  from { opacity: 0.6; }
-  to { opacity: 1; }
-}
+    @media (max-width: 860px) {
+      .periodic-grid {
+        min-width: 980px;
+        grid-template-columns: 62px repeat(18, minmax(46px, 1fr));
+        grid-template-rows: 40px repeat(7, 74px) 74px 74px;
+        gap: 4px;
+      }
+
+      .element {
+        border-radius: 9px;
+        padding: 4px;
+      }
+    }
   </style>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
   <main class="page">
     <h1>Periodic Table (IUPAC + Classical Groups)</h1>
     <p class="subtitle">118 elements with full detail panel, proper structure, f-block rows, and superscript electron configuration rendering.</p>
-
     <section class="toolbar" aria-label="Filter controls">
       <input id="search" type="search" placeholder="Search by name, symbol, or atomic number">
       <select id="category-filter">
@@ -292,7 +302,6 @@
         <option value="actinide">Actinide</option>
       </select>
     </section>
-
     <section class="legend" aria-label="Category legend">
       <div class="legend-item"><span class="legend-swatch alkali-metal"></span>Alkali metal</div>
       <div class="legend-item"><span class="legend-swatch alkaline-earth-metal"></span>Alkaline earth metal</div>
