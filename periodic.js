@@ -26,7 +26,7 @@ const SUPERSCRIPT_MAP = {
 };
 
 // ===== DOM =====
-const periodicGrid = document.getElementById('periodic-grid');
+const periodicGrid = document.getElementById('periodic-table');
 const detailPanel = document.getElementById('detail-panel');
 const searchInput = document.getElementById('search');
 const categoryFilter = document.getElementById('category-filter');
@@ -34,7 +34,6 @@ const countInfo = document.getElementById('count-info');
 
 // ===== STATE =====
 let elements = [];
-let elementsMap = new Map();
 let lockedElement = null;
 let hoveredTile = null;
 
@@ -80,6 +79,9 @@ function fitTextToBox(el) {
 
 function normalizeCategory(value) {
   return String(value ?? '').trim().toLowerCase();
+}
+function getElementData(atomicNumber) {
+  return elements.find((e) => e.atomicNumber == atomicNumber);
 }
 
 // ===== DATA VALIDATION =====
@@ -230,7 +232,7 @@ function updateActiveTile() {
 
   if (!lockedElement) return;
 
-  const tile = periodicGrid.querySelector(`[data-id="${lockedElement.atomicNumber}"]`);
+const tile = periodicGrid.querySelector(`[data-atomic-number="${lockedElement.atomicNumber}"]`);
   if (tile) tile.classList.add('active');
 }
 
@@ -265,7 +267,7 @@ function render() {
     tile.className = `element ${CATEGORY_CLASS[el.category] || ''}`;
     tile.style.gridRow = String(pos.row);
     tile.style.gridColumn = String(pos.col);
-    tile.dataset.id = String(el.atomicNumber);
+    tile.dataset.atomicNumber = String(el.atomicNumber);
 
     tile.innerHTML = `
       <span class="atomic-number">${el.atomicNumber}</span>
@@ -297,17 +299,43 @@ function render() {
 }
 
 // ===== EVENTS =====
+function handleHover(tile, data) {
+  if (!data) return;
+  if (lockedElement) return;
+
+  console.log('hover:', data.name);
+  setHoveredTile(tile);
+  updateDetail(data, true);
+}
+
+function handleClick(tile, data) {
+  if (!data) return;
+
+  if (lockedElement && lockedElement.atomicNumber === data.atomicNumber) {
+    lockedElement = null;
+    setHoveredTile(null);
+    tile.classList.remove('active');
+    const firstVisible = periodicGrid.querySelector('.element');
+    const firstData = firstVisible ? getElementData(firstVisible.dataset.atomicNumber) : null;
+    updateDetail(firstData || null, true);
+    console.log('lockedElement:', lockedElement);
+    updateActiveTile();
+    return;
+  }
+
+  lockedElement = data;
+  console.log('click lock:', data.name);
+  console.log('lockedElement:', lockedElement);
+  setHoveredTile(tile);
+  updateDetail(data, true);
+  updateActiveTile();
+}
 function bindEvents() {
   periodicGrid.addEventListener('mouseover', (e) => {
     const tile = e.target.closest('.element');
-    if (!tile || !periodicGrid.contains(tile) || lockedElement) return;
-    setHoveredTile(tile);
-
-    const el = elementsMap.get(Number(tile.dataset.id));
-    if (!el) return;
-
-    console.log('hover working', el);
-    updateDetail(el, true);
+     if (!tile || !periodicGrid.contains(tile)) return;
+    const data = getElementData(tile.dataset.atomicNumber);
+    handleHover(tile, data);
   });
 
   periodicGrid.addEventListener('mouseout', (e) => {
@@ -333,21 +361,8 @@ function bindEvents() {
     const tile = e.target.closest('.element');
     if (!tile || !periodicGrid.contains(tile)) return;
 
-    const el = elementsMap.get(Number(tile.dataset.id));
-    if (!el) return;
-
-    if (lockedElement?.atomicNumber === el.atomicNumber) {
-      lockedElement = null;
-      tile.classList.remove('active', 'hovered');
-      setHoveredTile(null);
-      updateDetail(el, true);
-    } else {
-      lockedElement = el;
-      setHoveredTile(tile);
-      updateDetail(el, true);
-    }
-
-    updateActiveTile();
+     const data = getElementData(tile.dataset.atomicNumber);
+    handleClick(tile, data);
   });
 
   let debounce;
@@ -366,8 +381,6 @@ async function init() {
     const data = await res.json();
 
     elements = validateAndNormalizeData(data);
-    elementsMap = new Map(elements.map((e) => [e.atomicNumber, e]));
-
     bindEvents();
     render();
   } catch (err) {
