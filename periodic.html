@@ -159,6 +159,15 @@
       background: #e2e8f0;
     }
 
+    .element > * {
+      width: 100%;
+      margin: 0;
+      justify-self: center;
+      align-self: center;
+      text-align: center;
+      min-width: 0;
+    }
+
     .element:hover,
     .element:focus-visible {
       transform: scale(1.15);
@@ -177,11 +186,21 @@
       animation: active-glow 260ms ease;
     }
 
-    .atomic-number { font-size: 0.7rem; font-weight: 700; justify-self: start; }
+     .atomic-number { font-size: 0.7rem; font-weight: 700; }
     .symbol { font-size: 1.4rem; font-weight: 800; line-height: 1; }
-    .name { font-size: 0.68rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .name {
+      font-size: clamp(0.5rem, 0.6vw, 0.68rem);
+      line-height: 1.1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      max-width: 100%;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
     .mass { font-size: 0.64rem; opacity: 0.9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
     .alkali-metal { background: #fca5a5; }
     .alkaline-earth-metal { background: #fdba74; }
     .transition-metal { background: #93c5fd; }
