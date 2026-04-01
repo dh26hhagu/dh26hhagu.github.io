@@ -20,9 +20,15 @@ const CATEGORY_CLASS = {
 };
 
 const VALID_CATEGORIES = new Set(Object.keys(CATEGORY_CLASS));
+const VALID_BLOCKS = new Set(['s', 'p', 'd', 'f']);
 const SUPERSCRIPT_MAP = {
   '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4',
   '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9'
+};
+const REQUIRED_NAMES_BY_ATOMIC_NUMBER = {
+  13: 'Aluminium',
+  16: 'Sulfur',
+  55: 'Cesium'
 };
 
 // ===== DOM =====
@@ -34,8 +40,11 @@ const countInfo = document.getElementById('count-info');
 
 // ===== STATE =====
 let elements = [];
-let lockedElement = null;
+let filteredElements = [];
+let elementByAtomicNumber = new Map();
+let lockedAtomicNumber = null;
 let hoveredTile = null;
+let searchDebounceId = null;
 
 // ===== UTILS =====
 const escapeHtml = (str) =>
@@ -46,42 +55,54 @@ const escapeHtml = (str) =>
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
 
-function format(value, suffix = '') {
+function formatValue(value, suffix = '') {
   if (value === null || value === undefined || value === '') return 'Unknown';
   return `${value}${suffix}`;
 }
 
 function capitalizeWords(str) {
-  return (str || '').replace(/\b\w/g, c => c.toUpperCase());
+  return String(str || '').replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 function electronConfigToHtml(config = '') {
-  let result = '';
-  for (const c of config) {
-    if (SUPERSCRIPT_MAP[c]) {
-      result += `<sup>${SUPERSCRIPT_MAP[c]}</sup>`;
-    } else {
-      result += escapeHtml(c);
-    }
-  }
-  return result || 'Unknown';
-}
-
-function fitTextToBox(el) {
-  let size = 14;
-  el.style.fontSize = `${size}px`;
-
-  while (el.scrollWidth > el.clientWidth && size > 6) {
-    size--;
-    el.style.fontSize = `${size}px`;
-  }
+  return String(config)
+    .split('')
+    .map((char) => (SUPERSCRIPT_MAP[char] ? `<sup>${SUPERSCRIPT_MAP[char]}</sup>` : escapeHtml(char)))
+    .join('') || 'Unknown';
 }
 
 function normalizeCategory(value) {
   return String(value ?? '').trim().toLowerCase();
 }
+
 function getElementData(atomicNumber) {
-  return elements.find((e) => e.atomicNumber == atomicNumber);
+  return elementByAtomicNumber.get(Number(atomicNumber)) || null;
+}
+
+function getCurrentFilters() {
+  return {
+    query: searchInput.value.trim().toLowerCase(),
+    category: categoryFilter.value
+  };
+}
+
+function getFilteredElements(filters = getCurrentFilters()) {
+  const { query, category } = filters;
+
+  return elements.filter((element) => {
+    const searchable = `${element.atomicNumber} ${element.name.toLowerCase()} ${element.symbol.toLowerCase()}`;
+    const matchesText = !query || searchable.includes(query);
+    const matchesCategory = category === 'all' || element.category === category;
+    return matchesText && matchesCategory;
+  });
+}
+
+function getFirstFilteredElement() {
+  return filteredElements[0] || null;
+}
+
+function getDetailTarget() {
+  return lockedAtomicNumber ? getElementData(lockedAtomicNumber) : getFirstFilteredElement();
 }
 
 // ===== DATA VALIDATION =====
@@ -90,10 +111,12 @@ function validateAndNormalizeData(rawData) {
     throw new Error('Invalid periodic-data.json format: expected an array.');
   }
 
-  const numbers = new Set();
-  const normalized = rawData.map((item) => {
+  const seenAtomicNumbers = new Set();
+  const normalizedData = rawData.map((item) => {
     const entry = {
       ...item,
+      name: String(item.name ?? '').trim(),
+      symbol: String(item.symbol ?? '').trim(),
       category: normalizeCategory(item.category),
       meltingPoint: item.meltingPoint ?? null,
       boilingPoint: item.boilingPoint ?? null
@@ -102,16 +125,19 @@ function validateAndNormalizeData(rawData) {
     if (!Number.isInteger(entry.atomicNumber) || entry.atomicNumber < 1 || entry.atomicNumber > 118) {
       throw new Error(`Invalid atomicNumber: ${entry.atomicNumber}`);
     }
-    if (numbers.has(entry.atomicNumber)) {
+    if (seenAtomicNumbers.has(entry.atomicNumber)) {
       throw new Error(`Duplicate atomicNumber detected: ${entry.atomicNumber}`);
     }
-    numbers.add(entry.atomicNumber);
+    seenAtomicNumbers.add(entry.atomicNumber);
 
-    if (!/^[A-Z][a-z]?$/.test(String(entry.symbol))) {
+    if (!/^[A-Z][a-z]?$/.test(entry.symbol)) {
       throw new Error(`Invalid symbol for atomic number ${entry.atomicNumber}: ${entry.symbol}`);
     }
-    if (!/^[A-Za-z]+(?:[ -][A-Za-z]+)*$/.test(String(entry.name))) {
+    if (!/^[A-Za-z]+(?:[ -][A-Za-z]+)*$/.test(entry.name)) {
       throw new Error(`Invalid name for atomic number ${entry.atomicNumber}: ${entry.name}`);
+    }
+    if (REQUIRED_NAMES_BY_ATOMIC_NUMBER[entry.atomicNumber] && REQUIRED_NAMES_BY_ATOMIC_NUMBER[entry.atomicNumber] !== entry.name) {
+      throw new Error(`Unexpected IUPAC name for atomic number ${entry.atomicNumber}: ${entry.name}`);
     }
     if (!(typeof entry.atomicMass === 'number' || typeof entry.atomicMass === 'string')) {
       throw new Error(`Invalid atomicMass for atomic number ${entry.atomicNumber}`);
@@ -122,7 +148,7 @@ function validateAndNormalizeData(rawData) {
     if (!Number.isInteger(entry.period) || entry.period < 1 || entry.period > 7) {
       throw new Error(`Invalid period for atomic number ${entry.atomicNumber}: ${entry.period}`);
     }
-    if (!['s', 'p', 'd', 'f'].includes(entry.block)) {
+    if (!VALID_BLOCKS.has(entry.block)) {
       throw new Error(`Invalid block for atomic number ${entry.atomicNumber}: ${entry.block}`);
     }
     if (!VALID_CATEGORIES.has(entry.category)) {
@@ -132,28 +158,29 @@ function validateAndNormalizeData(rawData) {
     return entry;
   });
 
-  for (let i = 1; i <= 118; i += 1) {
-    if (!numbers.has(i)) throw new Error(`Missing atomicNumber ${i}`);
+  for (let atomicNumber = 1; atomicNumber <= 118; atomicNumber += 1) {
+    if (!seenAtomicNumbers.has(atomicNumber)) {
+      throw new Error(`Missing atomicNumber ${atomicNumber}`);
+    }
   }
 
-  return normalized.sort((a, b) => a.atomicNumber - b.atomicNumber);
+  return normalizedData.sort((a, b) => a.atomicNumber - b.atomicNumber);
 }
 
 // ===== GRID POSITION =====
-function getPosition(el) {
-  if (el.atomicNumber >= 57 && el.atomicNumber <= 71) {
-    return { row: 9, col: el.atomicNumber - 54 };
+function getPosition(element) {
+  if (element.atomicNumber >= 57 && element.atomicNumber <= 71) {
+    return { row: 9, col: element.atomicNumber - 54 };
   }
-  if (el.atomicNumber >= 89 && el.atomicNumber <= 103) {
-    return { row: 10, col: el.atomicNumber - 86 };
+  if (element.atomicNumber >= 89 && element.atomicNumber <= 103) {
+    return { row: 10, col: element.atomicNumber - 86 };
   }
+  if (element.group === null) return null;
 
-  if (el.group === null) return null;
-
-  return { row: el.period + 1, col: el.group + 1 };
+  return { row: element.period + 1, col: element.group + 1 };
 }
 
-// ===== BUILD GRID =====
+// ===== BUILDERS =====
 function buildGridSkeleton(fragment) {
   const corner = document.createElement('div');
   corner.className = 'corner-cell';
@@ -162,21 +189,21 @@ function buildGridSkeleton(fragment) {
   corner.style.gridColumn = '1';
   fragment.appendChild(corner);
 
-  for (let g = 1; g <= 18; g += 1) {
+  for (let group = 1; group <= 18; group += 1) {
     const cell = document.createElement('div');
     cell.className = 'group-label';
     cell.style.gridRow = '1';
-    cell.style.gridColumn = String(g + 1);
-    cell.innerHTML = `<div>${g}</div><small>${OLD_GROUP_LABELS[g]}</small>`;
+    cell.style.gridColumn = String(group + 1);
+    cell.innerHTML = `<div>${group}</div><small>${OLD_GROUP_LABELS[group]}</small>`;
     fragment.appendChild(cell);
   }
 
-  for (let p = 1; p <= 7; p += 1) {
+  for (let period = 1; period <= 7; period += 1) {
     const cell = document.createElement('div');
     cell.className = 'period-label';
-    cell.style.gridRow = String(p + 1);
+    cell.style.gridRow = String(period + 1);
     cell.style.gridColumn = '1';
-    cell.textContent = String(p);
+    cell.textContent = String(period);
     fragment.appendChild(cell);
   }
 
@@ -195,28 +222,50 @@ function buildGridSkeleton(fragment) {
   fragment.appendChild(actinideLabel);
 }
 
+function buildElementTile(element) {
+  const position = getPosition(element);
+  if (!position) return null;
+
+  const tile = document.createElement('button');
+  tile.type = 'button';
+  tile.className = `element ${CATEGORY_CLASS[element.category] || ''}`;
+  tile.style.gridRow = String(position.row);
+  tile.style.gridColumn = String(position.col);
+  tile.dataset.atomicNumber = String(element.atomicNumber);
+  tile.setAttribute('aria-label', `${element.name} (${element.symbol}), atomic number ${element.atomicNumber}`);
+
+  tile.innerHTML = `
+    <span class="atomic-number">${element.atomicNumber}</span>
+    <strong class="symbol">${escapeHtml(element.symbol)}</strong>
+    <small class="element-name" title="${escapeHtml(element.name)}">${escapeHtml(element.name)}</small>
+    <small class="mass" title="${escapeHtml(String(element.atomicMass))}">${escapeHtml(String(element.atomicMass))}</small>
+  `;
+
+  return tile;
+}
+
 // ===== DETAIL PANEL =====
-function updateDetail(el, animate = false) {
-  if (!el) {
+function updateDetailPanel(element, animate = false) {
+  if (!element) {
     detailPanel.innerHTML = '<h2>No match</h2><p>Try another search/filter.</p>';
     return;
   }
 
-  const groupText = el.group ? `${el.group} (${OLD_GROUP_LABELS[el.group]})` : 'N/A';
+  const groupText = element.group ? `${element.group} (${OLD_GROUP_LABELS[element.group]})` : 'N/A';
 
   detailPanel.innerHTML = `
-    <h2>${escapeHtml(el.name)} (${escapeHtml(el.symbol)})</h2>
+    <h2>${escapeHtml(element.name)} (${escapeHtml(element.symbol)})</h2>
     <div class="detail-grid">
-      <div class="label">Atomic Number</div><div>${el.atomicNumber}</div>
+      <div class="label">Atomic Number</div><div>${element.atomicNumber}</div>
       <div class="label">Group</div><div>${groupText}</div>
-      <div class="label">Period</div><div>${el.period}</div>
-      <div class="label">Block</div><div>${escapeHtml(el.block.toUpperCase())}</div>
-      <div class="label">Category</div><div>${escapeHtml(capitalizeWords(el.category))}</div>
-      <div class="label">Atomic Mass</div><div>${escapeHtml(String(el.atomicMass))}</div>
-      <div class="label">Electron</div><div>${electronConfigToHtml(el.electronConfiguration)}</div>
-      <div class="label">Electronegativity</div><div>${format(el.electronegativity)}</div>
-      <div class="label">Melting</div><div>${format(el.meltingPoint, ' °C')}</div>
-      <div class="label">Boiling</div><div>${format(el.boilingPoint, ' °C')}</div>
+      <div class="label">Period</div><div>${element.period}</div>
+      <div class="label">Block</div><div>${escapeHtml(element.block.toUpperCase())}</div>
+      <div class="label">Category</div><div>${escapeHtml(capitalizeWords(element.category))}</div>
+      <div class="label">Atomic Mass</div><div>${escapeHtml(String(element.atomicMass))}</div>
+      <div class="label">Electron</div><div>${electronConfigToHtml(element.electronConfiguration)}</div>
+      <div class="label">Electronegativity</div><div>${formatValue(element.electronegativity)}</div>
+      <div class="label">Melting</div><div>${formatValue(element.meltingPoint, ' °C')}</div>
+      <div class="label">Boiling</div><div>${formatValue(element.boilingPoint, ' °C')}</div>
     </div>
   `;
 
@@ -230,9 +279,9 @@ function updateDetail(el, animate = false) {
 function updateActiveTile() {
   periodicGrid.querySelectorAll('.element.active').forEach((node) => node.classList.remove('active'));
 
-  if (!lockedElement) return;
+  if (!lockedAtomicNumber) return;
 
-const tile = periodicGrid.querySelector(`[data-atomic-number="${lockedElement.atomicNumber}"]`);
+  const tile = periodicGrid.querySelector(`[data-atomic-number="${lockedAtomicNumber}"]`);
   if (tile) tile.classList.add('active');
 }
 
@@ -244,148 +293,119 @@ function setHoveredTile(tile) {
   if (hoveredTile) hoveredTile.classList.add('hovered');
 }
 
-function render() {
-  const q = searchInput.value.trim().toLowerCase();
-  const c = categoryFilter.value;
+// ===== RENDER =====
+function renderTable() {
+  console.log('render check');
 
-  const filtered = elements.filter((el) => {
-    const searchable = `${el.atomicNumber} ${el.name.toLowerCase()} ${el.symbol.toLowerCase()}`;
-    const matchesText = !q || searchable.includes(q);
-    const matchesCategory = c === 'all' || el.category === c;
-    return matchesText && matchesCategory;
-  });
+  filteredElements = getFilteredElements();
 
   const fragment = document.createDocumentFragment();
   buildGridSkeleton(fragment);
-
-  filtered.forEach((el) => {
-    const pos = getPosition(el);
-    if (!pos) return;
-
-    const tile = document.createElement('button');
-    tile.type = 'button';
-    tile.className = `element ${CATEGORY_CLASS[el.category] || ''}`;
-    tile.style.gridRow = String(pos.row);
-    tile.style.gridColumn = String(pos.col);
-    tile.dataset.atomicNumber = String(el.atomicNumber);
-
-    tile.innerHTML = `
-      <span class="atomic-number">${el.atomicNumber}</span>
-      <strong class="symbol">${escapeHtml(el.symbol)}</strong>
-      <small class="element-name">${escapeHtml(el.name)}</small>
-      <small class="mass">${escapeHtml(String(el.atomicMass))}</small>
-    `;
-
-    fragment.appendChild(tile);
+  filteredElements.forEach((element) => {
+    const tile = buildElementTile(element);
+    if (tile) fragment.appendChild(tile);
   });
 
   periodicGrid.replaceChildren(fragment);
-  countInfo.textContent = `${filtered.length}/118`;
+  countInfo.textContent = `${filteredElements.length}/118`;
 
-  periodicGrid.querySelectorAll('.element-name, .mass').forEach((node) => fitTextToBox(node));
-
-  if (lockedElement && !filtered.some((e) => e.atomicNumber === lockedElement.atomicNumber)) {
-    lockedElement = null;
-  }
-
-  if (!lockedElement && filtered.length) {
-    updateDetail(filtered[0]);
-  } else {
-    updateDetail(lockedElement);
+  if (lockedAtomicNumber && !filteredElements.some((element) => element.atomicNumber === lockedAtomicNumber)) {
+    lockedAtomicNumber = null;
   }
 
   setHoveredTile(null);
   updateActiveTile();
+  updateDetailPanel(getDetailTarget());
 }
 
 // ===== EVENTS =====
 function handleHover(tile, data) {
-  if (!data) return;
-  if (lockedElement) return;
+  if (!data || lockedAtomicNumber) return;
 
-  console.log('hover:', data.name);
+  console.log('hover event');
   setHoveredTile(tile);
-  updateDetail(data, true);
+  updateDetailPanel(data, true);
 }
 
 function handleClick(tile, data) {
   if (!data) return;
 
-  if (lockedElement && lockedElement.atomicNumber === data.atomicNumber) {
-    lockedElement = null;
+  console.log('click event');
+  if (lockedAtomicNumber === data.atomicNumber) {
+    lockedAtomicNumber = null;
     setHoveredTile(null);
     tile.classList.remove('active');
-    const firstVisible = periodicGrid.querySelector('.element');
-    const firstData = firstVisible ? getElementData(firstVisible.dataset.atomicNumber) : null;
-    updateDetail(firstData || null, true);
-    console.log('lockedElement:', lockedElement);
     updateActiveTile();
+    updateDetailPanel(getDetailTarget(), true);
     return;
   }
 
-  lockedElement = data;
-  console.log('click lock:', data.name);
-  console.log('lockedElement:', lockedElement);
+  lockedAtomicNumber = data.atomicNumber;
   setHoveredTile(tile);
-  updateDetail(data, true);
   updateActiveTile();
+  updateDetailPanel(data, true);
 }
-function bindEvents() {
-  periodicGrid.addEventListener('mouseover', (e) => {
-    const tile = e.target.closest('.element');
-     if (!tile || !periodicGrid.contains(tile)) return;
-    const data = getElementData(tile.dataset.atomicNumber);
-    handleHover(tile, data);
-  });
 
-  periodicGrid.addEventListener('mouseout', (e) => {
-    const tile = e.target.closest('.element');
+function bindEvents() {
+  periodicGrid.addEventListener('mouseover', (event) => {
+    const tile = event.target.closest('.element');
     if (!tile || !periodicGrid.contains(tile)) return;
 
-    const related = e.relatedTarget?.closest?.('.element');
-    if (related === tile) return;
+    handleHover(tile, getElementData(tile.dataset.atomicNumber));
+  });
+
+  periodicGrid.addEventListener('mouseout', (event) => {
+    const tile = event.target.closest('.element');
+    if (!tile || !periodicGrid.contains(tile)) return;
+
+    const relatedTile = event.relatedTarget?.closest?.('.element');
+    if (relatedTile === tile) return;
 
     setHoveredTile(null);
-    if (!lockedElement) {
-      const first = elements.find((entry) => {
-        const q = searchInput.value.trim().toLowerCase();
-        const c = categoryFilter.value;
-        const searchable = `${entry.atomicNumber} ${entry.name.toLowerCase()} ${entry.symbol.toLowerCase()}`;
-        return (!q || searchable.includes(q)) && (c === 'all' || entry.category === c);
-      });
-      updateDetail(first || null);
+    if (!lockedAtomicNumber) {
+      updateDetailPanel(getFirstFilteredElement());
     }
   });
 
-  periodicGrid.addEventListener('click', (e) => {
-    const tile = e.target.closest('.element');
+  periodicGrid.addEventListener('click', (event) => {
+    const tile = event.target.closest('.element');
     if (!tile || !periodicGrid.contains(tile)) return;
 
-     const data = getElementData(tile.dataset.atomicNumber);
-    handleClick(tile, data);
+    handleClick(tile, getElementData(tile.dataset.atomicNumber));
   });
 
-  let debounce;
+  periodicGrid.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+
+    const tile = event.target.closest('.element');
+    if (!tile || !periodicGrid.contains(tile)) return;
+
+    event.preventDefault();
+    handleClick(tile, getElementData(tile.dataset.atomicNumber));
+  });
+
   searchInput.addEventListener('input', () => {
-    clearTimeout(debounce);
-    debounce = setTimeout(render, 120);
+    clearTimeout(searchDebounceId);
+    searchDebounceId = setTimeout(renderTable, 120);
   });
 
-  categoryFilter.addEventListener('change', render);
+  categoryFilter.addEventListener('change', renderTable);
 }
 
 // ===== INIT =====
 async function init() {
   try {
-    const res = await fetch('periodic-data.json');
-    const data = await res.json();
+    const response = await fetch('periodic-data.json');
+    const data = await response.json();
 
     elements = validateAndNormalizeData(data);
+    elementByAtomicNumber = new Map(elements.map((element) => [element.atomicNumber, element]));
+
     bindEvents();
-    render();
-  } catch (err) {
+    renderTable();
+  } catch (error) {
     detailPanel.innerHTML = '<h2>Failed to load data</h2><p>Check periodic-data.json structure.</p>';
-    console.error(err);
+    console.error(error);
   }
 }
 
