@@ -131,6 +131,7 @@
       padding: 4px;
       white-space: nowrap;
       overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .corner-cell {
@@ -160,7 +161,7 @@
       justify-items: center;
       text-align: center;
       cursor: pointer;
-      transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease, border-color 180ms ease;
+      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease, border-color 160ms ease;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
       overflow: hidden;
       position: relative;
@@ -169,6 +170,7 @@
       height: 100%;
       pointer-events: auto;
       user-select: none;
+      touch-action: manipulation;
     }
 
     .element > * {
@@ -178,6 +180,7 @@
       line-height: 1;
       white-space: nowrap;
       overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .element.hovered,
@@ -202,12 +205,12 @@
       display: block;
       text-align: center;
       line-height: 1.1;
-      font-size: 0.8rem;
+      font-size: clamp(0.6rem, 0.9vw, 0.78rem);
     }
     .mass {
-      font-size: clamp(0.58rem, 0.8vw, 0.64rem);
+      font-size: clamp(0.52rem, 0.75vw, 0.64rem);
       opacity: 0.95;
-      text-overflow: clip;
+      text-overflow: ellipsis;
     }
 
     .alkali-metal { background: #fca5a5; }
@@ -233,28 +236,7 @@
 
     .detail-panel h2 {
       margin-top: 0;
-      margin-bottom: 10px;
-      overflow-wrap: anywhere;
-    }
-
-    .detail-panel.panel-transition { animation: panel-fade 220ms ease; }
-
-    @keyframes panel-fade {
-      from { opacity: 0.6; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: minmax(120px, 145px) 1fr;
-      gap: 6px 10px;
-      font-size: 0.9rem;
-    }
-
-    .detail-grid > div {
-      min-width: 0;
-      overflow-wrap: anywhere;
-    }
+@@ -258,50 +261,92 @@
 
     .count-info {
       margin-top: 8px;
@@ -280,6 +262,48 @@
         padding: 4px;
       }
     }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 10px;
+      }
+
+      .toolbar {
+        gap: 8px;
+      }
+
+      .toolbar input,
+      .toolbar select {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .legend {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .legend-item {
+        font-size: 0.75rem;
+        padding: 7px 8px;
+      }
+
+      .detail-panel {
+        min-height: auto;
+        padding: 12px;
+      }
+
+      .detail-grid {
+        grid-template-columns: minmax(92px, 120px) 1fr;
+        font-size: 0.82rem;
+      }
+
+      .periodic-grid {
+        min-width: 860px;
+        grid-template-columns: 56px repeat(18, minmax(40px, 1fr));
+        grid-template-rows: 38px repeat(7, 66px) 66px 66px;
+      }
+    }
+
   </style>
 </head>
 <body>
