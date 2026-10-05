@@ -202,8 +202,8 @@ const ALL_EXPERIMENTS = [
     {
         title: "Ảnh hưởng của nhiệt độ đến chuyển dịch cân bằng thủy phân Sodium Acetate",
         keywords: "anh huong cua nhiet do den chuyen dich can bang thuy phan sodium acetate ch3coona",
-        ytLink: "https://www.youtube.com/watch?v=JSt808aOVRM",
-        thumbnail: "https://img.youtube.com/vi/JSt808aOVRM/hqdefault.jpg",
+        ytLink: "https://www.youtube.com/watch?v=8cpvwJ8-B6I",
+        thumbnail: "https://img.youtube.com/vi/8cpvwJ8-B6I/hqdefault.jpg",
         channel: "Kênh: Edusmart",
         badge: "Lớp 11"
     },
@@ -234,8 +234,8 @@ const ALL_EXPERIMENTS = [
     {
         title: "Cách làm chất chỉ thị màu từ hoa đậu biếc/bắp cải tím",
         keywords: "cach lam chat chi thi mau tu hoa dau biec bap cai tim",
-        ytLink: "https://www.youtube.com/watch?v=P7bI_ZoN9Kw",
-        thumbnail: "https://img.youtube.com/vi/P7bI_ZoN9Kw/hqdefault.jpg",
+        ytLink: "https://www.youtube.com/watch?v=YknbC8_rTL4",
+        thumbnail: "https://img.youtube.com/vi/YknbC8_rTL4/hqdefault.jpg",
         channel: "Kênh: Edusmart",
         badge: "Lớp 11"
     },
