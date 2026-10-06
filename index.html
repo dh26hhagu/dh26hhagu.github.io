@@ -888,5 +888,135 @@
         renderCards(CATEGORY_DATA, "category");
     </script>
     <script src="ui-enhance.js"></script>
-</body>
+    <!-- Optional development diagnostic: add ?repository-check=1 to exercise the new repository. -->
+    <script type="module">
+        const repositoryCheckEnabled =
+            new URLSearchParams(window.location.search).get("repository-check") === "1";
+
+        document.documentElement.dataset.experimentRepositoryStatus =
+            repositoryCheckEnabled ? "loading" : "idle";
+
+        if (repositoryCheckEnabled) {
+            const statusNode = document.createElement("p");
+            statusNode.id = "experimentRepositoryStatus";
+            statusNode.className = "sr-only";
+            statusNode.setAttribute("role", "status");
+            statusNode.textContent = "Đang kiểm tra Repository…";
+            document.body.append(statusNode);
+
+            const assertCheck = (condition, label) => {
+                if (!condition) throw new Error(`Repository integration check failed: ${label}`);
+            };
+
+            const positionsFor = (items, youtubeId) =>
+                items.flatMap((item, index) =>
+                    item.experiment.youtubeId === youtubeId ? [index + 1] : []
+                );
+
+            try {
+                const repository = await import("./experiment-repository.js");
+                const data = await repository.load();
+
+                const [
+                    all,
+                    grade10,
+                    grade11,
+                    grade12,
+                    lop10,
+                    lop11,
+                    lop12,
+                    toanbo
+                ] = await Promise.all([
+                    repository.getAll(),
+                    repository.getByGrade(10),
+                    repository.getByGrade(11),
+                    repository.getByGrade(12),
+                    repository.getPageOccurrences("lop10"),
+                    repository.getPageOccurrences("lop11"),
+                    repository.getPageOccurrences("lop12"),
+                    repository.getPageOccurrences("toanbo")
+                ]);
+
+                assertCheck(data.videos.length === 81, "81 video assets");
+                assertCheck(all.length === 83, "83 experiments");
+                assertCheck(grade10.length === 23, "grade 10 experiment records");
+                assertCheck(grade11.length === 33, "grade 11 experiment records");
+                assertCheck(grade12.length === 27, "grade 12 experiment records");
+                assertCheck(lop10.length === 23, "lop10 page occurrences");
+                assertCheck(lop11.length === 37, "lop11 page occurrences");
+                assertCheck(lop12.length === 27, "lop12 page occurrences");
+                assertCheck(toanbo.length === 87, "toanbo page occurrences");
+
+                for (const item of [lop10, lop11, lop12, toanbo].flat()) {
+                    assertCheck(
+                        item.ytLink === `https://www.youtube.com/watch?v=${item.video.youtubeId}`,
+                        `YouTube URL for ${item.video.youtubeId}`
+                    );
+                    assertCheck(
+                        item.thumbnail === `https://img.youtube.com/vi/${item.video.youtubeId}/hqdefault.jpg`,
+                        `thumbnail URL for ${item.video.youtubeId}`
+                    );
+                    assertCheck(
+                        item.badge === `Lớp ${item.experiment.grade}`,
+                        `grade badge for ${item.experiment.id}`
+                    );
+                    assertCheck(typeof item.title === "string" && item.title.length > 0, "resolved title");
+                }
+
+                assertCheck(
+                    JSON.stringify(positionsFor(lop10, "cRMZ0HH6R0Q")) === JSON.stringify([8]),
+                    "cRMZ0HH6R0Q at lop10 #8"
+                );
+                assertCheck(
+                    JSON.stringify(positionsFor(lop11, "cRMZ0HH6R0Q")) === JSON.stringify([4]),
+                    "cRMZ0HH6R0Q at lop11 #4"
+                );
+                assertCheck(
+                    lop10[0].video.youtubeId === "Wuo8SachZYE" &&
+                    lop10[0].experiment.grade === 10 &&
+                    lop11[15].video.youtubeId === "Wuo8SachZYE" &&
+                    lop11[15].experiment.grade === 11 &&
+                    lop11[15].title === "Thí nghiệm tinh chế muối",
+                    "Wuo8SachZYE Grade 10 and HTML-only Grade 11 entries"
+                );
+
+                const expectedDuplicates = {
+                    "lUbu8zZ7RSs": [19, 23],
+                    "JXdy_RB7DyE": [20, 24],
+                    "mk9G-R-exkI": [21, 25],
+                    "0-Is2lVfuls": [22, 26]
+                };
+                for (const [youtubeId, expectedPositions] of Object.entries(expectedDuplicates)) {
+                    assertCheck(
+                        JSON.stringify(positionsFor(lop11, youtubeId)) === JSON.stringify(expectedPositions),
+                        `duplicate occurrences for ${youtubeId}`
+                    );
+                }
+
+                const zeroIs = lop11.filter((item) => item.video.youtubeId === "0-Is2lVfuls");
+                assertCheck(
+                    zeroIs.length === 2 &&
+                    zeroIs[0].title !== zeroIs[1].title &&
+                    zeroIs.every((item) => typeof item.titleOverride === "string"),
+                    "both 0-Is2lVfuls title variants and overrides"
+                );
+
+                document.documentElement.dataset.experimentRepositoryStatus = "loaded";
+                statusNode.textContent = "Repository PASS: 81 video, 83 experiment, occurrence 23/37/27/87.";
+                console.info("Experiment repository integration PASS", {
+                    videos: data.videos.length,
+                    experiments: all.length,
+                    lop10: lop10.length,
+                    lop11: lop11.length,
+                    lop12: lop12.length,
+                    toanbo: toanbo.length
+                });
+            } catch (error) {
+                document.documentElement.dataset.experimentRepositoryStatus = "error";
+                statusNode.textContent = "Repository ERROR: xem console để biết chi tiết.";
+                console.error("Experiment repository integration FAIL", error);
+            }
+        }
+    </script>
+    </body>
 </html>
