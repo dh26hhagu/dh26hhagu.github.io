@@ -190,52 +190,8 @@
     </style>
     <link rel="stylesheet" href="ui-system.css">
 </head>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const videos = document.querySelectorAll(".video-card");
-    document.getElementById("resultCount").textContent = videos.length;
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const videos = document.querySelectorAll(".video-card");
-    const searchInput = document.getElementById("searchInput");
-    const resultCount = document.getElementById("resultCount");
 
-    // Hàm bỏ dấu tiếng Việt
-    function removeVietnameseTones(str) {
-        return str
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/đ/g, "d")
-            .replace(/Đ/g, "D")
-            .toLowerCase();
-    }
 
-    function updateCount(){
-        const visible = Array.from(videos).filter(v => v.style.display !== "none");
-        resultCount.textContent = visible.length;
-    }
-
-    updateCount();
-
-    searchInput.addEventListener("input", function () {
-        const keyword = removeVietnameseTones(this.value);
-
-        videos.forEach(card => {
-            const text = removeVietnameseTones(card.innerText);
-
-            if (text.includes(keyword)) {
-                card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
-        });
-
-        updateCount();
-    });
-});
-</script>
 
 
 
@@ -270,1046 +226,308 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="container">
         <div class="grid">
 		
-      <div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/KorZTnmmWnA/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=KorZTnmmWnA"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng xà phòng hoá chất béo </h3>
-		<p class="channel">Kênh: Hóa Học ABC </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/mxIbHNoeMBg/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=mxIbHNoeMBg"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng của glucose với Cu(OH)<sub>2</sub> </h3>
-		<p class="channel">Kênh: HÓA HỌC CƠ BẢN </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/4JcVnNKHGw0/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=4JcVnNKHGw0"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Tính chất aldehyde của glucose  </h3>
-		<p class="channel">Kênh: Khánh Linh </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/9XZfytvk0MM/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=9XZfytvk0MM"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng của saccharose với Cu(OH)<sub>2</sub>  </h3>
-		<p class="channel">Kênh: Học Hóa Cùng Cô Ly </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/eRP-x_a4RjQ/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=eRP-x_a4RjQ"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng thuỷ phân tinh bột   </h3>
-		<p class="channel">Kênh: Giac Cao Cu </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/7oqGLkQqTi8/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=7oqGLkQqTi8"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng màu của hồ tinh bột với iodine    </h3>
-		<p class="channel">Kênh: Giac Cao Cu </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/bav5TCJjUsg/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=bav5TCJjUsg"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng thuỷ phân cellulose trong môi trường acid     </h3>
-		<p class="channel">Kênh: Học Hóa Cùng Cô Ly </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/Y2GTUes9w-o/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=Y2GTUes9w-o"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng của cellulose với nitric acid  </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/hn3BsJuEETk/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=hn3BsJuEETk"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Tính tan của cellulose trong nước Schweizer   </h3>
-		<p class="channel">Kênh: Học Hóa Cùng Cô Ly</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/mpNe1LvWMKk/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=mpNe1LvWMKk"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng của nhóm amine    </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/9OfqTga8Fbs/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=9OfqTga8Fbs"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng của aniline với nước bromine </h3>
-		<p class="channel">Kênh: Khánh Linh</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/MMxXhTEGJw4/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=MMxXhTEGJw4"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm với protein</h3>
-		<p class="channel">Kênh: Hóa Học ABC</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/WMwtRIxld0A/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=WMwtRIxld0A"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Lắp ráp một pin đơn giản </h3>
-		<p class="channel">Kênh: Học Hóa Cùng Cô Ly</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/MdDScm4EBD8/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=MdDScm4EBD8"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Điện phân dung dịch CuSO<sub>4</sub> </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/1hW1hJghqq0/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=1hW1hJghqq0"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Điện phân dung dịch (tự điều chế nước Javel để tẩy rửa)  </h3>
-		<p class="channel">Kênh: Mr.Skeleton Thí Nghiệm</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/59m13-yZYiM/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=59m13-yZYiM"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Kim loại tác dụng với phi kim </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/ijfk0e8ofbs/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=ijfk0e8ofbs"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Kim loại tác dụng với dung dịch acid loãng  </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/ymO_GpLB1q8/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=ymO_GpLB1q8"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Kim loại tác dụng với dung dịch muối   </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/2vGUEWVCYmk/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=2vGUEWVCYmk"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Sự ăn mòn điện hoá sắt   </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/psz18-j7TlA/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=psz18-j7TlA"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Bảo vệ sắt bằng phương pháp điện hóa </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/K8OCBFc937o/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=K8OCBFc937o"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>So sánh độ tan giữa Calcium sulfate và Barium sulfate  </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/e1k6565b63k/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=e1k6565b63k"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Nhận biết từng ion riêng lẽ trong dung dịch   </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/q-fAd5-MIXQ/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=q-fAd5-MIXQ"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Xác định hàm lượng muối Fe(II) bằng dung dịch thuốc tím    </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/KDXp9_kcBUc/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=KDXp9_kcBUc"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Kiểm tra sự có mặt từng ion riêng biệt Cu<sup>2+</sup> Fe<sup>3+</sup>   </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/M7QydP6CLQ8/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=M7QydP6CLQ8"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Sự tạo thành phức chất của Cu<sup>2+</sup></h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/acKADFjYCG4/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=acKADFjYCG4"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm thử màu ngọn lửa kim loại kiềm thổ  </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/JbRLVBLEMEw/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=JbRLVBLEMEw"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm thử màu ngọn lửa kim loại kiềm   </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
 	<div class="grid" id="videoGrid">
-            <div class="card video-card">
-                <div class="thumb">
-                    <img src="https://img.youtube.com/vi/mfO5ocybEj4/hqdefault.jpg" alt="Thumbnail">
-                    <a class="play-btn" href="https://www.youtube.com/watch?v=mfO5ocybEj4" target="_blank">▶</a>
-                </div>
-                <div class="card-content">
-                    <h3> Thí nghiệm Ảnh hưởng của nhiệt độ đến sự chuyển dịch cân bằng của phản ứng 2NO<sub>2 (nâu đỏ) </sub> ⇄ N<sub>2</sub>O<sub>4 (không màu)</sub></h3>
-                    <p class="channel">Kênh: ABC Chemistryt</p>
-                </div>
-            </div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/8cpvwJ8-B6I/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=8cpvwJ8-B6I"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm Ảnh hưởng của nhiệt độ đến sự chuyển dịch cân bằng của phản ứng thủy phân Sodium Acetate (CH<sub>3</sub>COONa + H<sub>2</sub>O ⇌ CH<sub>3</sub>COOH + NaOH</h3>
-		<p class="channel">Kênh: Edusmart </p>
-	</div>
-	</div>
-            <div class="card video-card">
-                <div class="thumb">
-                    <img src="https://img.youtube.com/vi/AhIUrh4vEnU/hqdefault.jpg" alt="Thumbnail">
-                    <a class="play-btn" href="https://www.youtube.com/watch?v=AhIUrh4vEnU" target="_blank">▶</a>
-                </div>
-                <div class="card-content">
-                    <h3>Thí nghiệm nghiên cứu ảnh hưởng của nồng độ đến sự chuyển dịch cân bằng (hệ CH<sub>3</sub>COONa</h3>
-                    <p class="channel">Kênh: Edusmart</p>
-                </div>
-            </div>
-            <div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/cRMZ0HH6R0Q/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=cRMZ0HH6R0Q"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm tính dẫn điện của nước, dung dịch đường và dung dịch muối ăn</h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/nYGuUQS1NF8/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=nYGuUQS1NF8"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm tìm hiểu về chất điện li và chất không điện li </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/YknbC8_rTL4/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=YknbC8_rTL4"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm cách làm chất chỉ thị màu từ hoa đậu biếc/bắp cải tím</h3>
-		<p class="channel">Kênh: Edusmart</p>
-	</div>
-	</div>		
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/34fd06rhrRo/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=34fd06rhrRo"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm chuẩn độ acid - base (Dùng dung dịch NaOH chuẩn độ dung dịch HCl) </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/DKYWj4QrXtc/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=DKYWj4QrXtc"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm nhận biết ion ammonium trong phân đạm</h3>
-		<p class="channel">Kênh: Edusmart</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/0_gNRxKi-kE/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=0_gNRxKi-kE"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm Sulfur tác dụng với Sắt (Iron)</h3>
-		<p class="channel">Kênh: Học Hóa Cùng Cô Ly</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/Shdtss0DKyA/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=Shdtss0DKyA"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm Sulfur tác dụng với Oxygen</h3>
-		<p class="channel">Kênh: Edusmart</p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/IZzUKqydZao/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=IZzUKqydZao"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm Đồng (copper) tác dụng với dung dịch Sulfuric Acid đặc,nóng </h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu </p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/Dvd_fqyFazc/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=Dvd_fqyFazc"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm dung dịch sulfuric acid đặc tác dụng với đường mía</h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/-zR-uqLlyg0/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=-zR-uqLlyg0"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> Thí nghiệm nhận biết ion sulfate (dùng dung dịch muối barium)</h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/kzC_1BzdDc4/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=kzC_1BzdDc4"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm chưng cất ethanol từ dung dịch ethanol - nước</h3>
-		<p class="channel">Kênh: Tổ Hóa Trường Tây </p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/QxH09kYOY6I/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=QxH09kYOY6I"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm tách B-carotene từ nước ép cà rốt</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/Wuo8SachZYE/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=Wuo8SachZYE"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> Thí nghiệm tinh chế muối </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/bnRR15ksyKQ/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=bnRR15ksyKQ"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> Thí nghiệm phản ứng Bromine hóa Hexane C<sub>6</sub>H<sub>14</sub></h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/VB1T8Ym19bY/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=VB1T8Ym19bY"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm phản ứng Oxi hóa Hexane C<sub>6</sub>H<sub>14</sub></h3>
-		<p class="channel">Kênh: Tổ Hóa Trường Tây Thạnh</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/lUbu8zZ7RSs/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=lUbu8zZ7RSs"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm điều chế và thử tính chất hóa học của Ethylene C<sub>2</sub>H<sub>4</sub></h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/JXdy_RB7DyE/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=JXdy_RB7DyE"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm phản ứng Nitro hóa Benzene C<sub>6</sub>H<sub>6</sub></h3>
-		<p class="channel">Kênh: Smartschool-Trường học thông minh </p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/mk9G-R-exkI/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=mk9G-R-exkI"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm phản ứng cộng Chlorine và Benzene C<sub>6</sub>H<sub>6</sub> </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/0-Is2lVfuls/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=0-Is2lVfuls"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm phản ứng oxi hoa Toluene và Benzen bằng dung dịch KMnO4 </h3>
- 		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/lUbu8zZ7RSs/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=lUbu8zZ7RSs"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm điều chế và thử tính chất hóa học của Ethylene C<sub>2</sub>H<sub>4</sub><sub</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/JXdy_RB7DyE/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=JXdy_RB7DyE"
-           target="_blank">▶</a>
-	</div>
-    <div class="card-content">
-        <h3>Thí nghiệm phản ứng Nitro hóa Benzene C<sub>6</sub>H<sub>6</sub></h3>
-		<p class="channel">Kênh: Smartschool-Trường học thông minh </p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/mk9G-R-exkI/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=mk9G-R-exkI"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm phản ứng cộng Chlorine và Benzene C<sub>6</sub>H<sub>6</sub></h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/0-Is2lVfuls/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=0-Is2lVfuls"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm phản ứng oxi hoa Toluene C<sub>6</sub>H<sub>5</sub>CH<sub>3</sub> và Benzene C<sub>6</sub>H<sub>6</sub> bằng dung dịch KMnO4</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-				<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/ozZ4E9pvevQ/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=ozZ4E9pvevQ"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm Phản ứng thủy phân Bromoethane C<sub>2</sub>H<sub>5</sub></h3>
-		<p class="channel">Kênh: Ý Nguyễn Như </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/3fQjAP7bBvo/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=3fQjAP7bBvo"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm: Nghiên cứu về phản ứng cháy của Alcohol </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/--8iWaNOLKI/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=--8iWaNOLKI"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm Copper(II) hydroxide tác dụng với Alcohol đa chức </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/3jYmkpTaj1g/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=3jYmkpTaj1g"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm Nghiên cứu phản ứng của Phenol với dung dịch NaOH và dung dịch Na<sub>2</sub>CO<sub>3</sub> </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/6YA95z4zXqg/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=6YA95z4zXqg"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm Phản ứng của Phenol với nước Bromine</h3>
-		<p class="channel">Kênh: ABC Chemistry</p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/b98xqphz050/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=b98xqphz050"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm Phản ứng nitro hóa Phenol - tổng hợp Picric acid</h3>
-		<p class="channel">Kênh: ABC Chemistry</p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/4F8AJIguX8w/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=4F8AJIguX8w"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm phản ứng của Aldehyde với thuốc thử Tollens</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-	</div>
-	</div>
-				<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/7j5ihOJDKeE/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=7j5ihOJDKeE"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm Phản ứng oxi hóa Aldehyde bằng Copper(II) Hydroxide</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-	</div>
-	</div>
-				<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/oGGp8pmm0Es/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=oGGp8pmm0Es"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm Phản ứng tạo Iodoform từ Acetone</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-	</div>
-	</div>
-				<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/JUSbWMP_rxA/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=JUSbWMP_rxA"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm tính acid của Acetic Acid</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-	</div>
-	</div>
-					<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/d12h3HMx4sc/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=d12h3HMx4sc"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm phản ứng ester hóa - điều chế Ethyl Acetate</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-	</div>
-</div>
+            
+
+            
+            
+	
+			
+	
+		
+	
+		
+			
+			
+	
+	
+		
+		
+	
+		
+	
+	
+		
+			
+	
+	
+		
+			
+				
+	
+	
+	
+		
+			
+			
+				
+				
+				
+					
            </div> 
            <div class="grid" id="videoGrid">
-            <div class="card video-card">
-                <div class="thumb">
-                    <img src="https://img.youtube.com/vi/Wuo8SachZYE/hqdefault.jpg" alt="Thumbnail">
-                    <a class="play-btn" href="https://www.youtube.com/watch?v=Wuo8SachZYE" target="_blank">▶</a>
-                </div>
-                <div class="card-content">
-                    <h3>Phương pháp kết tinh muối hạt</h3>
-                    <p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-                </div>
-            </div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/JSt808aOVRM/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=JSt808aOVRM"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Mô phỏng thí nghiệm của Ernest Rutherford. Bắn tia alpha vào lá vàng mỏng. Tán xạ alpha</h3>
-		<p class="channel">Kênh: ABC Chemistry </p>
-	</div>
-	</div>
-            <div class="card video-card">
-                <div class="thumb">
-                    <img src="https://img.youtube.com/vi/yvqW3pa8-Jw/hqdefault.jpg" alt="Thumbnail">
-                    <a class="play-btn" href="https://www.youtube.com/watch?v=yvqW3pa8-Jw" target="_blank">▶</a>
-                </div>
-                <div class="card-content">
-                    <h3>So Sánh Tính Kim Loại Của Sodium Na Và Magnesium Mg</h3>
-                    <p class="channel">Kênh: Vũ Thị Lê</p>
-                </div>
-            </div>
-            <div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/IsoLGZXwV9A/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=IsoLGZXwV9A"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>SO SÁNH TÍNH PHI KIM CỦA CHLORINE VÀ IODINE</h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/qJH3nfVLypU/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=qJH3nfVLypU"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>TO SHOW THAT METALLIC OXIDES ARE BASIC IN NATURE</h3>
-		<p class="channel">Kênh: amritacreate</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/P7bI_ZoN9Kw/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=P7bI_ZoN9Kw"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>THÍ NGHIỆM PHẢN ỨNG CỦA DUNG DỊCH MUỐI NA2CO3 VỚI DUNG DỊCH AXIT HNO3</h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu</p>
-	</div>
-	</div>		
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/v8g3CK5kke0/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=v8g3CK5kke0"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Structure of Sodium Chloride (NaCl)</h3>
-		<p class="channel">Kênh: Scholarswing</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/cRMZ0HH6R0Q/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=cRMZ0HH6R0Q"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>THÍ NGHIỆM THỬ TÍNH DẪN ĐIỆN CỦA HỢP CHẤT</h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/mJqObq4xIDs/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=mJqObq4xIDs"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Mô phỏng lắp ráp mô hình phân tử Methane CH<sub>4</sub></h3>
-		<p class="channel">Kênh: EMILYCHEMIST</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/bV9ntYqngfg/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=bV9ntYqngfg"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí Nghiệm Đinh Sắt (Iron) Tác Dụng Với Dung Dịch CuSO<sub>4</sub> (Copper (II) sulfate)</h3>
-		<p class="channel">Kênh: Vũ Thị Lê</p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/RYhLr6ZD3lg/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=RYhLr6ZD3lg"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm đinh Sắt (Iron) tác dụng với dung dịch Sulfuric Acid loãng (H₂SO₄) </h3>
-		<p class="channel">Kênh: bang nhat</p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/a21Bby96Vgc/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=a21Bby96Vgc"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>THÍ NGHIỆM THEO DÕI SỰ THAY ĐỔI NHIỆT ĐỘ CỦA PHẢN ỨNG TRUNG HÒA</h3>
-		<p class="channel">Kênh: Học văn cùng cô Thu</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/EWb5q8Bl39A/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=EWb5q8Bl39A"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> Calorimetry: Calculate Enthalpy</h3>
-		<p class="channel">Kênh: Anne Schmidt</p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/lQpC_z11_4Y/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=lQpC_z11_4Y"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> Phản ứng Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> + H₂SO₄. Thí nghiệm ảnh hưởng của nồng độ đến tốc độ phản ứng</h3>
-		<p class="channel">Kênh: WAYS OUT</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/SITu7XjGkAE/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=SITu7XjGkAE"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> Ảnh Hưởng Của Nhiệt Độ Đến Tốc Độ Phản Ứng | Mg (Magnesium) Phản Ứng Với Nước</h3>
-		<p class="channel">Kênh: Vũ Thị Lê</p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/hf9eyJgqilA/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=hf9eyJgqilA"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> ẢNH HƯỞNG CỦA DIỆN TÍCH BỀ MẶT ĐẾN TỐC ĐỘ PHẢN ỨNG | CaCO<sub>3</sub> (Calcium Carbonate) Tác Dụng Với Dung Dịch HCl (Hydrochloric Acid)</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/LJXTOaeljeI/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=LJXTOaeljeI"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3> Ảnh Hưởng Của Chất Xúc Tác Đến Tốc Độ Phản Ứng | Phản Ứng Của H<sub>2</sub>O<sub>2</sub> Khi Có MnO<sub>2</sub> Xúc Tác</h3>
-		<p class="channel">Kênh: Vũ Thị Lê </p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/3xV_mYC5oFQ/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=3xV_mYC5oFQ"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>CHLORINE (Cl<sub>2</sub>) TÁC DỤNG VỚI DÂY SẮT (IRON)</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/qpL4KsnbAQ4/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=qpL4KsnbAQ4"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí Nghiệm Tính Tẩy Màu của Khí Chlorine Cl<sub>2</sub> | KMnO<sub>4</sub> Tác Dụng Với HCl</h3>
-		<p class="channel">Kênh: Vũ Thị Lê </p>
-	</div>
-	</div>
-	<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/kksVWwZ3Y14/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=kksVWwZ3Y14"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Cl<sub>2</sub> + KBr, Cl<sub>2</sub> + NaI, Br<sub>2</sub> + NaI. Comparing the oxidizing properties of Cl<sub>2</sub>, Br<sub>2</sub>, and I<sub>2</sub></h3>
-		<p class="channel">Kênh: ABC Chemistry </p>
-	</div>
-	</div>
-		<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/_XENzHwsaww/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=_XENzHwsaww"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Dung Dịch HCl Tác Dụng Zn, Cu</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-			<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/XYXcd3UMNIU/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=XYXcd3UMNIU"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>DUNG DỊCH HCl TÁC DỤNG MUỐI NaHCO3 rắn</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>
-	</div>
-				<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/GDuG2OaW0oM/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=GDuG2OaW0oM"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>NHẬN BIẾT MUỐI HALIDE</h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học </p>
-	</div>       
-</div>
+            
+
+            
+            
+	
+			
+	
+		
+	
+		
+			
+			
+	
+	
+		
+		
+		
+		
+	
+	
+		
+			
+				
     <script src="ui-enhance.js"></script>
+<script type="module">
+        import * as repository from "./experiment-repository.js";
+        import { renderLoading, renderError } from "./components/ui.js";
+
+        // Ordered fingerprints preserve the legacy 87-card baseline without duplicating its dataset.
+        const LEGACY_PARITY = {"youtubeIds":"c2f69b7a:a1847340","titles":"6c0858e8:bf8b10c4","thumbnails":"682ac68b:a79533a7","urls":"e21b3c94:2607e970","channels":"c7bd0033:d65082df","badges":"bd353322:ae0860a6","grades":"b0a7fa25:c3922081"};
+        const CHANNEL_EXCEPTIONS = [
+            { position: 28, youtubeId: "mfO5ocybEj4", legacy: "Kênh: ABC Chemistryt", canonical: "Kênh: ABC Chemistry" },
+            { position: 47, youtubeId: "JXdy_RB7DyE", legacy: "Kênh: Smartschool-Trường học thông minh", canonical: "Kênh: Smartschool" },
+            { position: 51, youtubeId: "JXdy_RB7DyE", legacy: "Kênh: Smartschool-Trường học thông minh", canonical: "Kênh: Smartschool" }
+        ];
+        const grids = [...document.querySelectorAll(".container .grid")];
+        const searchInput = document.getElementById("searchInput");
+        const resultCount = document.getElementById("resultCount");
+        const isRepositoryCheck = new URLSearchParams(window.location.search).has("repository-check");
+
+        function normalizeText(value) {
+            return String(value ?? "").trim().replace(/\s+/g, " ");
+        }
+
+        function fingerprint(values) {
+            const serialized = JSON.stringify(values);
+            let first = 2166136261;
+            let second = 5381;
+            for (let index = 0; index < serialized.length; index += 1) {
+                const character = serialized.charCodeAt(index);
+                first = Math.imul(first ^ character, 16777619) >>> 0;
+                second = (Math.imul(second, 33) ^ character) >>> 0;
+            }
+            return first.toString(16).padStart(8, "0") + ":" + second.toString(16).padStart(8, "0");
+        }
+
+        function reportParity(message, passed, details = {}) {
+            window.toanboRepositoryParity = { passed, message, ...details };
+            if (!isRepositoryCheck) return;
+            let status = document.getElementById("repositoryCheckStatus");
+            if (!status) {
+                status = document.createElement("p");
+                status.id = "repositoryCheckStatus";
+                status.setAttribute("role", passed ? "status" : "alert");
+                status.style.cssText = "padding:12px 30px;margin:0;background:#fff;color:#222";
+                document.querySelector(".top").append(status);
+            }
+            status.textContent = message;
+        }
+
+        function checkParity(occurrences) {
+            const values = {
+                youtubeIds: occurrences.map((item) => item.video.youtubeId),
+                titles: occurrences.map((item) => normalizeText(item.title)),
+                thumbnails: occurrences.map((item) => item.thumbnail),
+                urls: occurrences.map((item) => item.ytLink),
+                channels: occurrences.map((item) => normalizeText(item.video.channel)),
+                badges: occurrences.map((item) => item.badge),
+                grades: occurrences.map((item) => item.experiment.grade)
+            };
+            const errors = [];
+            if (occurrences.length !== 87) errors.push("count expected 87, got " + occurrences.length);
+            for (const [field, actualValues] of Object.entries(values)) {
+                if (fingerprint(actualValues) !== LEGACY_PARITY[field]) errors.push(field + " ordered parity mismatch");
+            }
+            const gradeCounts = {
+                12: values.grades.filter((grade) => grade === 12).length,
+                11: values.grades.filter((grade) => grade === 11).length,
+                10: values.grades.filter((grade) => grade === 10).length
+            };
+            if (gradeCounts[12] !== 27 || gradeCounts[11] !== 37 || gradeCounts[10] !== 23) {
+                errors.push("grade distribution mismatch");
+            }
+            const channelExceptions = CHANNEL_EXCEPTIONS.map((entry) => {
+                const item = occurrences[entry.position - 1];
+                return item && item.video.youtubeId === entry.youtubeId &&
+                    normalizeText(item.video.channel) === entry.canonical;
+            });
+            if (channelExceptions.some((matches) => !matches)) errors.push("expected canonical channel exception mismatch");
+
+            const protectedIds = ["Wuo8SachZYE", "lUbu8zZ7RSs", "JXdy_RB7DyE", "mk9G-R-exkI", "0-Is2lVfuls", "cRMZ0HH6R0Q"];
+            const counts = Object.fromEntries(protectedIds.map((id) => [
+                id,
+                values.youtubeIds.filter((youtubeId) => youtubeId === id).length
+            ]));
+            if (counts.Wuo8SachZYE !== 2 || values.youtubeIds[42] !== "Wuo8SachZYE" || values.youtubeIds[64] !== "Wuo8SachZYE" || counts.lUbu8zZ7RSs !== 2 ||
+                counts.JXdy_RB7DyE !== 2 || counts["mk9G-R-exkI"] !== 2 ||
+                counts["0-Is2lVfuls"] !== 2 || counts.cRMZ0HH6R0Q !== 2 || values.youtubeIds[30] !== "cRMZ0HH6R0Q" || values.youtubeIds[71] !== "cRMZ0HH6R0Q") {
+                errors.push("protected occurrence count mismatch");
+            }
+            const titleVariants = [...new Set(occurrences
+                .filter((item) => item.video.youtubeId === "0-Is2lVfuls")
+                .map((item) => normalizeText(item.title)))];
+            if (titleVariants.length !== 2) errors.push("0-Is2lVfuls title variants mismatch");
+            const incompleteOccurrence = occurrences[49];
+            const incompleteTitle = Boolean(incompleteOccurrence &&
+                incompleteOccurrence.video.youtubeId === "lUbu8zZ7RSs" &&
+                incompleteOccurrence.title.includes("C₂H₄<sub"));
+            if (!incompleteTitle) errors.push("incomplete title fragment missing");
+
+            return {
+                errors,
+                fieldParity: Object.fromEntries(Object.keys(values).map((field) => [
+                    field,
+                    fingerprint(values[field]) === LEGACY_PARITY[field]
+                ])),
+                gradeCounts,
+                protectedCounts: counts,
+                titleVariants,
+                channelExceptions: CHANNEL_EXCEPTIONS,
+                incompleteTitle
+            };
+        }
+
+        function createLegacyCard(item) {
+            const card = document.createElement("div");
+            card.className = "card video-card";
+            card.dataset.experimentId = item.experiment.id;
+            card.dataset.youtubeId = item.video.youtubeId;
+            card.dataset.grade = String(item.experiment.grade);
+            card.dataset.badge = item.badge;
+
+            const thumb = document.createElement("div");
+            thumb.className = "thumb";
+            const image = document.createElement("img");
+            image.src = item.thumbnail;
+            image.alt = "Thumbnail: " + item.title;
+            image.loading = "lazy";
+            image.decoding = "async";
+
+            const play = document.createElement("a");
+            play.className = "play-btn";
+            play.href = item.ytLink;
+            play.target = "_blank";
+            play.rel = "noopener noreferrer";
+            play.setAttribute("aria-label", "Mở video: " + item.title);
+            play.textContent = "▶";
+            thumb.append(image, play);
+
+            const content = document.createElement("div");
+            content.className = "card-content";
+            const heading = document.createElement("h3");
+            heading.textContent = item.title;
+            const channel = document.createElement("p");
+            channel.className = "channel";
+            channel.textContent = item.video.channel;
+            content.append(heading, channel);
+            card.append(thumb, content);
+            return card;
+        }
+
+        function removeVietnameseTones(value) {
+            return value.normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/đ/g, "d")
+                .replace(/Đ/g, "D")
+                .toLowerCase();
+        }
+
+        function updateCount(cards) {
+            resultCount.textContent = cards.filter((card) => card.style.display !== "none").length;
+        }
+
+        async function initializePage() {
+            renderLoading(grids[0], "Đang tải danh sách thí nghiệm…");
+            try {
+                await repository.load();
+                const occurrences = await repository.getPageOccurrences("toanbo");
+                const parity = checkParity(occurrences);
+                if (parity.errors.length) {
+                    reportParity("TOANBO REPOSITORY PARITY FAIL: " + parity.errors.join("; "), false, parity);
+                    renderError(grids[0], "Không thể xác minh dữ liệu thí nghiệm. Vui lòng tải lại trang.");
+                    return;
+                }
+
+                const gradeGroups = [];
+                occurrences.forEach((item, index) => {
+                    const grade = item.experiment.grade;
+                    let group = gradeGroups[gradeGroups.length - 1];
+                    if (!group || group.grade !== grade) {
+                        group = { grade, start: index, end: index };
+                        gradeGroups.push(group);
+                    }
+                    group.end = index + 1;
+                });
+                if (grids.length !== 3 || gradeGroups.length !== 3 ||
+                    gradeGroups[0].grade !== 12 || gradeGroups[1].grade !== 11 || gradeGroups[2].grade !== 10) {
+                    reportParity("TOANBO REPOSITORY PARITY FAIL: legacy grade grid structure mismatch", false, parity);
+                    renderError(grids[0], "Không thể xác minh cấu trúc danh sách thí nghiệm. Vui lòng tải lại trang.");
+                    return;
+                }
+
+                const cards = occurrences.map(createLegacyCard);
+                gradeGroups.forEach((group, index) => {
+                    grids[index].replaceChildren(...cards.slice(group.start, group.end));
+                });
+                updateCount(cards);
+                reportParity("TOANBO REPOSITORY PARITY PASS: 87/87 vị trí; phân bố L12 27, L11 37, L10 23; toàn bộ trường khớp. Có 3 channel legacy discrepancies đã canonicalize.", true, parity);
+
+                searchInput.addEventListener("input", function () {
+                    const keyword = removeVietnameseTones(this.value);
+                    cards.forEach((card) => {
+                        const text = removeVietnameseTones(card.innerText);
+                        card.style.display = text.includes(keyword) ? "block" : "none";
+                    });
+                    updateCount(cards);
+                });
+            } catch (error) {
+                reportParity("TOANBO REPOSITORY LOAD FAIL: " + error.message, false);
+                renderError(grids[0], "Không thể tải danh sách thí nghiệm. Vui lòng thử lại sau.");
+            }
+        }
+
+        initializePage();
+    </script>
 </body>
 </html>
