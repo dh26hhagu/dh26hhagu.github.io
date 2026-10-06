@@ -1,893 +1,687 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tổng hợp thí nghiệm</title>
-
-    <!--
-      UI Refresh Notes
-      - Refactored CSS into clear sections: Base, Header, Navbar, Main/Cards, Footer, Responsive.
-      - Consolidated duplicated styles and standardized spacing/color tokens.
-      - Added modern glassmorphism hero + smoother hover and reveal animations.
-      - Kept existing HTML structure and features (search, dropdown, dark mode, card rendering).
-    -->
-    <style>
-        /* =========================================================
-           1) Design Tokens & Base
-           ========================================================= */
-        :root {
-            --bg: #f4f7ff;
-            --bg-soft: #eef3ff;
-            --surface: #ffffff;
-            --surface-elevated: rgba(255, 255, 255, 0.78);
-            --text: #1f2937;
-            --muted: #64748b;
-
-            --primary: #5b7cff;
-            --primary-600: #4868e6;
-            --accent: #4cc9b0;
-            --accent-2: #9f7aea;
-
-            --danger: #b42318;
-
-            --radius-sm: 12px;
-            --radius-md: 18px;
-            --radius-lg: 24px;
-
-            --shadow-sm: 0 6px 18px rgba(31, 41, 55, 0.08);
-            --shadow-md: 0 14px 34px rgba(31, 41, 55, 0.12);
-            --shadow-lg: 0 24px 52px rgba(31, 41, 55, 0.18);
-
-            --space-1: 0.25rem;
-            --space-2: 0.5rem;
-            --space-3: 0.75rem;
-            --space-4: 1rem;
-            --space-5: 1.25rem;
-            --space-6: 1.5rem;
-            --space-8: 2rem;
-            --space-10: 2.5rem;
-
-            --transition-fast: 0.2s ease;
-            --transition-base: 0.32s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            min-height: 100%;
-        }
-
-        body {
-            font-family: "Inter", "Segoe UI", Arial, sans-serif;
-            color: var(--text);
-            line-height: 1.6;
-            background:
-                radial-gradient(circle at 12% 10%, #dfe8ff 0%, transparent 38%),
-                radial-gradient(circle at 90% 5%, #d8fff5 0%, transparent 35%),
-                linear-gradient(180deg, var(--bg-soft), var(--bg));
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .container {
-            width: min(1120px, 92vw);
-            margin: 0 auto;
-        }
-
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-            white-space: nowrap;
-        }
-
-        /* =========================================================
-           2) Header / Hero
-           ========================================================= */
-        header {
-            position: relative;
-            overflow: hidden;
-            isolation: isolate;
-        }
-
-        .hero {
-            min-height: 340px;
-            display: grid;
-            place-items: center;
-            text-align: center;
-            padding: var(--space-8) 0;
-            background:
-                linear-gradient(130deg, rgba(25, 39, 101, 0.56), rgba(45, 70, 165, 0.45)),
-                url("hoahoc2.jpg") center/cover no-repeat;
-        }
-
-        .hero-content {
-            width: min(760px, 92vw);
-            background: var(--surface-elevated);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.75);
-            border-radius: var(--radius-lg);
-            padding: var(--space-8) clamp(1.2rem, 3vw, 2.2rem);
-            box-shadow: var(--shadow-lg);
-            animation: fadeUp 0.75s var(--transition-base) both;
-        }
-
-        .hero h1 {
-            font-size: clamp(1.9rem, 4vw, 2.8rem);
-            line-height: 1.25;
-            color: #1f3f9f;
-            margin-bottom: var(--space-2);
-            letter-spacing: 0.2px;
-        }
-
-        .hero p {
-            font-size: clamp(1rem, 2vw, 1.1rem);
-            color: #334155;
-        }
-
-        /* =========================================================
-           3) Navbar / Dropdown / Search
-           ========================================================= */
-        .nav-wrap {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.3);
-            background: rgba(255, 255, 255, 0.82);
-            backdrop-filter: blur(10px);
-        }
-
-        .navbar {
-            min-height: 78px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: var(--space-4);
-        }
-
-        .brand {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-3);
-            color: #2948ac;
-            font-weight: 700;
-            letter-spacing: 0.2px;
-        }
-
-        .brand-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, var(--accent), var(--primary));
-            box-shadow: 0 0 0 6px rgba(91, 124, 255, 0.18);
-        }
-
-        .nav-center {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            flex-wrap: wrap;
-        }
-
-        .nav-item {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-1);
-        }
-
-        .nav-main {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.65rem 0.95rem;
-            border-radius: var(--radius-sm);
-            color: #334155;
-            font-weight: 600;
-            transition:
-                background var(--transition-fast),
-                color var(--transition-fast),
-                transform var(--transition-fast);
-        }
-
-        .nav-main:hover,
-        .nav-main:focus-visible {
-            background: rgba(91, 124, 255, 0.12);
-            color: var(--primary-600);
-            transform: translateY(-1px);
-            outline: none;
-        }
-
-        .nav-main.is-disabled {
-            opacity: 0.58;
-            pointer-events: none;
-            color: var(--muted);
-        }
-
-        .nav-arrow,
-        .theme-btn {
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: background var(--transition-fast), transform var(--transition-fast);
-        }
-
-        .nav-arrow {
-            color: var(--primary-600);
-            font-size: 0.85rem;
-            padding: 0.35rem;
-        }
-
-        .theme-btn {
-            font-size: 1rem;
-            padding: 0.45rem 0.55rem;
-        }
-
-        .nav-arrow:hover,
-        .theme-btn:hover,
-        .nav-arrow:focus-visible,
-        .theme-btn:focus-visible {
-            background: rgba(91, 124, 255, 0.12);
-            transform: translateY(-1px);
-            outline: none;
-        }
-
-        /* Smoother dropdown animation */
-        .nav-dropdown {
-            position: absolute;
-            top: calc(100% + 10px);
-            left: 0;
-            min-width: 200px;
-            padding: 0.35rem;
-            border-radius: 14px;
-            border: 1px solid rgba(148, 163, 184, 0.3);
-            background: var(--surface);
-            box-shadow: var(--shadow-md);
-
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: translateY(-8px) scale(0.98);
-            transform-origin: top left;
-            transition:
-                opacity var(--transition-fast),
-                transform var(--transition-fast),
-                visibility var(--transition-fast);
-        }
-
-        .nav-dropdown.open {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-            transform: translateY(0) scale(1);
-        }
-
-        .nav-dropdown a {
-            display: block;
-            padding: 0.65rem 0.85rem;
-            border-radius: 10px;
-            color: #334155;
-            font-weight: 500;
-            transition: background var(--transition-fast), color var(--transition-fast);
-        }
-
-        .nav-dropdown a:hover,
-        .nav-dropdown a:focus-visible {
-            background: #eef3ff;
-            color: var(--primary-600);
-            outline: none;
-        }
-
-        .nav-search {
-            flex: 0 1 360px;
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-        }
-
-        .nav-search input {
-            flex: 1;
-            border: 1px solid rgba(100, 116, 139, 0.35);
-            border-radius: 999px;
-            padding: 0.68rem 1rem;
-            font-size: 0.95rem;
-            color: #0f172a;
-            background: #fff;
-            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-        }
-
-        .nav-search input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(91, 124, 255, 0.16);
-            outline: none;
-        }
-
-        .clear-search {
-            border: 1px solid rgba(100, 116, 139, 0.35);
-            border-radius: 999px;
-            background: #fff;
-            color: #334155;
-            font-weight: 600;
-            padding: 0.58rem 0.9rem;
-            cursor: pointer;
-            transition:
-                border-color var(--transition-fast),
-                color var(--transition-fast),
-                background var(--transition-fast);
-        }
-
-        .clear-search[hidden] {
-            display: none;
-        }
-
-        .clear-search:hover,
-        .clear-search:focus-visible {
-            border-color: var(--primary);
-            color: var(--primary-600);
-            background: #eef3ff;
-            outline: none;
-        }
-
-        /* =========================================================
-           4) Main / Cards / States
-           ========================================================= */
-        main {
-            padding: var(--space-8) 0 var(--space-10);
-        }
-
-        .intro {
-            margin-bottom: var(--space-5);
-        }
-
-        .intro h2 {
-            color: #2547a9;
-            font-size: clamp(1.45rem, 2.5vw, 1.95rem);
-            margin-bottom: var(--space-2);
-        }
-
-        .intro p {
-            color: var(--muted);
-            max-width: 70ch;
-        }
-
-        .card-container {
-            list-style: none;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--space-4);
-            margin-top: var(--space-4);
-        }
-
-        .card {
-            position: relative;
-            display: block;
-            overflow: hidden;
-            background: linear-gradient(180deg, #ffffff, #fbfcff);
-            border-radius: var(--radius-md);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            padding: var(--space-5);
-            box-shadow: var(--shadow-sm);
-            transform: translateY(10px);
-            opacity: 0;
-            animation: fadeUp 0.55s var(--transition-base) forwards;
-            transition:
-                transform var(--transition-base),
-                box-shadow var(--transition-base),
-                border-color var(--transition-fast);
-        }
-
-        .card::after {
-            content: "";
-            position: absolute;
-            inset: -35% -45% auto;
-            height: 120px;
-            background: radial-gradient(circle, rgba(91, 124, 255, 0.24), transparent 70%);
-            transform: rotate(8deg);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transition-base);
-        }
-
-        .card:hover,
-        .card:focus-visible {
-            transform: translateY(-8px) scale(1.015);
-            border-color: rgba(91, 124, 255, 0.35);
-            box-shadow: var(--shadow-lg);
-            outline: none;
-        }
-
-        .card:hover::after,
-        .card:focus-visible::after {
-            opacity: 1;
-        }
-
-        .card h3 {
-            color: #2249b0;
-            margin-bottom: var(--space-2);
-            font-size: 1.08rem;
-            line-height: 1.4;
-        }
-
-        .card p {
-            color: var(--muted);
-            font-size: 0.95rem;
-        }
-
-        .card-badge {
-            display: inline-block;
-            float: right;
-            border-radius: 999px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            letter-spacing: 0.2px;
-            color: #fff;
-            background: linear-gradient(120deg, #ef5da8, #c06cff);
-            padding: 0.28rem 0.62rem;
-        }
-
-        .card-title {
-            text-align: left;
-            margin-top: 0.6rem;
-            clear: both;
-        }
-
-        .card-description {
-            text-align: left;
-            font-size: 0.9rem;
-            margin-top: 0.45rem;
-        }
-
-        .results-summary,
-        .hidden-empty,
-        .status-message {
-            margin-top: var(--space-3);
-            font-size: 0.95rem;
-            display: none;
-        }
-
-        .results-summary {
-            color: #334155;
-        }
-
-        .hidden-empty {
-            color: var(--muted);
-        }
-
-        .status-message {
-            color: var(--danger);
-        }
-
-        /* =========================================================
-           5) Footer
-           ========================================================= */
-        footer {
-            margin-top: var(--space-4);
-            border-top: 1px solid rgba(148, 163, 184, 0.3);
-            padding: var(--space-5) 0 var(--space-6);
-            color: var(--muted);
-            text-align: center;
-            font-size: 0.92rem;
-        }
-
-        /* =========================================================
-           6) Animations
-           ========================================================= */
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* =========================================================
-           7) Dark Mode (existing feature retained)
-           ========================================================= */
-        body.dark {
-            --bg: #0f172a;
-            --bg-soft: #111c33;
-            --surface: #1e293b;
-            --surface-elevated: rgba(30, 41, 59, 0.78);
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-        }
-
-        body.dark .hero h1,
-        body.dark .intro h2,
-        body.dark .card h3,
-        body.dark .brand {
-            color: #b8ccff;
-        }
-
-        body.dark .hero p,
-        body.dark .nav-main,
-        body.dark .nav-dropdown a,
-        body.dark .results-summary {
-            color: #d3deee;
-        }
-
-        body.dark .nav-wrap,
-        body.dark .nav-dropdown,
-        body.dark .nav-search input,
-        body.dark .clear-search,
-        body.dark .card {
-            background: #1d2a42;
-            border-color: rgba(148, 163, 184, 0.2);
-        }
-
-        body.dark .nav-search input,
-        body.dark .clear-search {
-            color: #e2e8f0;
-        }
-
-        /* =========================================================
-           8) Responsive
-           ========================================================= */
-        @media (max-width: 920px) {
-            .navbar {
-                flex-wrap: wrap;
-                justify-content: center;
-                padding: 0.9rem 0;
-            }
-
-            .brand {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .nav-center {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .nav-search {
-                width: min(460px, 100%);
-                flex-basis: 100%;
-                margin-left: 0;
-            }
-        }
-
-        @media (max-width: 580px) {
-            .hero {
-                min-height: 285px;
-            }
-
-            .hero-content {
-                padding: var(--space-6) var(--space-4);
-            }
-
-            .nav-item {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .nav-dropdown {
-                left: 50%;
-                transform: translate(-50%, -8px) scale(0.98);
-                transform-origin: top center;
-            }
-
-            .nav-dropdown.open {
-                transform: translate(-50%, 0) scale(1);
-            }
-
-            main {
-                padding-top: var(--space-6);
-            }
-        }
-    </style>
-
-    <script src="data.js"></script>
-    <link rel="stylesheet" href="ui-system.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kho tài liệu trực quan tổng hợp thí nghiệm Hóa học dành cho học sinh THPT theo từng khối lớp.">
+  <meta name="theme-color" content="#f5f8f8">
+  <title>Tổng hợp thí nghiệm | Thí nghiệm THPT</title>
+  <style>
+:root {
+  color-scheme: light;
+  --color-primary: #176a63;
+  --color-primary-strong: #10544f;
+  --color-primary-soft: #e8f3f1;
+  --color-accent: #d79a55;
+  --color-bg: #f5f8f8;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef4f3;
+  --color-text: #173136;
+  --color-muted: #5e7478;
+  --color-border: #dbe6e5;
+  --color-shadow: 0 14px 38px rgba(20, 54, 56, .09);
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --content-width: 1160px;
+  --page-gutter: clamp(1.1rem, 4vw, 2.4rem);
+  --motion-fast: 160ms ease;
+  --motion-base: 240ms ease;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  line-height: 1.6;
+}
+body.dark {
+  color-scheme: dark;
+  --color-bg: #101a1d;
+  --color-surface: #182629;
+  --color-surface-muted: #203235;
+  --color-text: #e5efed;
+  --color-muted: #a4b8b5;
+  --color-border: #34494a;
+  --color-primary-soft: #203d3a;
+  --color-shadow: 0 16px 42px rgba(0, 0, 0, .25);
+}
+a { color: inherit; text-decoration: none; }
+button, input { font: inherit; }
+button, a, input { -webkit-tap-highlight-color: transparent; }
+button { color: inherit; }
+.site-container { width: min(var(--content-width), calc(100% - 2 * var(--page-gutter))); margin-inline: auto; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: fixed; z-index: 1000; top: .75rem; left: .75rem;
+  padding: .7rem 1rem; border-radius: var(--radius-sm);
+  background: var(--color-surface); color: var(--color-text);
+  transform: translateY(-160%); box-shadow: var(--color-shadow);
+}
+.skip-link:focus { transform: translateY(0); }
+:focus-visible { outline: 3px solid #e4a653; outline-offset: 3px; }
+
+/* Navigation */
+.ui-site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(14px);
+}
+.ui-navbar {
+  width: min(var(--content-width), calc(100% - 2 * var(--page-gutter)));
+  min-height: 76px; margin-inline: auto; display: flex; align-items: center; gap: 1rem;
+}
+.brand {
+  display: inline-flex; align-items: center; gap: .7rem; flex: 0 0 auto;
+  color: var(--color-text); font-size: 1rem; font-weight: 760; letter-spacing: -.02em;
+}
+.brand-mark {
+  width: 38px; height: 38px; display: grid; place-items: center;
+  border-radius: 13px; background: var(--color-primary); color: #fff;
+  font-size: .86rem; font-weight: 800; letter-spacing: -.04em;
+}
+.ui-navbar-links { display: flex; align-items: center; gap: .35rem; margin-left: auto; }
+.ui-navbar .nav-main {
+  display: inline-flex; align-items: center; gap: .3rem;
+  min-height: 42px; padding: .55rem .82rem; border-radius: 999px;
+  color: var(--color-muted); font-size: .92rem; font-weight: 650;
+  transition: color var(--motion-fast), background var(--motion-fast);
+}
+.ui-navbar .nav-main:hover,
+.ui-navbar .nav-main:focus-visible,
+.ui-navbar .nav-main.active-page {
+  color: var(--color-primary-strong); background: var(--color-primary-soft);
+}
+.ui-navbar .nav-main.active-page { font-weight: 750; }
+.ui-navbar-item { position: relative; display: inline-flex; align-items: center; }
+.ui-navbar .nav-arrow, .ui-navbar .theme-btn {
+  width: 38px; height: 38px; display: grid; place-items: center;
+  border: 1px solid transparent; border-radius: 50%;
+  background: transparent; cursor: pointer; transition: background var(--motion-fast), border-color var(--motion-fast);
+}
+.ui-navbar .nav-arrow:hover, .ui-navbar .theme-btn:hover {
+  background: var(--color-primary-soft); border-color: var(--color-border);
+}
+.ui-navbar .nav-dropdown {
+  position: absolute; top: calc(100% + .55rem); left: 0; z-index: 60;
+  min-width: 190px; padding: .45rem; border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); background: var(--color-surface); box-shadow: var(--color-shadow);
+}
+.ui-navbar .nav-dropdown[hidden] { display: none !important; }
+.ui-navbar .nav-dropdown a {
+  display: block; padding: .62rem .75rem; border-radius: 10px;
+  color: var(--color-text); font-weight: 600;
+}
+.ui-navbar .nav-dropdown a:hover, .ui-navbar .nav-dropdown a:focus-visible {
+  background: var(--color-primary-soft); color: var(--color-primary-strong);
+}
+.ui-new-label {
+  padding: .08rem .38rem; border-radius: 999px; background: #fff1dd;
+  color: #87551b; font-size: .62rem; font-weight: 800; letter-spacing: .06em;
+}
+.site-menu-toggle {
+  display: none; width: 42px; height: 42px; margin-left: auto;
+  border: 1px solid var(--color-border); border-radius: 12px;
+  background: var(--color-surface); cursor: pointer;
+}
+.site-menu-toggle span[aria-hidden] { font-size: 1.2rem; line-height: 1; }
+
+/* Hero */
+.hero {
+  position: relative; isolation: isolate; overflow: hidden;
+  padding: clamp(3.2rem, 7vw, 6.5rem) 0 clamp(3.4rem, 6vw, 5rem);
+  background: #e9f1ef;
+}
+body.dark .hero { background: #172629; }
+.hero::before {
+  content: ""; position: absolute; z-index: -1; width: 46rem; height: 46rem;
+  top: -32rem; right: -12rem; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.76), rgba(255,255,255,0) 68%);
+}
+.hero-layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(300px, .88fr); gap: clamp(2rem, 6vw, 5.5rem); align-items: center; }
+.hero-copy { max-width: 680px; }
+.hero-kicker, .section-kicker {
+  display: flex; align-items: center; gap: .55rem; margin: 0 0 1rem;
+  color: var(--color-primary); font-size: .75rem; font-weight: 800;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+.hero-kicker::before {
+  content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent);
+}
+.site-name { margin: 0 0 .55rem; color: var(--color-muted); font-size: .94rem; font-weight: 700; }
+.hero h1 {
+  max-width: 13ch; margin: 0; color: var(--color-text);
+  font-size: clamp(2.5rem, 5.4vw, 4.6rem); font-weight: 760;
+  letter-spacing: -.055em; line-height: 1.04;
+}
+.hero h1 span { color: var(--color-primary); }
+.hero-description { max-width: 57ch; margin: 1.25rem 0 0; color: var(--color-muted); font-size: clamp(1rem, 1.45vw, 1.13rem); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.65rem; }
+.button {
+  min-height: 48px; display: inline-flex; align-items: center; justify-content: center;
+  gap: .55rem; padding: .7rem 1.1rem; border: 1px solid transparent;
+  border-radius: 999px; font-size: .92rem; font-weight: 720;
+  transition: transform var(--motion-fast), background var(--motion-fast), box-shadow var(--motion-fast);
+}
+.button:hover { transform: translateY(-2px); }
+.button-primary { background: var(--color-primary); color: #fff; box-shadow: 0 8px 20px rgba(23,106,99,.18); }
+.button-primary:hover { background: var(--color-primary-strong); }
+.button-secondary { background: var(--color-surface); color: var(--color-text); border-color: var(--color-border); }
+.button-secondary:hover { background: var(--color-primary-soft); }
+.hero-search { max-width: 580px; margin-top: 2rem; }
+.search-label { display: block; margin-bottom: .5rem; color: var(--color-text); font-size: .83rem; font-weight: 700; }
+.search-control {
+  display: flex; align-items: center; gap: .55rem; min-height: 58px;
+  padding: .35rem .45rem .35rem .9rem; border: 1px solid #cbdad7;
+  border-radius: 16px; background: var(--color-surface);
+  box-shadow: 0 8px 22px rgba(24,64,65,.07);
+  transition: border-color var(--motion-fast), box-shadow var(--motion-fast);
+}
+.search-control:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 4px rgba(23,106,99,.12); }
+.search-icon { flex: 0 0 auto; color: var(--color-primary); font-size: 1.1rem; }
+.search-control input {
+  width: 100%; min-width: 0; min-height: 44px; border: 0; outline: 0;
+  background: transparent; color: var(--color-text); font-size: .94rem;
+}
+.search-control input::placeholder { color: #819395; opacity: 1; }
+.search-control input:disabled { cursor: wait; }
+.search-clear {
+  flex: 0 0 auto; min-width: 42px; min-height: 42px; border: 0;
+  border-radius: 12px; background: var(--color-surface-muted);
+  color: var(--color-muted); cursor: pointer; font-size: .84rem; font-weight: 700;
+}
+.search-clear[hidden] { display: none; }
+.search-hint { margin: .55rem 0 0; color: var(--color-muted); font-size: .78rem; }
+
+/* Decorative chemistry illustration, built locally with CSS */
+.chemistry-art {
+  position: relative; width: min(100%, 430px); aspect-ratio: 1 / .88;
+  justify-self: end; display: grid; place-items: center;
+}
+.chemistry-art::before, .chemistry-art::after {
+  content: ""; position: absolute; border: 1px solid rgba(23,106,99,.16); border-radius: 50%;
+}
+.chemistry-art::before { width: 84%; height: 84%; transform: rotate(-24deg) scaleY(.48); }
+.chemistry-art::after { width: 70%; height: 70%; transform: rotate(43deg) scaleY(.48); }
+.chemistry-orbit {
+  position: absolute; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--color-accent); box-shadow: 0 0 0 8px rgba(215,154,85,.14);
+}
+.orbit-one { top: 16%; left: 22%; }
+.orbit-two { top: 28%; right: 14%; width: 9px; height: 9px; background: var(--color-primary); box-shadow: 0 0 0 7px rgba(23,106,99,.12); }
+.orbit-three { bottom: 16%; left: 19%; width: 10px; height: 10px; background: #6d8caa; box-shadow: 0 0 0 7px rgba(109,140,170,.13); }
+.molecule {
+  position: relative; width: 190px; aspect-ratio: 1; display: grid; place-items: center;
+  border: 1px solid rgba(23,106,99,.17); border-radius: 50%;
+  background: rgba(255,255,255,.7); box-shadow: 0 24px 64px rgba(25,74,72,.12);
+}
+body.dark .molecule { background: rgba(24,38,41,.82); }
+.molecule::before, .molecule::after {
+  content: ""; position: absolute; width: 72px; height: 72px; border-radius: 50%;
+  border: 1px solid rgba(23,106,99,.22);
+}
+.molecule::before { top: -25px; right: 2px; }
+.molecule::after { bottom: 1px; left: -25px; }
+.molecule-core {
+  width: 88px; height: 88px; display: grid; place-items: center;
+  border-radius: 26px; background: var(--color-primary); color: #fff;
+  font-size: 1.5rem; font-weight: 800; letter-spacing: -.06em;
+  box-shadow: 0 12px 26px rgba(23,106,99,.24);
+}
+.molecule-note {
+  position: absolute; z-index: 1; padding: .45rem .72rem;
+  border: 1px solid var(--color-border); border-radius: 999px;
+  background: var(--color-surface); color: var(--color-text);
+  box-shadow: 0 8px 20px rgba(25,74,72,.08); font-size: .8rem; font-weight: 750;
+}
+.note-one { top: 20%; right: 4%; }
+.note-two { bottom: 18%; right: 5%; }
+
+/* Main sections */
+main { padding: clamp(3rem, 6vw, 5.3rem) 0; }
+.section { margin-bottom: clamp(3.6rem, 7vw, 6rem); }
+.section-heading { max-width: 700px; margin-bottom: 1.55rem; }
+.section-kicker { margin-bottom: .55rem; }
+.section-heading h2 { margin: 0; color: var(--color-text); font-size: clamp(1.8rem, 3.4vw, 2.65rem); line-height: 1.12; letter-spacing: -.04em; }
+.section-heading p { max-width: 62ch; margin: .75rem 0 0; color: var(--color-muted); }
+.grade-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.grade-card {
+  position: relative; min-width: 0; padding: clamp(1.2rem, 2.2vw, 1.7rem);
+  border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  background: var(--color-surface); box-shadow: 0 8px 24px rgba(23,49,54,.035);
+  transition: transform var(--motion-base), box-shadow var(--motion-base), border-color var(--motion-base);
+}
+.grade-card:hover { transform: translateY(-4px); border-color: rgba(23,106,99,.35); box-shadow: var(--color-shadow); }
+.grade-card-top { display: flex; justify-content: space-between; align-items: center; }
+.grade-number { color: var(--color-primary); font-size: 2.65rem; font-weight: 800; letter-spacing: -.08em; line-height: 1; }
+.grade-symbol {
+  width: 44px; height: 44px; display: grid; place-items: center;
+  border-radius: 14px; background: var(--color-primary-soft); color: var(--color-primary);
+  font-size: 1.15rem;
+}
+.grade-card h3 { margin: 1.1rem 0 .35rem; font-size: 1.16rem; letter-spacing: -.02em; }
+.grade-card > p { min-height: 3.2em; margin: 0; color: var(--color-muted); font-size: .9rem; }
+.grade-count-line { display: flex; align-items: baseline; gap: .42rem; margin: 1.1rem 0 1rem; }
+.grade-count { color: var(--color-primary); font-size: 1.25rem; font-weight: 800; }
+.grade-count-label { color: var(--color-muted); font-size: .79rem; }
+.grade-link { display: inline-flex; align-items: center; gap: .45rem; color: var(--color-primary-strong); font-size: .88rem; font-weight: 750; }
+.grade-link span { transition: transform var(--motion-fast); }
+.grade-link:hover span { transform: translateX(4px); }
+
+.discovery-section { padding: clamp(1.5rem, 4vw, 2.5rem); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface-muted); }
+.discovery-heading { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin-bottom: 1.2rem; }
+.discovery-heading .section-heading { margin-bottom: 0; }
+.discovery-count { flex: 0 0 auto; color: var(--color-muted); font-size: .82rem; }
+.experiment-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.ui-experiment-card {
+  min-width: 0; display: flex; flex-direction: column; overflow: hidden;
+  border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  background: var(--color-surface); box-shadow: 0 6px 18px rgba(23,49,54,.045);
+  transition: transform var(--motion-base), box-shadow var(--motion-base), border-color var(--motion-base);
+}
+.ui-experiment-card:hover, .ui-experiment-card:focus-within {
+  transform: translateY(-3px); border-color: rgba(23,106,99,.32); box-shadow: var(--color-shadow);
+}
+.ui-experiment-card-media { display: block; overflow: hidden; aspect-ratio: 16 / 9; background: var(--color-surface-muted); }
+.ui-experiment-card-media img { display: block; width: 100%; height: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.ui-experiment-card-content { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: 1rem 1.05rem 1.05rem; }
+.ui-experiment-card-badge {
+  display: inline-flex; align-items: center; min-height: 25px; padding: .18rem .58rem;
+  border-radius: 999px; background: var(--color-primary-soft); color: var(--color-primary-strong);
+  font-size: .72rem; font-weight: 780;
+}
+.ui-experiment-card-title { margin: .65rem 0 1rem; color: var(--color-text); font-size: 1rem; line-height: 1.45; overflow-wrap: anywhere; }
+.ui-experiment-card-action {
+  display: inline-flex; align-items: center; gap: .4rem; margin-top: auto;
+  color: var(--color-primary); font-size: .86rem; font-weight: 760;
+}
+.ui-experiment-card-action::after { content: "↗"; font-size: .9em; }
+.ui-experiment-card-action:hover { color: var(--color-primary-strong); }
+.search-status { min-height: 1.4em; margin: 0 0 1rem; color: var(--color-muted); font-size: .86rem; }
+.ui-state { margin: 0; padding: 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-muted); background: var(--color-surface); }
+.ui-state-error { color: #a63232; }
+body.dark .ui-state-error { color: #ffabab; }
+
+.site-footer { padding: 1.4rem var(--page-gutter) 1.8rem; border-top: 1px solid var(--color-border); background: var(--color-surface); }
+.site-footer .ui-site-footer { width: min(var(--content-width), 100%); margin-inline: auto; color: var(--color-muted); font-size: .85rem; }
+
+/* Tablet */
+@media (max-width: 980px) {
+  .hero-layout { grid-template-columns: minmax(0, 1.05fr) minmax(250px, .8fr); gap: 2rem; }
+  .molecule { width: 160px; }
+  .experiment-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* Mobile navigation and tablet layout */
+@media (max-width: 760px) {
+  .ui-navbar { min-height: 68px; flex-wrap: wrap; padding-block: .65rem; }
+  .site-menu-toggle { display: grid; place-items: center; }
+  .ui-navbar-links { display: none; width: 100%; margin: 0; align-items: stretch; flex-direction: column; gap: .25rem; padding: .6rem 0 .2rem; }
+  .ui-navbar[data-mobile-open="true"] .ui-navbar-links { display: flex; }
+  .ui-navbar-links > .nav-main, .ui-navbar-item > .nav-main { width: 100%; justify-content: flex-start; }
+  .ui-navbar-item { width: 100%; display: grid; grid-template-columns: 1fr auto; }
+  .ui-navbar-item .nav-dropdown { position: static; grid-column: 1 / -1; width: 100%; margin: .25rem 0; box-shadow: none; }
+  .ui-navbar-item .nav-arrow { justify-self: end; }
+  .hero-layout { grid-template-columns: 1fr; }
+  .hero-copy { max-width: 720px; }
+  .chemistry-art { width: min(100%, 380px); justify-self: center; margin-top: .25rem; }
+  .grade-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  :root { --page-gutter: 1rem; }
+  .hero { padding-block: 3rem 3.2rem; }
+  .hero h1 { max-width: 12ch; font-size: clamp(2.3rem, 12vw, 3.35rem); }
+  .hero-actions { display: grid; grid-template-columns: 1fr; }
+  .hero-actions .button { width: 100%; }
+  .search-control { min-height: 54px; }
+  main { padding-top: 2.7rem; }
+  .grade-grid, .experiment-grid { grid-template-columns: 1fr; }
+  .grade-card > p { min-height: 0; }
+  .discovery-heading { align-items: flex-start; flex-direction: column; gap: .3rem; }
+  .discovery-section { padding: 1.1rem; border-radius: 22px; }
+  .chemistry-art { width: min(100%, 330px); }
+  .molecule { width: 145px; }
+  .molecule-core { width: 76px; height: 76px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .button:hover, .grade-card:hover, .ui-experiment-card:hover, .ui-experiment-card:focus-within { transform: none; }
+}
+
+  </style>
 </head>
 <body>
-    <header>
-        <div class="hero">
-            <div class="hero-content container">
-                <h1>Tổng hợp thí nghiệm Hóa học</h1>
-                <p>Kho tài liệu trực quan cho học sinh THPT theo từng khối lớp.</p>
-            </div>
+  <a class="skip-link" href="#main-content">Bỏ qua điều hướng</a>
+  <div id="navbarRoot"></div>
+
+  <header class="hero">
+    <div class="site-container hero-layout">
+      <div class="hero-copy">
+        <p class="hero-kicker">Kho tài liệu Hóa học THPT</p>
+        <p class="site-name">Tổng hợp thí nghiệm</p>
+        <h1>Khám phá Hóa học qua những <span>thí nghiệm trực quan</span></h1>
+        <p class="hero-description">Kho tài liệu trực quan cho học sinh THPT theo từng khối lớp.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="lop10.html">Khám phá Lớp 10 <span aria-hidden="true">→</span></a>
+          <a class="button button-secondary" href="toanbo.html">Xem toàn bộ thí nghiệm</a>
         </div>
-    </header>
 
-    <div class="nav-wrap">
-        <nav class="container navbar" aria-label="Điều hướng chính">
-            <a href="index.html" class="brand" aria-label="Trang chủ thí nghiệm">
-                <span class="brand-dot" aria-hidden="true"></span>
-                Thí nghiệm THPT
-            </a>
+        <form class="hero-search" id="searchForm" role="search">
+          <label class="search-label" for="searchInput">Tìm nhanh trong kho thí nghiệm</label>
+          <div class="search-control">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input type="text" id="searchInput" placeholder="Tên thí nghiệm, từ khóa hoặc lớp..." autocomplete="off" disabled aria-busy="true">
+            <button class="search-clear" id="searchClear" type="button" aria-label="Xóa từ khóa" hidden>Xóa</button>
+          </div>
+          <p class="search-hint">Ví dụ: phản ứng oxi hóa, axit, Lớp 11</p>
+        </form>
+      </div>
 
-            <div class="nav-center">
-                <div class="nav-item">
-                    <a href="thinghiem.html" class="nav-main">Hóa học</a>
-                    <button class="nav-arrow" id="menuToggle" type="button" aria-expanded="false" aria-controls="experimentMenu" aria-haspopup="true" aria-label="Mở menu lớp">▼</button>
-                    <div class="nav-dropdown" id="experimentMenu" role="menu" aria-label="Danh sách lớp">
-                        <a href="lop10.html" role="menuitem">Lớp 10</a>
-                        <a href="lop11.html" role="menuitem">Lớp 11</a>
-                        <a href="lop12.html" role="menuitem">Lớp 12</a>
-                    </div>
-                    <button class="theme-btn" type="button" onclick="toggleDarkMode()" aria-label="Bật hoặc tắt chế độ tối">🌙</button>
-                </div>
-                <a href="periodic.html" class="nav-main">
-    Bảng tuần hoàn <span style="color:red; font-size:12px;">NEW</span>
-</a>
-            </div>
-
-            <div class="nav-search">
-                <label class="sr-only" for="searchInput">Tìm thí nghiệm theo lớp hoặc chủ đề</label>
-                <input type="text" id="searchInput" placeholder="🔍 Tìm theo lớp, chủ đề..." autocomplete="off" disabled>
-                <button class="clear-search" id="clearSearch" type="button" aria-label="Xóa từ khóa tìm kiếm" hidden>Xóa</button>
-            </div>
-        </nav>
+      <div class="chemistry-art" aria-hidden="true">
+        <span class="chemistry-orbit orbit-one"></span>
+        <span class="chemistry-orbit orbit-two"></span>
+        <span class="chemistry-orbit orbit-three"></span>
+        <div class="molecule"><span class="molecule-core">H₂O</span></div>
+        <span class="molecule-note note-one">NaCl</span>
+        <span class="molecule-note note-two">Cu²⁺</span>
+      </div>
     </div>
+  </header>
 
-    <main class="container">
-        <section class="intro" id="introSection">
-            <h2>Xin chào 👋</h2>
-            <p>Website tổng hợp thí nghiệm Hóa học dành cho giáo viên và học sinh THPT, giúp tra cứu nhanh theo lớp và từ khóa.</p>
-        </section>
+  <main class="site-container" id="main-content">
+    <section class="section" id="grades" aria-labelledby="gradesTitle">
+      <div class="section-heading">
+        <p class="section-kicker">Học theo lộ trình</p>
+        <h2 id="gradesTitle">Chọn khối lớp</h2>
+        <p>Đi thẳng đến bộ thí nghiệm phù hợp với nội dung học tập của bạn.</p>
+      </div>
+      <div class="grade-grid">
+        <article class="grade-card">
+          <div class="grade-card-top"><span class="grade-number">10</span><span class="grade-symbol" aria-hidden="true">◉</span></div>
+          <h3>Hóa học 10</h3>
+          <p>Nội dung thí nghiệm và mô phỏng theo chương trình lớp 10.</p>
+          <div class="grade-count-line"><span class="grade-count" data-grade-count="10">—</span><span class="grade-count-label">video trong danh sách</span></div>
+          <a class="grade-link" href="lop10.html">Khám phá lớp 10 <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="grade-card">
+          <div class="grade-card-top"><span class="grade-number">11</span><span class="grade-symbol" aria-hidden="true">◉</span></div>
+          <h3>Hóa học 11</h3>
+          <p>Tổng hợp video thí nghiệm trọng tâm của chương trình lớp 11.</p>
+          <div class="grade-count-line"><span class="grade-count" data-grade-count="11">—</span><span class="grade-count-label">video trong danh sách</span></div>
+          <a class="grade-link" href="lop11.html">Khám phá lớp 11 <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="grade-card">
+          <div class="grade-card-top"><span class="grade-number">12</span><span class="grade-symbol" aria-hidden="true">◉</span></div>
+          <h3>Hóa học 12</h3>
+          <p>Tài liệu trực quan phục vụ ôn tập và học tập lớp 12.</p>
+          <div class="grade-count-line"><span class="grade-count" data-grade-count="12">—</span><span class="grade-count-label">video trong danh sách</span></div>
+          <a class="grade-link" href="lop12.html">Khám phá lớp 12 <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+    </section>
 
-        <section>
-            <ul class="card-container" id="cardContainer"></ul>
-            <p class="results-summary" id="resultCount" role="status" aria-live="polite"></p>
-            <p class="hidden-empty" id="emptyMessage">Không tìm thấy nội dung phù hợp. Hãy thử từ khóa khác.</p>
-            <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
-        </section>
-    </main>
+    <section class="section discovery-section" id="discovery" aria-labelledby="discoveryTitle">
+      <div class="discovery-heading">
+        <div class="section-heading">
+          <p class="section-kicker">Khám phá</p>
+          <h2 id="discoveryTitle">Thí nghiệm được chọn</h2>
+          <p id="discoveryDescription">Một vài video được chọn từ kho thí nghiệm theo từng khối lớp.</p>
+        </div>
+        <span class="discovery-count" id="discoveryCount">Đang tải…</span>
+      </div>
+      <p class="search-status" id="searchStatus" role="status" aria-live="polite">Đang tải danh sách thí nghiệm…</p>
+      <div class="experiment-grid" id="experimentGrid" aria-live="polite" aria-busy="true">
+        <p class="ui-state ui-state-loading" role="status">Đang tải danh sách thí nghiệm…</p>
+      </div>
+    </section>
+  </main>
 
-    <footer>
-        © 2026 – Website thí nghiệm Hóa học | Sinh viên thực hiện
-    </footer>
+  <footer class="site-footer" id="footerRoot"></footer>
 
-    <script>
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark");
-        }
+  <script type="module">
+import {
+  createNavbar,
+  createExperimentCard,
+  renderLoading,
+  renderEmpty,
+  renderError,
+  createFooter
+} from "./components/ui.js";
+import * as repository from "./experiment-repository.js";
 
-        const CATEGORY_DATA = [
-            {
-                title: "Hóa học lớp 10",
-                description: "Nội dung thí nghiệm và mô phỏng theo chương trình lớp 10.",
-                link: "lop10.html"
-            },
-            {
-                title: "Hóa học lớp 11",
-                description: "Tổng hợp video thí nghiệm trọng tâm của chương trình lớp 11.",
-                link: "lop11.html"
-            },
-            {
-                title: "Hóa học lớp 12",
-                description: "Tài liệu trực quan phục vụ ôn tập và học tập lớp 12.",
-                link: "lop12.html"
-            }
-        ];
+const navbarRoot = document.getElementById("navbarRoot");
+const navbar = createNavbar({
+  brandText: "Thí nghiệm THPT",
+  brandHref: "index.html",
+  comingSoon: true,
+  periodicTable: true,
+  themeToggle: true,
+  onThemeToggle: () => document.body.classList.toggle("dark")
+});
+const nav = navbar.querySelector("nav");
+const brand = navbar.querySelector(".brand");
+const navLinks = navbar.querySelector(".ui-navbar-links");
+const chemistryLink = navbar.querySelector(".ui-navbar-item > .nav-main");
 
-        function removeVietnameseTones(str) {
-            return (str || "")
-                .normalize("NFD")
-                .replace(/[̀-ͯ]/g, "")
-                .replace(/đ/g, "d")
-                .replace(/Đ/g, "D")
-                .toLowerCase();
-        }
+brand.textContent = "";
+const brandMark = document.createElement("span");
+brandMark.className = "brand-mark";
+brandMark.setAttribute("aria-hidden", "true");
+brandMark.textContent = "H₂";
+const brandName = document.createElement("span");
+brandName.textContent = "Thí nghiệm THPT";
+brand.append(brandMark, brandName);
 
-        function formatChemText(rawText = "") {
-            return rawText
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/&lt;(\/?(?:sub|sup))&gt;/gi, "<$1>");
-        }
+const homeLink = document.createElement("a");
+homeLink.className = "nav-main active-page";
+homeLink.href = "index.html";
+homeLink.textContent = "Trang chủ";
+homeLink.setAttribute("aria-current", "page");
+navLinks.prepend(homeLink);
 
-        function highlight(text, keyword) {
-            if (!keyword) return text;
-            const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-            const regex = new RegExp(`(${escaped})`, "gi");
-            return text.replace(regex, "<mark>$1</mark>");
-        }
+nav.classList.add("site-nav");
+navLinks.id = "primaryNavigation";
+const mobileToggle = document.createElement("button");
+mobileToggle.className = "site-menu-toggle";
+mobileToggle.type = "button";
+mobileToggle.setAttribute("aria-expanded", "false");
+mobileToggle.setAttribute("aria-controls", "primaryNavigation");
+mobileToggle.setAttribute("aria-label", "Mở điều hướng");
+const menuGlyph = document.createElement("span");
+menuGlyph.setAttribute("aria-hidden", "true");
+menuGlyph.textContent = "☰";
+mobileToggle.append(menuGlyph);
+brand.after(mobileToggle);
 
-        const searchInput = document.getElementById("searchInput");
-        const clearSearchButton = document.getElementById("clearSearch");
+const closeMobileMenu = ({ restoreFocus = false } = {}) => {
+  nav.dataset.mobileOpen = "false";
+  mobileToggle.setAttribute("aria-expanded", "false");
+  mobileToggle.setAttribute("aria-label", "Mở điều hướng");
+  if (restoreFocus) mobileToggle.focus();
+};
+mobileToggle.addEventListener("click", () => {
+  const isOpen = nav.dataset.mobileOpen !== "true";
+  nav.dataset.mobileOpen = String(isOpen);
+  mobileToggle.setAttribute("aria-expanded", String(isOpen));
+  mobileToggle.setAttribute("aria-label", isOpen ? "Đóng điều hướng" : "Mở điều hướng");
+  if (isOpen) homeLink.focus();
+});
+navLinks.addEventListener("click", (event) => {
+  if (event.target.closest("a")) closeMobileMenu();
+});
+document.addEventListener("click", (event) => {
+  if (!nav.contains(event.target)) closeMobileMenu();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && nav.dataset.mobileOpen === "true") {
+    closeMobileMenu({ restoreFocus: true });
+  }
+});
+navbarRoot.append(navbar);
 
-        function renderCards(items, type = "category") {
-            const container = document.getElementById("cardContainer");
-            const emptyMessage = document.getElementById("emptyMessage");
-            const statusMessage = document.getElementById("statusMessage");
-            const resultCount = document.getElementById("resultCount");
+const themeButton = navbar.querySelector(".theme-btn");
+if (themeButton) {
+  themeButton.setAttribute("aria-pressed", "false");
+  themeButton.addEventListener("click", () => {
+    themeButton.setAttribute("aria-pressed", String(document.body.classList.contains("dark")));
+  });
+}
 
-            container.innerHTML = "";
-            statusMessage.style.display = "none";
-            statusMessage.textContent = "";
-            resultCount.style.display = "none";
+const gradeCountNodes = new Map(
+  [...document.querySelectorAll("[data-grade-count]")].map((node) => [Number(node.dataset.gradeCount), node])
+);
+const experimentGrid = document.getElementById("experimentGrid");
+const searchInput = document.getElementById("searchInput");
+const searchClear = document.getElementById("searchClear");
+const searchStatus = document.getElementById("searchStatus");
+const discoveryTitle = document.getElementById("discoveryTitle");
+const discoveryDescription = document.getElementById("discoveryDescription");
+const discoveryCount = document.getElementById("discoveryCount");
+const searchForm = document.getElementById("searchForm");
+const discoverySection = document.getElementById("discovery");
 
-            if (!items || !items.length) {
-                emptyMessage.style.display = "block";
-                return;
-            }
+let allExperiments = [];
+let featuredExperiments = [];
 
-            emptyMessage.style.display = "none";
-            if (type === "experiment") {
-                resultCount.textContent = `Tìm thấy ${items.length} kết quả.`;
-                resultCount.style.display = "block";
-            }
+function renderExperiments(items) {
+  const fragment = document.createDocumentFragment();
+  for (const item of items) {
+    const card = createExperimentCard(item);
+    const image = card.querySelector("img");
+    if (image) {
+      image.width = 640;
+      image.height = 360;
+    }
+    fragment.append(card);
+  }
+  experimentGrid.replaceChildren(fragment);
+  experimentGrid.setAttribute("aria-busy", "false");
+}
 
-            items.forEach((item, index) => {
-                const listItem = document.createElement("li");
-                const card = document.createElement("a");
-                card.className = "card";
-                card.style.animationDelay = `${index * 55}ms`;
+function removeVietnameseTones(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase();
+}
 
-                const destination = type === "experiment"
-                    ? (item.ytLink || item.link || "")
-                    : (item.link || "");
+function updateDiscovery(items, query = "") {
+  const cleanQuery = query.trim();
+  if (!cleanQuery) {
+    discoveryTitle.textContent = "Thí nghiệm được chọn";
+    discoveryDescription.textContent = "Một vài video được chọn từ kho thí nghiệm theo từng khối lớp.";
+    discoveryCount.textContent = `${items.length} video gợi ý`;
+    searchStatus.textContent = "Tìm kiếm trong danh sách video theo tên, từ khóa hoặc lớp.";
+    renderExperiments(items);
+    return;
+  }
 
-                if (destination) {
-                    card.href = destination;
-                } else {
-                    card.setAttribute("aria-disabled", "true");
-                    card.tabIndex = -1;
-                }
+  discoveryTitle.textContent = "Kết quả tìm kiếm";
+  discoveryDescription.textContent = "Các thí nghiệm phù hợp với từ khóa bạn nhập.";
+  discoveryCount.textContent = `${items.length} kết quả`;
+  searchStatus.textContent = items.length
+    ? `Tìm thấy ${items.length} thí nghiệm. Hiển thị tối đa 12 kết quả.`
+    : "Không tìm thấy nội dung phù hợp. Hãy thử từ khóa khác.";
 
-                if (type === "experiment" && destination) {
-                    card.target = "_blank";
-                    card.rel = "noopener noreferrer";
-                }
+  if (items.length) renderExperiments(items.slice(0, 12));
+  else {
+    renderEmpty(experimentGrid, "Không tìm thấy nội dung phù hợp. Hãy thử từ khóa khác.");
+    experimentGrid.setAttribute("aria-busy", "false");
+  }
+}
 
-                if (type === "category") {
-                    const title = document.createElement("h3");
-                    title.textContent = item.title;
+function runSearch() {
+  const query = removeVietnameseTones(searchInput.value.trim());
+  searchClear.hidden = !searchInput.value.trim();
+  if (!query) {
+    updateDiscovery(featuredExperiments);
+    return;
+  }
 
-                    const description = document.createElement("p");
-                    description.textContent = item.description || "Khám phá nội dung theo từng lớp.";
+  const matches = allExperiments.filter((item) => {
+    const searchable = removeVietnameseTones(
+      `${item.title} ${item.keywords.join(" ")} ${item.badge} Hóa học lớp ${item.grade} ${item.grade}`
+    );
+    return searchable.includes(query);
+  });
+  updateDiscovery(matches, searchInput.value);
+}
 
-                    card.append(title, description);
-                } else {
-                    const badge = document.createElement("span");
-                    badge.className = "card-badge";
-                    badge.textContent = item.badge || "Không rõ lớp";
+function saveSearch(value) {
+  if (!value.trim()) return;
+  try {
+    const stored = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+    const history = Array.isArray(stored) ? stored : [];
+    history.unshift(value);
+    localStorage.setItem("searchHistory", JSON.stringify(history.slice(0, 5)));
+  } catch {
+    // Search remains available when browser storage is disabled.
+  }
+}
 
-                    const title = document.createElement("h3");
-                    title.className = "card-title";
-                    title.innerHTML = highlight(
-                        formatChemText(item.title || "Video thí nghiệm"),
-                        searchInput.value.trim()
-                    );
+searchInput.addEventListener("input", () => {
+  searchClear.hidden = !searchInput.value.trim();
+  saveSearch(searchInput.value);
+  runSearch();
+});
+searchClear.addEventListener("click", () => {
+  searchInput.value = "";
+  runSearch();
+  searchInput.focus();
+});
+searchForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  runSearch();
+  discoverySection.scrollIntoView({ behavior: "smooth", block: "start" });
+});
 
-                    const description = document.createElement("p");
-                    description.className = "card-description";
-                    description.textContent = `Nhấn để xem video tại trang ${item.badge || "liên kết nguồn"}`;
+renderLoading(experimentGrid, "Đang tải danh sách thí nghiệm…");
+experimentGrid.setAttribute("aria-busy", "true");
 
-                    card.append(badge, title, description);
-                }
+try {
+  await repository.load();
+  const [experiments, grade10, grade11, grade12] = await Promise.all([
+    repository.getAll(),
+    repository.getPageOccurrences("lop10"),
+    repository.getPageOccurrences("lop11"),
+    repository.getPageOccurrences("lop12")
+  ]);
 
-                listItem.appendChild(card);
-                container.appendChild(listItem);
-            });
-        }
+  allExperiments = experiments.map((experiment) => ({
+    ...experiment,
+    ytLink: repository.buildYouTubeUrl(experiment.youtubeId),
+    thumbnail: repository.buildThumbnailUrl(experiment.youtubeId),
+    badge: repository.getGradeBadge(experiment.grade)
+  }));
 
-        function searchExperiment(value) {
-            const normalizedInput = removeVietnameseTones(value.trim());
-            const introSection = document.getElementById("introSection");
+  for (const [grade, occurrences] of [[10, grade10], [11, grade11], [12, grade12]]) {
+    const countNode = gradeCountNodes.get(grade);
+    if (countNode) countNode.textContent = String(occurrences.length);
+  }
 
-            if (!normalizedInput) {
-                introSection.style.display = "block";
-                renderCards(CATEGORY_DATA, "category");
-                return;
-            }
+  featuredExperiments = [...grade10.slice(0, 2), ...grade11.slice(0, 2), ...grade12.slice(0, 2)];
+  searchInput.disabled = false;
+  searchInput.removeAttribute("aria-busy");
+  updateDiscovery(featuredExperiments);
+} catch (error) {
+  for (const countNode of gradeCountNodes.values()) countNode.textContent = "—";
+  renderError(experimentGrid, "Không thể tải danh sách thí nghiệm. Vui lòng tải lại trang.");
+  experimentGrid.setAttribute("aria-busy", "false");
+  searchStatus.textContent = "Không thể tải dữ liệu để tìm kiếm.";
+  console.error("Homepage experiment data failed to load.", error);
+}
 
-            introSection.style.display = "none";
+document.getElementById("footerRoot").append(createFooter());
 
-            if (typeof ALL_EXPERIMENTS !== "undefined") {
-                const filtered = ALL_EXPERIMENTS.filter((item) => {
-                    const normalizedText = removeVietnameseTones(`${item.title} ${item.keywords} ${item.badge}`);
-                    return normalizedText.includes(normalizedInput);
-                });
-                renderCards(filtered, "experiment");
-            } else {
-                const statusMessage = document.getElementById("statusMessage");
-                statusMessage.style.display = "block";
-                statusMessage.textContent = "Không thể tải dữ liệu thí nghiệm. Vui lòng thử tải lại trang.";
-            }
-        }
-
-        const menuToggle = document.getElementById("menuToggle");
-        const experimentMenu = document.getElementById("experimentMenu");
-        const menuItems = Array.from(experimentMenu.querySelectorAll('[role="menuitem"]'));
-
-        function closeMenu({ focusButton = false } = {}) {
-            experimentMenu.classList.remove("open");
-            menuToggle.setAttribute("aria-expanded", "false");
-            if (focusButton) menuToggle.focus();
-        }
-
-        menuToggle.addEventListener("click", (event) => {
-            event.stopPropagation();
-            const isOpen = experimentMenu.classList.toggle("open");
-            menuToggle.setAttribute("aria-expanded", String(isOpen));
-            if (isOpen && menuItems.length) menuItems[0].focus();
-        });
-
-        document.addEventListener("click", (event) => {
-            if (!event.target.closest(".nav-item")) closeMenu();
-        });
-
-        document.addEventListener("keydown", (event) => {
-            if (event.key === "Escape") closeMenu({ focusButton: true });
-        });
-
-        let searchTimer;
-
-        function updateSearchControlState() {
-            const hasText = searchInput.value.trim().length > 0;
-            clearSearchButton.hidden = !hasText;
-            clearSearchButton.disabled = !hasText;
-        }
-
-        searchInput.addEventListener("input", (event) => {
-            saveSearch(event.target.value);
-            updateSearchControlState();
-            window.clearTimeout(searchTimer);
-            searchTimer = window.setTimeout(() => {
-                searchExperiment(event.target.value);
-            }, 150);
-        });
-
-        clearSearchButton.addEventListener("click", () => {
-            searchInput.value = "";
-            updateSearchControlState();
-            searchExperiment("");
-            searchInput.focus();
-        });
-
-        function saveSearch(value) {
-            if (!value.trim()) return;
-
-            let history = [];
-            try {
-                history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
-                if (!Array.isArray(history)) history = [];
-            } catch {
-                history = [];
-            }
-
-            history.unshift(value);
-            localStorage.setItem("searchHistory", JSON.stringify(history.slice(0, 5)));
-        }
-
-        if (typeof ALL_EXPERIMENTS !== "undefined" && Array.isArray(ALL_EXPERIMENTS)) {
-            searchInput.disabled = false;
-            searchInput.removeAttribute("aria-busy");
-        } else {
-            const statusMessage = document.getElementById("statusMessage");
-            statusMessage.style.display = "block";
-            statusMessage.textContent = "Dữ liệu chưa sẵn sàng. Vui lòng tải lại trang để tiếp tục tìm kiếm.";
-            searchInput.setAttribute("aria-busy", "true");
-        }
-
-        updateSearchControlState();
-
-        // Ensure default categories are visible on first load.
-        renderCards(CATEGORY_DATA, "category");
-    </script>
-    <script src="ui-enhance.js"></script>
+  </script>
     <!-- Optional development diagnostic: add ?repository-check=1 to exercise the new repository. -->
     <script type="module">
         const repositoryCheckEnabled =
@@ -1018,5 +812,6 @@
             }
         }
     </script>
-    </body>
+    
+</body>
 </html>
