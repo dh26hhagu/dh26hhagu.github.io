@@ -11,13 +11,16 @@
   color-scheme: light;
   --color-primary: #176a63;
   --color-primary-strong: #10544f;
+  --color-primary-action: #176a63;
+  --color-primary-action-hover: #10544f;
+  --color-focus-ring: #10544f;
   --color-primary-soft: #e8f3f1;
   --color-accent: #d79a55;
   --color-bg: #f5f8f8;
   --color-surface: #ffffff;
   --color-surface-muted: #eef4f3;
   --color-text: #173136;
-  --color-muted: #5e7478;
+  --color-muted: #526a6e;
   --color-border: #dbe6e5;
   --color-shadow: 0 14px 38px rgba(20, 54, 56, .09);
   --radius-sm: 12px;
@@ -47,6 +50,11 @@ body.dark {
   --color-muted: #a4b8b5;
   --color-border: #34494a;
   --color-primary-soft: #203d3a;
+  --color-primary: #76c9bd;
+  --color-primary-strong: #9addd3;
+  --color-primary-action: #176a63;
+  --color-primary-action-hover: #10544f;
+  --color-focus-ring: #e4a653;
   --color-shadow: 0 16px 42px rgba(0, 0, 0, .25);
 }
 a { color: inherit; text-decoration: none; }
@@ -65,7 +73,7 @@ button { color: inherit; }
   transform: translateY(-160%); box-shadow: var(--color-shadow);
 }
 .skip-link:focus { transform: translateY(0); }
-:focus-visible { outline: 3px solid #e4a653; outline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 3px; }
 
 /* Navigation */
 .ui-site-header {
@@ -84,7 +92,7 @@ button { color: inherit; }
 }
 .brand-mark {
   width: 38px; height: 38px; display: grid; place-items: center;
-  border-radius: 13px; background: var(--color-primary); color: #fff;
+  border-radius: 13px; background: var(--color-primary-action); color: #fff;
   font-size: .86rem; font-weight: 800; letter-spacing: -.04em;
 }
 .ui-navbar-links { display: flex; align-items: center; gap: .35rem; margin-left: auto; }
@@ -136,16 +144,17 @@ button { color: inherit; }
 /* Hero */
 .hero {
   position: relative; isolation: isolate; overflow: hidden;
-  padding: clamp(3.2rem, 7vw, 6.5rem) 0 clamp(3.4rem, 6vw, 5rem);
+  padding: clamp(2.7rem, 5vw, 4.7rem) 0 clamp(2.6rem, 4.5vw, 4rem);
   background: #e9f1ef;
 }
 body.dark .hero { background: #172629; }
+body.dark .hero::before { background: radial-gradient(circle, rgba(255,255,255,.08), rgba(255,255,255,0) 68%); }
 .hero::before {
   content: ""; position: absolute; z-index: -1; width: 46rem; height: 46rem;
   top: -32rem; right: -12rem; border-radius: 50%;
   background: radial-gradient(circle, rgba(255,255,255,.76), rgba(255,255,255,0) 68%);
 }
-.hero-layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(300px, .88fr); gap: clamp(2rem, 6vw, 5.5rem); align-items: center; }
+.hero-layout { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(280px, .82fr); gap: clamp(1.8rem, 4.5vw, 4.25rem); align-items: center; }
 .hero-copy { max-width: 680px; }
 .hero-kicker, .section-kicker {
   display: flex; align-items: center; gap: .55rem; margin: 0 0 1rem;
@@ -157,8 +166,8 @@ body.dark .hero { background: #172629; }
 }
 .site-name { margin: 0 0 .55rem; color: var(--color-muted); font-size: .94rem; font-weight: 700; }
 .hero h1 {
-  max-width: 13ch; margin: 0; color: var(--color-text);
-  font-size: clamp(2.5rem, 5.4vw, 4.6rem); font-weight: 760;
+  max-width: 15ch; margin: 0; color: var(--color-text);
+  font-size: clamp(2.35rem, 4.8vw, 4rem); font-weight: 760;
   letter-spacing: -.055em; line-height: 1.04;
 }
 .hero h1 span { color: var(--color-primary); }
@@ -171,8 +180,8 @@ body.dark .hero { background: #172629; }
   transition: transform var(--motion-fast), background var(--motion-fast), box-shadow var(--motion-fast);
 }
 .button:hover { transform: translateY(-2px); }
-.button-primary { background: var(--color-primary); color: #fff; box-shadow: 0 8px 20px rgba(23,106,99,.18); }
-.button-primary:hover { background: var(--color-primary-strong); }
+.button-primary { background: var(--color-primary-action); color: #fff; box-shadow: 0 8px 20px rgba(23,106,99,.18); }
+.button-primary:hover { background: var(--color-primary-action-hover); }
 .button-secondary { background: var(--color-surface); color: var(--color-text); border-color: var(--color-border); }
 .button-secondary:hover { background: var(--color-primary-soft); }
 .hero-search { max-width: 580px; margin-top: 2rem; }
@@ -184,13 +193,15 @@ body.dark .hero { background: #172629; }
   box-shadow: 0 8px 22px rgba(24,64,65,.07);
   transition: border-color var(--motion-fast), box-shadow var(--motion-fast);
 }
+body.dark .search-control { border-color: #496061; }
 .search-control:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 4px rgba(23,106,99,.12); }
 .search-icon { flex: 0 0 auto; color: var(--color-primary); font-size: 1.1rem; }
 .search-control input {
   width: 100%; min-width: 0; min-height: 44px; border: 0; outline: 0;
   background: transparent; color: var(--color-text); font-size: .94rem;
 }
-.search-control input::placeholder { color: #819395; opacity: 1; }
+.search-control input::placeholder { color: #657a7c; opacity: 1; }
+body.dark .search-control input::placeholder { color: #a4b8b5; }
 .search-control input:disabled { cursor: wait; }
 .search-clear {
   flex: 0 0 auto; min-width: 42px; min-height: 42px; border: 0;
@@ -231,7 +242,7 @@ body.dark .molecule { background: rgba(24,38,41,.82); }
 .molecule::after { bottom: 1px; left: -25px; }
 .molecule-core {
   width: 88px; height: 88px; display: grid; place-items: center;
-  border-radius: 26px; background: var(--color-primary); color: #fff;
+  border-radius: 26px; background: var(--color-primary-action); color: #fff;
   font-size: 1.5rem; font-weight: 800; letter-spacing: -.06em;
   box-shadow: 0 12px 26px rgba(23,106,99,.24);
 }
@@ -258,7 +269,7 @@ main { padding: clamp(3rem, 6vw, 5.3rem) 0; }
   background: var(--color-surface); box-shadow: 0 8px 24px rgba(23,49,54,.035);
   transition: transform var(--motion-base), box-shadow var(--motion-base), border-color var(--motion-base);
 }
-.grade-card:hover { transform: translateY(-4px); border-color: rgba(23,106,99,.35); box-shadow: var(--color-shadow); }
+.grade-card:hover, .grade-card:focus-within { transform: translateY(-4px); border-color: rgba(23,106,99,.35); box-shadow: var(--color-shadow); }
 .grade-card-top { display: flex; justify-content: space-between; align-items: center; }
 .grade-number { color: var(--color-primary); font-size: 2.65rem; font-weight: 800; letter-spacing: -.08em; line-height: 1; }
 .grade-symbol {
@@ -335,8 +346,8 @@ body.dark .ui-state-error { color: #ffabab; }
 }
 @media (max-width: 560px) {
   :root { --page-gutter: 1rem; }
-  .hero { padding-block: 3rem 3.2rem; }
-  .hero h1 { max-width: 12ch; font-size: clamp(2.3rem, 12vw, 3.35rem); }
+  .hero { padding-block: 2.4rem 2.5rem; }
+  .hero h1 { max-width: 15ch; font-size: clamp(2.05rem, 9.4vw, 2.9rem); }
   .hero-actions { display: grid; grid-template-columns: 1fr; }
   .hero-actions .button { width: 100%; }
   .search-control { min-height: 54px; }
@@ -345,9 +356,9 @@ body.dark .ui-state-error { color: #ffabab; }
   .grade-card > p { min-height: 0; }
   .discovery-heading { align-items: flex-start; flex-direction: column; gap: .3rem; }
   .discovery-section { padding: 1.1rem; border-radius: 22px; }
-  .chemistry-art { width: min(100%, 330px); }
-  .molecule { width: 145px; }
-  .molecule-core { width: 76px; height: 76px; }
+  .chemistry-art { width: min(100%, 200px); aspect-ratio: 1.2 / 1; margin-top: 0; }
+  .molecule { width: 112px; }
+  .molecule-core { width: 64px; height: 64px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
@@ -436,13 +447,13 @@ body.dark .ui-state-error { color: #ffabab; }
         <span class="discovery-count" id="discoveryCount">Đang tải…</span>
       </div>
       <p class="search-status" id="searchStatus" role="status" aria-live="polite">Đang tải danh sách thí nghiệm…</p>
-      <div class="experiment-grid" id="experimentGrid" aria-live="polite" aria-busy="true">
+      <div class="experiment-grid" id="experimentGrid" aria-busy="true">
         <p class="ui-state ui-state-loading" role="status">Đang tải danh sách thí nghiệm…</p>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer" id="footerRoot"></footer>
+  <div class="site-footer" id="footerRoot"></div>
 
   <script type="module">
 import {
@@ -524,6 +535,33 @@ document.addEventListener("keydown", (event) => {
   }
 });
 navbarRoot.append(navbar);
+
+const gradeMenu = navbar.querySelector(".nav-dropdown");
+const gradeMenuToggle = navbar.querySelector(".nav-arrow");
+gradeMenu.addEventListener("keydown", (event) => {
+  const items = [...gradeMenu.querySelectorAll('[role="menuitem"]')];
+  if (!items.length) return;
+  const currentIndex = items.indexOf(document.activeElement);
+  let nextIndex;
+
+  if (event.key === "ArrowDown") nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % items.length;
+  else if (event.key === "ArrowUp") nextIndex = currentIndex < 0 ? items.length - 1 : (currentIndex - 1 + items.length) % items.length;
+  else if (event.key === "Home") nextIndex = 0;
+  else if (event.key === "End") nextIndex = items.length - 1;
+  else return;
+
+  event.preventDefault();
+  items[nextIndex].focus();
+});
+gradeMenu.addEventListener("focusout", (event) => {
+  if (
+    !gradeMenu.contains(event.relatedTarget) &&
+    event.relatedTarget !== gradeMenuToggle &&
+    gradeMenuToggle.getAttribute("aria-expanded") === "true"
+  ) {
+    gradeMenuToggle.click();
+  }
+});
 
 const themeButton = navbar.querySelector(".theme-btn");
 if (themeButton) {
@@ -640,7 +678,7 @@ searchClear.addEventListener("click", () => {
 searchForm.addEventListener("submit", (event) => {
   event.preventDefault();
   runSearch();
-  discoverySection.scrollIntoView({ behavior: "smooth", block: "start" });
+  discoverySection.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
 });
 
 renderLoading(experimentGrid, "Đang tải danh sách thí nghiệm…");
