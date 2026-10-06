@@ -192,57 +192,6 @@
 	</style>
     <link rel="stylesheet" href="ui-system.css">
 </head>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const videos = document.querySelectorAll(".video-card");
-    document.getElementById("resultCount").textContent = videos.length;
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const videos = document.querySelectorAll(".video-card");
-    const searchInput = document.getElementById("searchInput");
-    const resultCount = document.getElementById("resultCount");
-
-    // Hàm bỏ dấu tiếng Việt
-    function removeVietnameseTones(str) {
-        return str
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/đ/g, "d")
-            .replace(/Đ/g, "D")
-            .toLowerCase();
-    }
-
-    function updateCount(){
-        const visible = Array.from(videos).filter(v => v.style.display !== "none");
-        resultCount.textContent = visible.length;
-    }
-
-    updateCount();
-
-    searchInput.addEventListener("input", function () {
-        const keyword = removeVietnameseTones(this.value);
-
-        videos.forEach(card => {
-            const text = removeVietnameseTones(card.innerText);
-
-            if (text.includes(keyword)) {
-                card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
-        });
-
-        updateCount();
-    });
-});
-</script>
-
-
-
-
-
 <body>
 
     <!-- HEADER -->
@@ -270,337 +219,155 @@ document.addEventListener("DOMContentLoaded", function () {
 
     <!-- CONTENT -->
     <div class="container">
-        <div class="grid">
-		
-    <div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/KorZTnmmWnA/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=KorZTnmmWnA"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng xà phòng hoá chất béo </h3>
-		<p class="channel">Kênh: Hóa Học ABC </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/mxIbHNoeMBg/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=mxIbHNoeMBg"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng của glucose với Cu(OH)<sub>2</sub> </h3>
-		<p class="channel">Kênh: HÓA HỌC CƠ BẢN </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/4JcVnNKHGw0/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=4JcVnNKHGw0"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Tính chất aldehyde của glucose  </h3>
-		<p class="channel">Kênh: Khánh Linh </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/9XZfytvk0MM/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=9XZfytvk0MM"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng của saccharose với Cu(OH)<sub>2</sub>  </h3>
-		<p class="channel">Kênh: Học Hóa Cùng Cô Ly </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/eRP-x_a4RjQ/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=eRP-x_a4RjQ"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng thuỷ phân tinh bột   </h3>
-		<p class="channel">Kênh: Giac Cao Cu </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/7oqGLkQqTi8/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=7oqGLkQqTi8"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng màu của hồ tinh bột với iodine    </h3>
-		<p class="channel">Kênh: Giac Cao Cu </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/bav5TCJjUsg/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=bav5TCJjUsg"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng thuỷ phân cellulose trong môi trường acid     </h3>
-		<p class="channel">Kênh: Học Hóa Cùng Cô Ly </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/Y2GTUes9w-o/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=Y2GTUes9w-o"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng của cellulose với nitric acid  </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt </p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/hn3BsJuEETk/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=hn3BsJuEETk"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Tính tan của cellulose trong nước Schweizer   </h3>
-		<p class="channel">Kênh: Học Hóa Cùng Cô Ly</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/mpNe1LvWMKk/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=mpNe1LvWMKk"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng của nhóm amine    </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/9OfqTga8Fbs/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=9OfqTga8Fbs"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Phản ứng của aniline với nước bromine </h3>
-		<p class="channel">Kênh: Khánh Linh</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/MMxXhTEGJw4/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=MMxXhTEGJw4"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm với protein</h3>
-		<p class="channel">Kênh: Hóa Học ABC</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/WMwtRIxld0A/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=WMwtRIxld0A"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Lắp ráp một pin đơn giản </h3>
-		<p class="channel">Kênh: Học Hóa Cùng Cô Ly</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/MdDScm4EBD8/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=MdDScm4EBD8"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Điện phân dung dịch CuSO<sub>4</sub> </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/1hW1hJghqq0/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=1hW1hJghqq0"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Điện phân dung dịch (tự điều chế nước Javel để tẩy rửa)  </h3>
-		<p class="channel">Kênh: Mr.Skeleton Thí Nghiệm</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/59m13-yZYiM/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=59m13-yZYiM"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Kim loại tác dụng với phi kim </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/ijfk0e8ofbs/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=ijfk0e8ofbs"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Kim loại tác dụng với dung dịch acid loãng  </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/ymO_GpLB1q8/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=ymO_GpLB1q8"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Kim loại tác dụng với dung dịch muối   </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/2vGUEWVCYmk/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=2vGUEWVCYmk"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Sự ăn mòn điện hoá sắt   </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/psz18-j7TlA/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=psz18-j7TlA"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Bảo vệ sắt bằng phương pháp điện hóa </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/K8OCBFc937o/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=K8OCBFc937o"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>So sánh độ tan giữa Calcium sulfate và Barium sulfate  </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/e1k6565b63k/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=e1k6565b63k"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Nhận biết từng ion riêng lẽ trong dung dịch   </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/q-fAd5-MIXQ/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=q-fAd5-MIXQ"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Xác định hàm lượng muối Fe(II) bằng dung dịch thuốc tím    </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/KDXp9_kcBUc/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=KDXp9_kcBUc"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Kiểm tra sự có mặt từng ion riêng biệt Cu<sup>2+</sup> Fe<sup>3+</sup>   </h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/M7QydP6CLQ8/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=M7QydP6CLQ8"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Sự tạo thành phức chất của Cu<sup>2+</sup></h3>
-		<p class="channel">Kênh: Cô Bích Ngọc Hóa Học</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/acKADFjYCG4/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=acKADFjYCG4"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm thử màu ngọn lửa kim loại kiềm thổ  </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-<div class="card video-card">
-    <div class="thumb">
-        <img src="https://img.youtube.com/vi/JbRLVBLEMEw/hqdefault.jpg">
-        <a class="play-btn"
-           href="https://www.youtube.com/watch?v=JbRLVBLEMEw"
-           target="_blank">▶</a>
-    </div>
-    <div class="card-content">
-        <h3>Thí nghiệm thử màu ngọn lửa kim loại kiềm   </h3>
-		<p class="channel">Kênh: Thầy Nguyễn Phú Hoạt</p>
-    </div>
-</div>
-     </div>
+        <div class="grid" id="videoGrid"></div>
 
             
                 
 
+    <script type="module">
+        import * as repository from "./experiment-repository.js";
+        import { renderLoading, renderError } from "./components/ui.js";
+
+        // Per-field fingerprints capture the legacy ordered baseline without duplicating its records here.
+        const LEGACY_PARITY = {"youtubeIds":"b82ee206:c4ff5154","titles":"2460d6f0:fbf2e532","thumbnails":"a786754f:b43466f3","urls":"e22fd148:d4a6bee4","channels":"683c90b1:80ec5891","badges":"1ca860a7:b615eec7","grades":"0db8ff2e:8eec3840"};
+        const grid = document.getElementById("videoGrid");
+        const searchInput = document.getElementById("searchInput");
+        const resultCount = document.getElementById("resultCount");
+        const isRepositoryCheck = new URLSearchParams(window.location.search).has("repository-check");
+
+        function normalizeText(value) {
+            return String(value ?? "").trim().replace(/\s+/g, " ");
+        }
+
+        function fingerprint(values) {
+            const serialized = JSON.stringify(values);
+            let first = 2166136261;
+            let second = 5381;
+            for (let index = 0; index < serialized.length; index += 1) {
+                const character = serialized.charCodeAt(index);
+                first = Math.imul(first ^ character, 16777619) >>> 0;
+                second = (Math.imul(second, 33) ^ character) >>> 0;
+            }
+            return first.toString(16).padStart(8, "0") + ":" + second.toString(16).padStart(8, "0");
+        }
+
+        function reportParity(message, passed, details = {}) {
+            window.lop12RepositoryParity = { passed, message, ...details };
+            if (!isRepositoryCheck) return;
+            let status = document.getElementById("repositoryCheckStatus");
+            if (!status) {
+                status = document.createElement("p");
+                status.id = "repositoryCheckStatus";
+                status.setAttribute("role", passed ? "status" : "alert");
+                status.style.cssText = "padding:12px 30px;margin:0;background:#fff;color:#222";
+                document.querySelector(".top").append(status);
+            }
+            status.textContent = message;
+        }
+
+        function checkParity(occurrences) {
+            const values = {
+                youtubeIds: occurrences.map((item) => item.video.youtubeId),
+                titles: occurrences.map((item) => normalizeText(item.title)),
+                thumbnails: occurrences.map((item) => item.thumbnail),
+                urls: occurrences.map((item) => item.ytLink),
+                channels: occurrences.map((item) => normalizeText(item.video.channel)),
+                badges: occurrences.map((item) => item.badge),
+                grades: occurrences.map((item) => item.experiment.grade)
+            };
+            const errors = [];
+            if (occurrences.length !== 27) errors.push("count expected 27, got " + occurrences.length);
+            for (const [field, actualValues] of Object.entries(values)) {
+                if (fingerprint(actualValues) !== LEGACY_PARITY[field]) errors.push(field + " ordered parity mismatch");
+            }
+            return { errors, fieldParity: Object.fromEntries(Object.keys(values).map((field) => [field, !errors.some((error) => error.startsWith(field + " "))])) };
+        }
+
+        function createLegacyCard(item) {
+            const card = document.createElement("div");
+            card.className = "card video-card";
+            card.dataset.experimentId = item.experiment.id;
+            card.dataset.youtubeId = item.video.youtubeId;
+            card.dataset.grade = String(item.experiment.grade);
+            card.dataset.badge = item.badge;
+
+            const thumb = document.createElement("div");
+            thumb.className = "thumb";
+            const image = document.createElement("img");
+            image.src = item.thumbnail;
+            image.alt = "Thumbnail: " + item.title;
+            image.loading = "lazy";
+            image.decoding = "async";
+
+            const play = document.createElement("a");
+            play.className = "play-btn";
+            play.href = item.ytLink;
+            play.target = "_blank";
+            play.rel = "noopener noreferrer";
+            play.setAttribute("aria-label", "Mở video: " + item.title);
+            play.textContent = "▶";
+            thumb.append(image, play);
+
+            const content = document.createElement("div");
+            content.className = "card-content";
+            const heading = document.createElement("h3");
+            heading.textContent = item.title;
+            const channel = document.createElement("p");
+            channel.className = "channel";
+            channel.textContent = item.video.channel;
+            content.append(heading, channel);
+            card.append(thumb, content);
+            return card;
+        }
+
+        function normalizeVietnameseTones(value) {
+            const chemicalCharacters = { "₀":"0", "₁":"1", "₂":"2", "₃":"3", "₄":"4", "₅":"5", "₆":"6", "₇":"7", "₈":"8", "₉":"9", "⁰":"0", "¹":"1", "²":"2", "³":"3", "⁴":"4", "⁵":"5", "⁶":"6", "⁷":"7", "⁸":"8", "⁹":"9", "⁺":"+", "⁻":"-" };
+            return value.normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/đ/g, "d")
+                .replace(/Đ/g, "D")
+                .replace(/[₀-₉⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]/g, (character) => chemicalCharacters[character] || character)
+                .toLowerCase();
+        }
+
+        function updateCount(cards) {
+            resultCount.textContent = cards.filter((card) => card.style.display !== "none").length;
+        }
+
+        async function initializePage() {
+            renderLoading(grid, "Đang tải danh sách thí nghiệm…");
+            try {
+                await repository.load();
+                const occurrences = await repository.getPageOccurrences("lop12");
+                const parity = checkParity(occurrences);
+                if (parity.errors.length) {
+                    reportParity("LOP12 REPOSITORY PARITY FAIL: " + parity.errors.join("; "), false, parity);
+                    renderError(grid, "Không thể xác minh dữ liệu Lớp 12. Vui lòng tải lại trang.");
+                    return;
+                }
+
+                const cards = occurrences.map(createLegacyCard);
+                grid.replaceChildren(...cards);
+                updateCount(cards);
+                reportParity("LOP12 REPOSITORY PARITY PASS: 27/27 vị trí; YouTube IDs, titles, thumbnails, URLs, channels, badge và grade khớp baseline.", true, parity);
+
+                searchInput.addEventListener("input", function () {
+                    const keyword = normalizeVietnameseTones(this.value);
+                    cards.forEach((card) => {
+                        const text = normalizeVietnameseTones(card.innerText);
+                        card.style.display = text.includes(keyword) ? "block" : "none";
+                    });
+                    updateCount(cards);
+                });
+            } catch (error) {
+                reportParity("LOP12 REPOSITORY LOAD FAIL: " + error.message, false);
+                renderError(grid, "Không thể tải danh sách thí nghiệm. Vui lòng thử lại sau.");
+            }
+        }
+
+        initializePage();
+    </script>
+    <script src="ui-enhance.js"></script>
     <script src="ui-enhance.js"></script>
 </body>
 </html>
