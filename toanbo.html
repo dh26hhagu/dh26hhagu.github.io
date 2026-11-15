@@ -189,6 +189,7 @@
 }
     </style>
     <link rel="stylesheet" href="ui-system.css">
+    <link rel="stylesheet" href="search-filter.css">
 </head>
 
 
@@ -202,7 +203,7 @@
     <!-- HEADER -->
     <div class="top">
     <div class="top-bar">
-        <h1><span id="resultCount">0</span> Kết quả</h1>
+        <h1><span id="resultCount" aria-live="polite" aria-atomic="true">0</span> Kết quả</h1>
 
         <!-- Nút trở về -->
         <a href="thinghiem.html" class="back-btn" title="Quay lại">
@@ -211,8 +212,18 @@
     </div>
 
     <!-- Ô tìm kiếm -->
-    <div class="search-box">
+    <div class="search-box search-controls">
+        <label class="visually-hidden" for="searchInput">Tìm theo tiêu đề, kênh YouTube hoặc từ khóa</label>
         <input type="text" id="searchInput" placeholder="🔍 Tìm thí nghiệm, video, nội dung...">
+        <label class="visually-hidden" for="gradeFilter">Lọc theo lớp</label>
+        <select id="gradeFilter">
+            <option value="all">Tất cả lớp</option>
+            <option value="10">Lớp 10</option>
+            <option value="11">Lớp 11</option>
+            <option value="12">Lớp 12</option>
+        </select>
+        <button type="button" id="clearSearchBtn">Xóa tìm kiếm</button>
+        <button type="button" id="resetFiltersBtn">Xóa tất cả</button>
     </div>
 </div>
 
@@ -224,6 +235,7 @@
 
     <!-- CONTENT -->
     <div class="container">
+        <p id="noResultMsg" class="search-no-results" role="status" aria-live="polite" hidden>Không tìm thấy video thí nghiệm nào phù hợp.</p>
         <div class="grid">
 		
       
@@ -321,6 +333,7 @@
 <script type="module">
         import * as repository from "./experiment-repository.js";
         import { renderLoading, renderError } from "./components/ui.js";
+        import { createSearchIndex, filterSearchIndex } from "./search-filter.js";
 
         // Ordered fingerprints preserve the legacy 87-card baseline without duplicating its dataset.
         const LEGACY_PARITY = {"youtubeIds":"c2f69b7a:a1847340","titles":"6c0858e8:bf8b10c4","thumbnails":"682ac68b:a79533a7","urls":"e21b3c94:2607e970","channels":"c7bd0033:d65082df","badges":"bd353322:ae0860a6","grades":"b0a7fa25:c3922081"};
@@ -331,7 +344,9 @@
         ];
         const grids = [...document.querySelectorAll(".container .grid")];
         const searchInput = document.getElementById("searchInput");
+        const gradeFilter = document.getElementById("gradeFilter");
         const resultCount = document.getElementById("resultCount");
+        const noResultMsg = document.getElementById("noResultMsg");
         const isRepositoryCheck = new URLSearchParams(window.location.search).has("repository-check");
 
         function normalizeText(value) {
@@ -465,18 +480,6 @@
             return card;
         }
 
-        function removeVietnameseTones(value) {
-            return value.normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .replace(/đ/g, "d")
-                .replace(/Đ/g, "D")
-                .toLowerCase();
-        }
-
-        function updateCount(cards) {
-            resultCount.textContent = cards.filter((card) => card.style.display !== "none").length;
-        }
-
         async function initializePage() {
             renderLoading(grids[0], "Đang tải danh sách thí nghiệm…");
             try {
@@ -510,16 +513,30 @@
                 gradeGroups.forEach((group, index) => {
                     grids[index].replaceChildren(...cards.slice(group.start, group.end));
                 });
-                updateCount(cards);
+                const searchIndex = createSearchIndex(occurrences, cards);
+                const updateResults = () => {
+                    const count = filterSearchIndex(searchIndex, {
+                        query: searchInput.value,
+                        grade: gradeFilter.value
+                    });
+                    resultCount.textContent = count;
+                    noResultMsg.hidden = count !== 0;
+                };
+                updateResults();
                 reportParity("TOANBO REPOSITORY PARITY PASS: 87/87 vị trí; phân bố L12 27, L11 37, L10 23; toàn bộ trường khớp. Có 3 channel legacy discrepancies đã canonicalize.", true, parity);
 
-                searchInput.addEventListener("input", function () {
-                    const keyword = removeVietnameseTones(this.value);
-                    cards.forEach((card) => {
-                        const text = removeVietnameseTones(card.innerText);
-                        card.style.display = text.includes(keyword) ? "block" : "none";
-                    });
-                    updateCount(cards);
+                searchInput.addEventListener("input", updateResults);
+                gradeFilter.addEventListener("change", updateResults);
+                document.getElementById("clearSearchBtn").addEventListener("click", () => {
+                    searchInput.value = "";
+                    updateResults();
+                    searchInput.focus();
+                });
+                document.getElementById("resetFiltersBtn").addEventListener("click", () => {
+                    searchInput.value = "";
+                    gradeFilter.value = "all";
+                    updateResults();
+                    searchInput.focus();
                 });
             } catch (error) {
                 reportParity("TOANBO REPOSITORY LOAD FAIL: " + error.message, false);
