@@ -1,40 +1,69 @@
 .search-controls {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
+    align-items: end;
+    gap: 12px;
 }
 
-.search-controls input {
-    box-sizing: border-box;
+.search-control-field {
+    display: flex;
     flex: 1 1 260px;
+    flex-direction: column;
+    gap: 6px;
     min-width: 0;
 }
 
+.search-control-field label {
+    color: var(--ui-text, #173136);
+    font-size: .9rem;
+    font-weight: 650;
+    line-height: 1.3;
+}
+
+.search-controls input,
 .search-controls select,
 .search-controls button {
     box-sizing: border-box;
-    min-height: 42px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    min-height: 44px;
+    border: 1px solid var(--ui-border, #dbe6e5);
+    border-radius: 10px;
     padding: 10px 14px;
-    background: #fff;
-    color: #222;
+    background: var(--ui-surface, #fff);
+    color: var(--ui-text, #173136);
     font: inherit;
 }
 
-.search-controls select:focus,
-.search-controls button:focus-visible {
-    outline: 2px solid #7a2bc2;
-    outline-offset: 2px;
+.search-controls input {
+    width: 100%;
+}
+
+.search-controls input::placeholder {
+    color: var(--ui-muted, #526a6e);
+    opacity: 1;
 }
 
 .search-controls button {
+    flex: 0 0 auto;
+    color: var(--ui-primary-strong, #10544f);
+    font-weight: 650;
     cursor: pointer;
 }
 
 .search-controls button:hover {
-    border-color: #7a2bc2;
+    border-color: var(--ui-primary, #176a63);
+    background: var(--ui-surface-soft, #eef4f3);
+}
+
+.search-controls input:focus,
+.search-controls select:focus {
+    border-color: var(--ui-primary, #176a63);
+}
+
+.search-controls input:focus-visible,
+.search-controls select:focus-visible,
+.search-controls button:focus-visible {
+    outline: 3px solid var(--ui-primary-strong, #10544f);
+    outline-offset: 2px;
 }
 
 .visually-hidden {
@@ -52,6 +81,18 @@
 .search-no-results {
     width: 100%;
     padding: 12px 0;
-    color: #888;
+    color: var(--ui-muted, #526a6e);
     text-align: center;
+}
+
+@media (max-width: 480px) {
+    .search-controls {
+        align-items: stretch;
+    }
+
+    .search-control-field,
+    .search-controls > button {
+        flex: 1 1 100%;
+        width: 100%;
+    }
 }

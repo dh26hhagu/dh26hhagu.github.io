@@ -41,26 +41,26 @@
         <div class="top-bar">
             <div>
                 <h1>Thí nghiệm Hóa học lớp 10</h1>
-                <p class="page-result-count"><span id="resultCount" aria-live="polite" aria-atomic="true">0</span> kết quả</p>
+                <p class="page-result-count"><span id="resultCount" aria-live="off">0</span> kết quả</p>
+                <span id="resultAnnouncement" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></span>
             </div>
             <a href="index.html" class="back-btn" aria-label="Về trang chủ" title="Quay lại">⬅</a>
         </div>
         <div class="search-box search-controls">
-            <label class="visually-hidden" for="searchInput">Tìm theo tiêu đề, kênh YouTube hoặc từ khóa</label>
-            <input type="text" id="searchInput" placeholder="🔍 Tìm thí nghiệm, video, nội dung...">
+            <div class="search-control-field"><label for="searchInput">Tìm thí nghiệm</label><input type="text" id="searchInput" placeholder="🔍 Tìm thí nghiệm, video, nội dung..." autocomplete="off"></div>
             <button type="button" id="clearSearchBtn">Xóa tìm kiếm</button>
         </div>
     </div>
 
     <div class="container">
-        <p id="noResultMsg" class="search-no-results" role="status" aria-live="polite" hidden>Không tìm thấy video thí nghiệm nào phù hợp.</p>
+        <p id="noResultMsg" class="search-no-results" hidden>Không tìm thấy thí nghiệm phù hợp. Thử từ khóa khác hoặc thay đổi bộ lọc.</p>
         
-        <div class="grid" id="videoGrid">
+        <div class="grid phase6d-card-grid" id="videoGrid" aria-busy="true">
             </div>
 
     <script type="module">
         import * as repository from "./experiment-repository.js";
-        import { renderLoading, renderError } from "./components/ui.js";
+        import { createExperimentCard, createDebouncedStatusAnnouncer, renderLoading, renderError } from "./components/ui.js";
         import { createSearchIndex, filterSearchIndex } from "./search-filter.js";
 
         const LEGACY_BASELINE = [{"youtubeId":"Wuo8SachZYE","titleMarkup":"Phương pháp kết tinh muối hạt","channel":"Kênh: Cô Bích Ngọc Hóa Học"},{"youtubeId":"JSt808aOVRM","titleMarkup":"Mô phỏng thí nghiệm của Ernest Rutherford. Bắn tia alpha vào lá vàng mỏng. Tán xạ alpha","channel":"Kênh: ABC Chemistry"},{"youtubeId":"yvqW3pa8-Jw","titleMarkup":"So Sánh Tính Kim Loại Của Sodium Na Và Magnesium Mg","channel":"Kênh: Vũ Thị Lê"},{"youtubeId":"IsoLGZXwV9A","titleMarkup":"SO SÁNH TÍNH PHI KIM CỦA CHLORINE VÀ IODINE","channel":"Kênh: Học văn cùng cô Thu"},{"youtubeId":"qJH3nfVLypU","titleMarkup":"TO SHOW THAT METALLIC OXIDES ARE BASIC IN NATURE","channel":"Kênh: amritacreate"},{"youtubeId":"P7bI_ZoN9Kw","titleMarkup":"THÍ NGHIỆM PHẢN ỨNG CỦA DUNG DỊCH MUỐI NA2CO3 VỚI DUNG DỊCH AXIT HNO3","channel":"Kênh: Học văn cùng cô Thu"},{"youtubeId":"v8g3CK5kke0","titleMarkup":"Structure of Sodium Chloride (NaCl)","channel":"Kênh: Scholarswing"},{"youtubeId":"cRMZ0HH6R0Q","titleMarkup":"THÍ NGHIỆM THỬ TÍNH DẪN ĐIỆN CỦA HỢP CHẤT","channel":"Kênh: Học văn cùng cô Thu"},{"youtubeId":"mJqObq4xIDs","titleMarkup":"Mô phỏng lắp ráp mô hình phân tử Methane CH<sub>4</sub>","channel":"Kênh: EMILYCHEMIST"},{"youtubeId":"bV9ntYqngfg","titleMarkup":"Thí Nghiệm Đinh Sắt (Iron) Tác Dụng Với Dung Dịch CuSO<sub>4</sub> (Copper (II) sulfate)","channel":"Kênh: Vũ Thị Lê"},{"youtubeId":"RYhLr6ZD3lg","titleMarkup":"Thí nghiệm đinh Sắt (Iron) tác dụng với dung dịch Sulfuric Acid loãng (H₂SO₄) ","channel":"Kênh: bang nhat"},{"youtubeId":"a21Bby96Vgc","titleMarkup":"THÍ NGHIỆM THEO DÕI SỰ THAY ĐỔI NHIỆT ĐỘ CỦA PHẢN ỨNG TRUNG HÒA","channel":"Kênh: Học văn cùng cô Thu"},{"youtubeId":"EWb5q8Bl39A","titleMarkup":" Calorimetry: Calculate Enthalpy","channel":"Kênh: Anne Schmidt"},{"youtubeId":"lQpC_z11_4Y","titleMarkup":" Phản ứng Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> + H₂SO₄. Thí nghiệm ảnh hưởng của nồng độ đến tốc độ phản ứng","channel":"Kênh: WAYS OUT"},{"youtubeId":"SITu7XjGkAE","titleMarkup":" Ảnh Hưởng Của Nhiệt Độ Đến Tốc Độ Phản Ứng | Mg (Magnesium) Phản Ứng Với Nước","channel":"Kênh: Vũ Thị Lê"},{"youtubeId":"hf9eyJgqilA","titleMarkup":" ẢNH HƯỞNG CỦA DIỆN TÍCH BỀ MẶT ĐẾN TỐC ĐỘ PHẢN ỨNG | CaCO<sub>3</sub> (Calcium Carbonate) Tác Dụng Với Dung Dịch HCl (Hydrochloric Acid)","channel":"Kênh: Cô Bích Ngọc Hóa Học"},{"youtubeId":"LJXTOaeljeI","titleMarkup":" Ảnh Hưởng Của Chất Xúc Tác Đến Tốc Độ Phản Ứng | Phản Ứng Của H<sub>2</sub>O<sub>2</sub> Khi Có MnO<sub>2</sub> Xúc Tác","channel":"Kênh: Vũ Thị Lê"},{"youtubeId":"3xV_mYC5oFQ","titleMarkup":"CHLORINE (Cl<sub>2</sub>) TÁC DỤNG VỚI DÂY SẮT (IRON)","channel":"Kênh: Cô Bích Ngọc Hóa Học"},{"youtubeId":"qpL4KsnbAQ4","titleMarkup":"Thí Nghiệm Tính Tẩy Màu của Khí Chlorine Cl<sub>2</sub> | KMnO<sub>4</sub> Tác Dụng Với HCl","channel":"Kênh: Vũ Thị Lê"},{"youtubeId":"kksVWwZ3Y14","titleMarkup":"Cl<sub>2</sub> + KBr, Cl<sub>2</sub> + NaI, Br<sub>2</sub> + NaI. Comparing the oxidizing properties of Cl<sub>2</sub>, Br<sub>2</sub>, and I<sub>2</sub>","channel":"Kênh: ABC Chemistry"},{"youtubeId":"_XENzHwsaww","titleMarkup":"Dung Dịch HCl Tác Dụng Zn, Cu","channel":"Kênh: Cô Bích Ngọc Hóa Học"},{"youtubeId":"XYXcd3UMNIU","titleMarkup":"DUNG DỊCH HCl TÁC DỤNG MUỐI NaHCO3 rắn","channel":"Kênh: Cô Bích Ngọc Hóa Học"},{"youtubeId":"GDuG2OaW0oM","titleMarkup":"NHẬN BIẾT MUỐI HALIDE","channel":"Kênh: Cô Bích Ngọc Hóa Học"}];
@@ -68,6 +68,7 @@
         const searchInput = document.getElementById("searchInput");
         const resultCount = document.getElementById("resultCount");
         const noResultMsg = document.getElementById("noResultMsg");
+        const announceResults = createDebouncedStatusAnnouncer(document.getElementById("resultAnnouncement"));
         const isRepositoryCheck = new URLSearchParams(window.location.search).has("repository-check");
 
         function normalizeText(value) {
@@ -96,44 +97,6 @@
                 document.querySelector(".top").append(status);
             }
             status.textContent = message;
-        }
-
-        function createLegacyCard(item) {
-            const experiment = item.experiment;
-            const card = document.createElement("div");
-            card.className = "card video-card";
-            card.dataset.experimentId = experiment.id;
-            card.dataset.youtubeId = item.video.youtubeId;
-            card.dataset.grade = String(experiment.grade);
-            card.dataset.badge = item.badge;
-
-            const thumb = document.createElement("div");
-            thumb.className = "thumb";
-            const image = document.createElement("img");
-            image.src = item.thumbnail;
-            image.alt = `Thumbnail: ${item.title}`;
-            image.loading = "lazy";
-            image.decoding = "async";
-
-            const play = document.createElement("a");
-            play.className = "play-btn";
-            play.href = item.ytLink;
-            play.target = "_blank";
-            play.rel = "noopener noreferrer";
-            play.setAttribute("aria-label", `Mở video: ${item.title}`);
-            play.textContent = "▶";
-            thumb.append(image, play);
-
-            const content = document.createElement("div");
-            content.className = "card-content";
-            const heading = document.createElement("h3");
-            heading.textContent = item.title;
-            const channel = document.createElement("p");
-            channel.className = "channel";
-            channel.textContent = item.video.channel;
-            content.append(heading, channel);
-            card.append(thumb, content);
-            return card;
         }
 
         function checkOrderedParity(occurrences) {
@@ -168,7 +131,14 @@
             return errors;
         }
 
+        function showGridError(message) {
+            grid.replaceChildren();
+            grid.setAttribute("aria-busy", "false");
+            renderError(grid, message);
+        }
+
         async function initializePage() {
+            grid.setAttribute("aria-busy", "true");
             renderLoading(grid, "Đang tải danh sách thí nghiệm…");
             try {
                 await repository.load();
@@ -176,17 +146,19 @@
                 const errors = checkOrderedParity(occurrences);
                 if (errors.length) {
                     reportParity(`LOP10 REPOSITORY PARITY FAIL: ${errors.join("; ")}`, false);
-                    renderError(grid, "Không thể xác minh dữ liệu Lớp 10. Vui lòng tải lại trang.");
+                    showGridError("Không thể xác minh dữ liệu Lớp 10. Vui lòng tải lại trang.");
                     return;
                 }
 
-                const cards = occurrences.map(createLegacyCard);
+                const cards = occurrences.map((item, index) => createExperimentCard(item, { showChannel: true, occurrenceIndex: index + 1 }));
                 grid.replaceChildren(...cards);
+                grid.setAttribute("aria-busy", "false");
                 const searchIndex = createSearchIndex(occurrences, cards);
                 const updateResults = () => {
                     const count = filterSearchIndex(searchIndex, { query: searchInput.value });
                     resultCount.textContent = count;
                     noResultMsg.hidden = count !== 0;
+                    announceResults(count === 0 ? "Không tìm thấy thí nghiệm phù hợp." : `Có ${count} thí nghiệm phù hợp.`);
                 };
                 updateResults();
                 reportParity("LOP10 REPOSITORY PARITY PASS: 23/23 vị trí; ID, title, thumbnail, URL, channel, badge và grade khớp baseline.", true);
@@ -199,7 +171,7 @@
                 });
             } catch (error) {
                 reportParity(`LOP10 REPOSITORY LOAD FAIL: ${error.message}`, false);
-                renderError(grid, "Không thể tải danh sách thí nghiệm. Vui lòng thử lại sau.");
+                showGridError("Không thể tải danh sách thí nghiệm. Vui lòng thử lại sau.");
             }
         }
 

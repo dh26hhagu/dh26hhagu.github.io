@@ -163,7 +163,7 @@ function validYoutubeId(value) {
  * Render one experiment or one resolved repository page occurrence.
  * All user-supplied strings, including chemical titles, are inserted as text.
  */
-export function createExperimentCard(item) {
+export function createExperimentCard(item, options = {}) {
   if (!item || typeof item !== "object") {
     throw new TypeError("Experiment card requires an experiment object.");
   }
@@ -180,28 +180,50 @@ export function createExperimentCard(item) {
   const title = item.title ?? item.titleOverride ?? experiment.title ?? "Video thí nghiệm";
   const grade = experiment.grade ?? item.grade;
   const badgeText = item.badge || (grade ? `Lớp ${grade}` : "Không rõ lớp");
+  const channel = options?.showChannel ? String(video.channel ?? "").trim() : "";
+  const occurrenceIndex = options?.occurrenceIndex ?? item.occurrenceIndex;
 
   const article = document.createElement("article");
   article.className = "ui-experiment-card";
   if (experiment.id) article.dataset.experimentId = experiment.id;
+  if (youtubeId) article.dataset.youtubeId = youtubeId;
+  if (grade != null) article.dataset.grade = String(grade);
+  if (occurrenceIndex != null) article.dataset.occurrenceIndex = String(occurrenceIndex);
+
+  const imageLink = document.createElement(ytLink ? "a" : "div");
+  imageLink.className = "ui-experiment-card-media";
+  if (ytLink) {
+    imageLink.href = ytLink;
+    imageLink.target = "_blank";
+    imageLink.rel = "noopener noreferrer";
+    imageLink.setAttribute("aria-label", `Xem video: ${title}`);
+  }
+
+  const showImageFallback = () => {
+    if (imageLink.dataset.imageError === "true") return;
+    imageLink.dataset.imageError = "true";
+    imageLink.classList.add("is-image-error");
+    imageLink.setAttribute("aria-label", `Ảnh xem trước không tải được. Xem video: ${title}`);
+    const fallback = document.createElement("span");
+    fallback.className = "ui-experiment-card-image-fallback";
+    fallback.setAttribute("role", "img");
+    fallback.setAttribute("aria-label", "Ảnh xem trước không khả dụng");
+    fallback.textContent = "Ảnh xem trước không khả dụng";
+    imageLink.replaceChildren(fallback);
+  };
 
   if (thumbnail) {
-    const imageLink = document.createElement(ytLink ? "a" : "div");
-    imageLink.className = "ui-experiment-card-media";
-    if (ytLink) {
-      imageLink.href = ytLink;
-      imageLink.target = "_blank";
-      imageLink.rel = "noopener noreferrer";
-      imageLink.setAttribute("aria-label", `Xem video: ${title}`);
-    }
     const image = document.createElement("img");
     image.src = thumbnail;
     image.alt = `Thumbnail: ${title}`;
     image.loading = "lazy";
     image.decoding = "async";
+    image.addEventListener("error", showImageFallback, { once: true });
     imageLink.append(image);
-    article.append(imageLink);
+  } else {
+    showImageFallback();
   }
+  article.append(imageLink);
 
   const content = document.createElement("div");
   content.className = "ui-experiment-card-content";
@@ -209,12 +231,20 @@ export function createExperimentCard(item) {
   const badge = document.createElement("span");
   badge.className = "ui-experiment-card-badge";
   badge.textContent = badgeText;
+  if (grade != null) badge.dataset.grade = String(grade);
 
   const heading = document.createElement("h3");
   heading.className = "ui-experiment-card-title";
   heading.textContent = title;
 
   content.append(badge, heading);
+
+  if (channel) {
+    const channelNode = document.createElement("p");
+    channelNode.className = "ui-experiment-card-channel channel";
+    channelNode.textContent = channel;
+    content.append(channelNode);
+  }
 
   if (ytLink) {
     const action = document.createElement("a");
@@ -223,11 +253,27 @@ export function createExperimentCard(item) {
     action.target = "_blank";
     action.rel = "noopener noreferrer";
     action.textContent = "Xem video";
+    action.setAttribute("aria-label", `Xem video: ${title}`);
     content.append(action);
   }
 
   article.append(content);
   return article;
+}
+
+/** Update a polite status region after rapid result changes have settled. */
+export function createDebouncedStatusAnnouncer(element, delay = 350) {
+  if (!(element instanceof Element)) {
+    throw new TypeError("Status announcer requires a DOM element.");
+  }
+
+  let timer = 0;
+  return (message) => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      element.textContent = String(message ?? "");
+    }, Math.max(0, Number(delay) || 0));
+  };
 }
 
 // Loading, empty, and error states

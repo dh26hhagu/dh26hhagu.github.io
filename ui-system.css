@@ -235,6 +235,134 @@ p { color: var(--ui-muted); }
 
 .card .card-content { padding: var(--ui-space-5) !important; }
 .channel { color: var(--ui-muted) !important; }
+
+/* Phase 6D cards are scoped to the four experiment discovery pages. */
+.phase6d-card-grid { align-items: stretch; }
+.phase6d-card-grid > .ui-experiment-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  box-shadow: var(--ui-shadow-sm);
+  transition: transform var(--ui-speed), box-shadow var(--ui-speed), border-color var(--ui-speed);
+}
+.phase6d-card-grid > .ui-experiment-card[hidden] { display: none !important; }
+.phase6d-card-grid > .ui-experiment-card:hover,
+.phase6d-card-grid > .ui-experiment-card:focus-within {
+  transform: translateY(-3px);
+  border-color: rgba(23, 106, 99, .34);
+  box-shadow: var(--ui-shadow-md);
+}
+.phase6d-card-grid .ui-experiment-card-media {
+  position: relative;
+  display: grid;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  place-items: center;
+  overflow: hidden;
+  background: var(--ui-surface-soft);
+  color: var(--ui-muted);
+  text-decoration: none;
+}
+.phase6d-card-grid .ui-experiment-card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.phase6d-card-grid .ui-experiment-card-image-fallback {
+  padding: 1rem;
+  color: var(--ui-muted);
+  font-size: .9rem;
+  text-align: center;
+}
+.phase6d-card-grid .ui-experiment-card-content {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1rem 1.05rem 1.05rem;
+}
+.phase6d-card-grid .ui-experiment-card-badge {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  padding: .2rem .65rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 700;
+}
+.phase6d-card-grid .ui-experiment-card-badge[data-grade="10"] {
+  border-color: #b5d7d3;
+  background: #e6f3f1;
+  color: #10544f;
+}
+.phase6d-card-grid .ui-experiment-card-badge[data-grade="11"] {
+  border-color: #c8d7ef;
+  background: #edf2fb;
+  color: #234e8a;
+}
+.phase6d-card-grid .ui-experiment-card-badge[data-grade="12"] {
+  border-color: #ead4b6;
+  background: #f8f0e6;
+  color: #704617;
+}
+.phase6d-card-grid .ui-experiment-card-title {
+  margin: .7rem 0 .45rem;
+  color: var(--ui-text);
+  font-size: 1rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.phase6d-card-grid .ui-experiment-card-channel {
+  margin: 0 0 1rem;
+  color: var(--ui-muted);
+  font-size: .88rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.phase6d-card-grid .ui-experiment-card-action {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  padding: .55rem 1rem;
+  border-radius: 999px;
+  background: var(--ui-primary);
+  color: #fff;
+  font-size: .92rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+}
+.phase6d-card-grid .ui-experiment-card-action:hover {
+  background: var(--ui-primary-strong);
+  color: #fff;
+}
+.phase6d-card-grid .ui-experiment-card-media:focus-visible,
+.phase6d-card-grid .ui-experiment-card-action:focus-visible {
+  outline: 3px solid var(--ui-primary-strong);
+  outline-offset: 3px;
+}
+.phase6d-card-grid > .ui-state {
+  grid-column: 1 / -1;
+  width: 100%;
+  box-sizing: border-box;
+  border-color: var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  color: var(--ui-muted);
+}
+.phase6d-card-grid > .ui-state-error { color: #8a2020; }
+
 .play-btn {
   transition: transform var(--ui-speed), background var(--ui-speed), box-shadow var(--ui-speed);
 }
@@ -303,5 +431,10 @@ body[data-theme="dark"] .top {
   .clear-search:active,
   .back-btn:active {
     transform: none !important;
+  }
+
+  .phase6d-card-grid > .ui-experiment-card:hover,
+  .phase6d-card-grid > .ui-experiment-card:focus-within {
+    transform: none;
   }
 }

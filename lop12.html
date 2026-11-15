@@ -202,7 +202,8 @@
     <div class="top-bar">
         <div>
             <h1>Thí nghiệm Hóa học lớp 12</h1>
-            <p class="page-result-count"><span id="resultCount" aria-live="polite" aria-atomic="true">0</span> kết quả</p>
+            <p class="page-result-count"><span id="resultCount" aria-live="off">0</span> kết quả</p>
+                <span id="resultAnnouncement" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></span>
         </div>
 
         <!-- Nút trở về -->
@@ -213,8 +214,7 @@
 
     <!-- Ô tìm kiếm -->
     <div class="search-box search-controls">
-        <label class="visually-hidden" for="searchInput">Tìm theo tiêu đề, kênh YouTube hoặc từ khóa</label>
-        <input type="text" id="searchInput" placeholder="🔍 Tìm thí nghiệm, video, nội dung...">
+        <div class="search-control-field"><label for="searchInput">Tìm thí nghiệm</label><input type="text" id="searchInput" placeholder="🔍 Tìm thí nghiệm, video, nội dung..." autocomplete="off"></div>
         <button type="button" id="clearSearchBtn">Xóa tìm kiếm</button>
     </div>
 </div>
@@ -227,15 +227,15 @@
 
     <!-- CONTENT -->
     <div class="container">
-        <p id="noResultMsg" class="search-no-results" role="status" aria-live="polite" hidden>Không tìm thấy video thí nghiệm nào phù hợp.</p>
-        <div class="grid" id="videoGrid"></div>
+        <p id="noResultMsg" class="search-no-results" hidden>Không tìm thấy thí nghiệm phù hợp. Thử từ khóa khác hoặc thay đổi bộ lọc.</p>
+        <div class="grid phase6d-card-grid" id="videoGrid" aria-busy="true"></div>
 
             
                 
 
     <script type="module">
         import * as repository from "./experiment-repository.js";
-        import { renderLoading, renderError } from "./components/ui.js";
+        import { createExperimentCard, createDebouncedStatusAnnouncer, renderLoading, renderError } from "./components/ui.js";
         import { createSearchIndex, filterSearchIndex } from "./search-filter.js";
 
         // Per-field fingerprints capture the legacy ordered baseline without duplicating its records here.
@@ -243,6 +243,8 @@
         const grid = document.getElementById("videoGrid");
         const searchInput = document.getElementById("searchInput");
         const resultCount = document.getElementById("resultCount");
+        const noResultMsg = document.getElementById("noResultMsg");
+        const announceResults = createDebouncedStatusAnnouncer(document.getElementById("resultAnnouncement"));
         const isRepositoryCheck = new URLSearchParams(window.location.search).has("repository-check");
 
         function normalizeText(value) {
@@ -293,44 +295,14 @@
             return { errors, fieldParity: Object.fromEntries(Object.keys(values).map((field) => [field, !errors.some((error) => error.startsWith(field + " "))])) };
         }
 
-        function createLegacyCard(item) {
-            const card = document.createElement("div");
-            card.className = "card video-card";
-            card.dataset.experimentId = item.experiment.id;
-            card.dataset.youtubeId = item.video.youtubeId;
-            card.dataset.grade = String(item.experiment.grade);
-            card.dataset.badge = item.badge;
-
-            const thumb = document.createElement("div");
-            thumb.className = "thumb";
-            const image = document.createElement("img");
-            image.src = item.thumbnail;
-            image.alt = "Thumbnail: " + item.title;
-            image.loading = "lazy";
-            image.decoding = "async";
-
-            const play = document.createElement("a");
-            play.className = "play-btn";
-            play.href = item.ytLink;
-            play.target = "_blank";
-            play.rel = "noopener noreferrer";
-            play.setAttribute("aria-label", "Mở video: " + item.title);
-            play.textContent = "▶";
-            thumb.append(image, play);
-
-            const content = document.createElement("div");
-            content.className = "card-content";
-            const heading = document.createElement("h3");
-            heading.textContent = item.title;
-            const channel = document.createElement("p");
-            channel.className = "channel";
-            channel.textContent = item.video.channel;
-            content.append(heading, channel);
-            card.append(thumb, content);
-            return card;
+        function showGridError(message) {
+            grid.replaceChildren();
+            grid.setAttribute("aria-busy", "false");
+            renderError(grid, message);
         }
 
         async function initializePage() {
+            grid.setAttribute("aria-busy", "true");
             renderLoading(grid, "Đang tải danh sách thí nghiệm…");
             try {
                 await repository.load();
@@ -338,17 +310,19 @@
                 const parity = checkParity(occurrences);
                 if (parity.errors.length) {
                     reportParity("LOP12 REPOSITORY PARITY FAIL: " + parity.errors.join("; "), false, parity);
-                    renderError(grid, "Không thể xác minh dữ liệu Lớp 12. Vui lòng tải lại trang.");
+                    showGridError("Không thể xác minh dữ liệu Lớp 12. Vui lòng tải lại trang.");
                     return;
                 }
 
-                const cards = occurrences.map(createLegacyCard);
+                const cards = occurrences.map((item, index) => createExperimentCard(item, { showChannel: true, occurrenceIndex: index + 1 }));
                 grid.replaceChildren(...cards);
+                grid.setAttribute("aria-busy", "false");
                 const searchIndex = createSearchIndex(occurrences, cards);
                 const updateResults = () => {
                     const count = filterSearchIndex(searchIndex, { query: searchInput.value });
                     resultCount.textContent = count;
                     noResultMsg.hidden = count !== 0;
+                    announceResults(count === 0 ? "Không tìm thấy thí nghiệm phù hợp." : `Có ${count} thí nghiệm phù hợp.`);
                 };
                 updateResults();
                 reportParity("LOP12 REPOSITORY PARITY PASS: 27/27 vị trí; YouTube IDs, titles, thumbnails, URLs, channels, badge và grade khớp baseline.", true, parity);
@@ -361,7 +335,7 @@
                 });
             } catch (error) {
                 reportParity("LOP12 REPOSITORY LOAD FAIL: " + error.message, false);
-                renderError(grid, "Không thể tải danh sách thí nghiệm. Vui lòng thử lại sau.");
+                showGridError("Không thể tải danh sách thí nghiệm. Vui lòng thử lại sau.");
             }
         }
 
