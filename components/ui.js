@@ -9,14 +9,12 @@ function createElement(tagName, className, text) {
   return element;
 }
 
-/**
- * Build the existing site navigation without mounting it into a page.
- * Optional links match routes currently present in legacy pages.
- */
+/** Build the shared site navigation without mounting it into a page. */
 export function createNavbar({
   brandText = "Thí nghiệm THPT",
   brandHref = "index.html",
   brandClassName = "brand",
+  currentPage = "",
   comingSoon = false,
   periodicTable = false,
   themeToggle = false,
@@ -30,66 +28,37 @@ export function createNavbar({
   const brand = createElement("a", brandClassName, brandText);
   brand.href = brandHref;
   brand.setAttribute("aria-label", "Trang chủ thí nghiệm");
-  nav.append(brand);
+  const navigationId = `ui-primary-navigation-${++navbarSequence}`;
+  const menuToggle = createElement("button", "site-menu-toggle");
+  menuToggle.type = "button";
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-controls", navigationId);
+  menuToggle.setAttribute("aria-label", "Mở điều hướng");
+  const menuGlyph = createElement("span", "", "☰");
+  menuGlyph.setAttribute("aria-hidden", "true");
+  menuToggle.append(menuGlyph);
 
   const links = createElement("div", "ui-navbar-links");
-  const chemistry = createElement("div", "ui-navbar-item");
-  const chemistryLink = createElement("a", "nav-main", "Hóa học");
-  chemistryLink.href = "thinghiem.html";
-
-  const menuId = `ui-chemistry-menu-${++navbarSequence}`;
-  const toggle = createElement("button", "nav-arrow", "▼");
-  toggle.type = "button";
-  toggle.setAttribute("aria-expanded", "false");
-  toggle.setAttribute("aria-controls", menuId);
-  toggle.setAttribute("aria-haspopup", "true");
-  toggle.setAttribute("aria-label", "Mở menu lớp");
-
-  const menu = createElement("div", "nav-dropdown");
-  menu.id = menuId;
-  menu.setAttribute("role", "menu");
-  menu.setAttribute("aria-label", "Danh sách lớp");
-  menu.hidden = true;
-
-  for (const [label, href] of [
+  links.id = navigationId;
+  const current = currentPage || window.location.pathname.split("/").pop() || "index.html";
+  const primaryLinks = [
+    ["Trang chủ", "index.html"],
+    ["Hóa học", "thinghiem.html"],
     ["Lớp 10", "lop10.html"],
     ["Lớp 11", "lop11.html"],
-    ["Lớp 12", "lop12.html"]
-  ]) {
-    const link = createElement("a", "", label);
+    ["Lớp 12", "lop12.html"],
+    ["Tất cả thí nghiệm", "toanbo.html"]
+  ];
+
+  for (const [label, href] of primaryLinks) {
+    const link = createElement("a", "nav-main", label);
     link.href = href;
-    link.setAttribute("role", "menuitem");
-    menu.append(link);
-  }
-
-  const closeMenu = ({ restoreFocus = false } = {}) => {
-    menu.classList.remove("open");
-    menu.hidden = true;
-    toggle.setAttribute("aria-expanded", "false");
-    if (restoreFocus) toggle.focus();
-  };
-
-  toggle.addEventListener("click", (event) => {
-    event.stopPropagation();
-    const isOpen = toggle.getAttribute("aria-expanded") !== "true";
-    toggle.setAttribute("aria-expanded", String(isOpen));
-    menu.hidden = !isOpen;
-    menu.classList.toggle("open", isOpen);
-    if (isOpen) menu.querySelector("a")?.focus();
-  });
-
-  document.addEventListener("click", (event) => {
-    if (!chemistry.contains(event.target)) closeMenu();
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
-      closeMenu({ restoreFocus: true });
+    if (current === href) {
+      link.classList.add("active-page");
+      link.setAttribute("aria-current", "page");
     }
-  });
-
-  chemistry.append(chemistryLink, toggle, menu);
-  links.append(chemistry);
+    links.append(link);
+  }
 
   if (periodicTable) {
     const link = createElement("a", "nav-main");
@@ -148,8 +117,38 @@ export function createNavbar({
     links.append(searchArea);
   }
 
-  nav.append(links);
+  nav.append(brand, menuToggle, links);
   header.append(nav);
+
+  const closeMobileMenu = ({ restoreFocus = false } = {}) => {
+    nav.dataset.mobileOpen = "false";
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Mở điều hướng");
+    if (restoreFocus) menuToggle.focus();
+  };
+
+  menuToggle.addEventListener("click", () => {
+    const isOpen = nav.dataset.mobileOpen !== "true";
+    nav.dataset.mobileOpen = String(isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menuToggle.setAttribute("aria-label", isOpen ? "Đóng điều hướng" : "Mở điều hướng");
+    if (isOpen) links.querySelector("a")?.focus();
+  });
+
+  links.addEventListener("click", (event) => {
+    if (event.target.closest("a")) closeMobileMenu();
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!nav.contains(event.target)) closeMobileMenu();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && nav.dataset.mobileOpen === "true") {
+      closeMobileMenu({ restoreFocus: true });
+    }
+  });
+
   return header;
 }
 

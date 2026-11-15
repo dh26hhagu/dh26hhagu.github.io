@@ -1,6 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
   document.body.classList.add('ui-enhanced');
 
+  const navigationMount = document.querySelector('[data-site-nav]');
+  if (navigationMount) {
+    import("./components/ui.js")
+      .then(({ createNavbar }) => {
+        if (navigationMount.isConnected) {
+          navigationMount.replaceChildren(createNavbar({ currentPage: navigationMount.dataset.currentPage }));
+        }
+      })
+      .catch((error) => console.error("Unable to load shared navigation.", error));
+  }
+
   // ===== Highlight trang hiện tại =====
   const current = location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav-main[href]').forEach((link) => {

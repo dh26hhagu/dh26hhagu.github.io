@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tổng hợp thí nghiệm</title>
+    <title>Danh mục thí nghiệm Hóa học | Thí nghiệm THPT</title>
     <style>
         :root {
             --bg: #eef2ff;
@@ -261,6 +261,19 @@
             box-shadow: 0 12px 30px rgba(79, 70, 229, 0.12);
         }
 
+        .category-search {
+            width: min(480px, 100%);
+            margin-bottom: 1rem;
+        }
+
+        .category-search label {
+            display: block;
+            margin-bottom: .35rem;
+            color: var(--muted);
+            font-size: .9rem;
+            font-weight: 650;
+        }
+
         .card-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -427,6 +440,8 @@
     <link rel="stylesheet" href="ui-system.css">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Bỏ qua đến nội dung chính</a>
+    <div data-site-nav data-current-page="thinghiem.html"></div>
     <header>
         <div class="hero">
             <div class="hero-content">
@@ -436,34 +451,14 @@
         </div>
     </header>
 
-    <div class="nav-wrap">
-        <nav class="container navbar" aria-label="Điều hướng chính">
-            <a href="index.html" class="home-btn" aria-label="Quay về trang chủ">
-                <span class="arrow" aria-hidden="true">←</span>
-                <span>Trang chủ</span>
-            </a>
-
-            <div class="nav-center">
-                <div class="nav-item">
-                    <a href="thinghiem.html" class="nav-main">Hóa học</a>
-                    <button class="nav-arrow" id="menuToggle" aria-expanded="false" aria-controls="experimentMenu" aria-label="Mở menu lớp">▼</button>
-                    <div class="nav-dropdown" id="experimentMenu" role="menu" aria-label="Danh sách lớp" aria-hidden="true">
-                        <a href="lop10.html" role="menuitem">Lớp 10</a>
-                        <a href="lop11.html" role="menuitem">Lớp 11</a>
-                        <a href="lop12.html" role="menuitem">Lớp 12</a>
-                    </div>
-                </div>
-                <a href="#" class="nav-main" aria-disabled="true">Coming soon</a>
-            </div>
-
-            <div class="nav-search">
-                <input type="text" id="searchInput" placeholder="🔍 Tìm theo lớp, chủ đề..." autocomplete="off">
-            </div>
-        </nav>
-    </div>
-
-    <main class="container">
+    <main class="container" id="main-content">
         <section class="section-card">
+            <div class="category-search">
+                <label for="searchInput">Tìm theo lớp hoặc chủ đề</label>
+                <div class="nav-search">
+                    <input type="text" id="searchInput" placeholder="Tìm theo lớp, chủ đề..." autocomplete="off">
+                </div>
+            </div>
             <div class="card-container" id="cardContainer"></div>
             <p class="hidden-empty" id="emptyMessage">Không tìm thấy nội dung phù hợp. Hãy thử từ khóa khác.</p>
         </section>
@@ -584,24 +579,6 @@
                 console.error("Lỗi: Không tìm thấy dữ liệu ALL_EXPERIMENTS. Bạn hãy chắc chắn file data.js đã nằm cùng thư mục.");
             }
         }
-
-        const menuToggle = document.getElementById("menuToggle");
-        const experimentMenu = document.getElementById("experimentMenu");
-
-        menuToggle.addEventListener("click", (event) => {
-            event.stopPropagation();
-            const isOpen = experimentMenu.classList.toggle("open");
-            menuToggle.setAttribute("aria-expanded", String(isOpen));
-            experimentMenu.setAttribute("aria-hidden", String(!isOpen));
-        });
-
-        document.addEventListener("click", (event) => {
-            if (!event.target.closest(".nav-item")) {
-                experimentMenu.classList.remove("open");
-                menuToggle.setAttribute("aria-expanded", "false");
-                experimentMenu.setAttribute("aria-hidden", "true");
-            }
-        });
 
         document.getElementById("searchInput").addEventListener("input", (event) => {
             searchExperiment(event.target.value);
