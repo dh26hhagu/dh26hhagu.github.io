@@ -31,12 +31,123 @@ const REQUIRED_NAMES_BY_ATOMIC_NUMBER = {
   55: 'Cesium'
 };
 
+const UI_TRANSLATIONS = {
+  vi: {
+    pageTitle: 'Bảng tuần hoàn các nguyên tố hóa học',
+    subtitle: 'Khám phá vị trí, phân loại và thông tin khoa học của 118 nguyên tố.',
+    languageGroup: 'Ngôn ngữ giao diện',
+    controlsLabel: 'Tìm và lọc nguyên tố',
+    searchLabel: 'Tìm nguyên tố',
+    searchPlaceholder: 'Tên tiếng Anh, ký hiệu hoặc số hiệu nguyên tử',
+    categoryLabel: 'Lọc theo phân loại',
+    categoryOptions: {
+      all: 'Tất cả phân loại',
+      'alkali metal': 'Kim loại kiềm',
+      'alkaline earth metal': 'Kim loại kiềm thổ',
+      'transition metal': 'Kim loại chuyển tiếp',
+      'post-transition metal': 'Kim loại hậu chuyển tiếp',
+      metalloid: 'Á kim',
+      nonmetal: 'Phi kim',
+      halogen: 'Halogen',
+      'noble gas': 'Khí hiếm',
+      lanthanide: 'Họ Lantan',
+      actinide: 'Họ Actini'
+    },
+    legendLabel: 'Chú giải phân loại nguyên tố',
+    tableRegion: 'Bảng tuần hoàn, có thể cuộn ngang',
+    tableLabel: 'Các nguyên tố hóa học',
+    tableHeading: 'Bảng tuần hoàn',
+    detailsRegion: 'Thông tin nguyên tố đang chọn',
+    detailsHeading: 'Thông tin nguyên tố',
+    usage: 'Chọn một nguyên tố để xem thông tin. Dùng Tab để di chuyển và Enter hoặc Space để chọn.',
+    period: 'Chu kỳ',
+    group: 'Nhóm',
+    lanthanides: 'Họ Lantan',
+    actinides: 'Họ Actini',
+    count: (count) => `${count}/118 nguyên tố`,
+    languageChanged: 'Đã chuyển ngôn ngữ giao diện sang Tiếng Việt.',
+    noMatchTitle: 'Không có kết quả phù hợp',
+    noMatchBody: 'Thử từ khóa hoặc bộ lọc khác.',
+    loading: 'Đang tải dữ liệu bảng tuần hoàn…',
+    loadErrorTitle: 'Không tải được dữ liệu bảng tuần hoàn',
+    loadErrorBody: 'Vui lòng kiểm tra kết nối và thử tải lại trang.',
+    unknown: 'Chưa có dữ liệu',
+    fields: {
+      atomicNumber: 'Số hiệu nguyên tử',
+      group: 'Nhóm',
+      period: 'Chu kỳ',
+      block: 'Khối',
+      category: 'Phân loại',
+      atomicMass: 'Nguyên tử khối',
+      electronConfiguration: 'Cấu hình electron',
+      electronegativity: 'Độ âm điện',
+      meltingPoint: 'Nhiệt độ nóng chảy',
+      boilingPoint: 'Nhiệt độ sôi'
+    }
+  },
+  en: {
+    pageTitle: 'Periodic Table of the Elements',
+    subtitle: 'Explore the positions, classifications, and scientific data for 118 elements.',
+    languageGroup: 'Interface language',
+    controlsLabel: 'Search and filter elements',
+    searchLabel: 'Search elements',
+    searchPlaceholder: 'English name, symbol, or atomic number',
+    categoryLabel: 'Filter by category',
+    categoryOptions: {
+      all: 'All categories',
+      'alkali metal': 'Alkali metals',
+      'alkaline earth metal': 'Alkaline earth metals',
+      'transition metal': 'Transition metals',
+      'post-transition metal': 'Post-transition metals',
+      metalloid: 'Metalloids',
+      nonmetal: 'Nonmetals',
+      halogen: 'Halogens',
+      'noble gas': 'Noble gases',
+      lanthanide: 'Lanthanides',
+      actinide: 'Actinides'
+    },
+    legendLabel: 'Element category legend',
+    tableRegion: 'Periodic table; scroll horizontally on narrow screens',
+    tableLabel: 'Chemical elements',
+    tableHeading: 'Periodic table',
+    detailsRegion: 'Details for the selected element',
+    detailsHeading: 'Element details',
+    usage: 'Select an element to view its details. Use Tab to move and Enter or Space to select.',
+    period: 'Period',
+    group: 'Group',
+    lanthanides: 'Lanthanides',
+    actinides: 'Actinides',
+    count: (count) => `${count}/118 elements`,
+    languageChanged: 'Interface language changed to English.',
+    noMatchTitle: 'No matching elements',
+    noMatchBody: 'Try another search term or filter.',
+    loading: 'Loading periodic table data…',
+    loadErrorTitle: 'Unable to load periodic table data',
+    loadErrorBody: 'Check your connection and try reloading the page.',
+    unknown: 'No data available',
+    fields: {
+      atomicNumber: 'Atomic number',
+      group: 'Group',
+      period: 'Period',
+      block: 'Block',
+      category: 'Category',
+      atomicMass: 'Atomic mass',
+      electronConfiguration: 'Electron configuration',
+      electronegativity: 'Electronegativity',
+      meltingPoint: 'Melting point',
+      boilingPoint: 'Boiling point'
+    }
+  }
+};
+
 // ===== DOM =====
 const periodicGrid = document.getElementById('periodic-table');
 const detailPanel = document.getElementById('detail-panel');
 const searchInput = document.getElementById('search');
 const categoryFilter = document.getElementById('category-filter');
 const countInfo = document.getElementById('count-info');
+const languageControls = document.getElementById('language-controls');
+const languageStatus = document.getElementById('language-status');
 
 // ===== STATE =====
 let elements = [];
@@ -45,6 +156,112 @@ let elementByAtomicNumber = new Map();
 let lockedAtomicNumber = null;
 let hoveredTile = null;
 let searchDebounceId = null;
+let dataLoadFailed = false;
+
+function readPreferredLanguage() {
+  try {
+    return window.localStorage.getItem('periodicTableLanguage') === 'en' ? 'en' : 'vi';
+  } catch {
+    return 'vi';
+  }
+}
+
+let currentLanguage = readPreferredLanguage();
+
+function getTranslations() {
+  return UI_TRANSLATIONS[currentLanguage];
+}
+
+function setTextById(id, text) {
+  const node = document.getElementById(id);
+  if (node) node.textContent = text;
+}
+
+function updateElementTileLanguage() {
+  const numberLabel = currentLanguage === 'vi' ? 'số hiệu nguyên tử' : 'atomic number';
+  periodicGrid.querySelectorAll('.element').forEach((tile) => {
+    const element = getElementData(tile.dataset.atomicNumber);
+    if (!element) return;
+    const numberDescription = tile.querySelector(`#element-number-description-${element.atomicNumber}`);
+    if (numberDescription) {
+      numberDescription.textContent = `${numberLabel} ${element.atomicNumber}`;
+      numberDescription.lang = currentLanguage;
+    }
+    tile.setAttribute('aria-pressed', String(lockedAtomicNumber === element.atomicNumber));
+  });
+}
+
+function updateLanguageText({ announce = false } = {}) {
+  const translations = getTranslations();
+  document.title = translations.pageTitle;
+  document.documentElement.lang = currentLanguage;
+  setTextById('page-title', translations.pageTitle);
+  setTextById('page-subtitle', translations.subtitle);
+  setTextById('usage-hint', translations.usage);
+  setTextById('search-label', translations.searchLabel);
+  setTextById('category-label', translations.categoryLabel);
+  setTextById('legend-alkali-metal', translations.categoryOptions['alkali metal']);
+  setTextById('legend-alkaline-earth-metal', translations.categoryOptions['alkaline earth metal']);
+  setTextById('legend-transition-metal', translations.categoryOptions['transition metal']);
+  setTextById('legend-post-transition-metal', translations.categoryOptions['post-transition metal']);
+  setTextById('legend-metalloid', translations.categoryOptions.metalloid);
+  setTextById('legend-nonmetal', translations.categoryOptions.nonmetal);
+  setTextById('legend-halogen', translations.categoryOptions.halogen);
+  setTextById('legend-noble-gas', translations.categoryOptions['noble gas']);
+  setTextById('legend-lanthanide', translations.categoryOptions.lanthanide);
+  setTextById('legend-actinide', translations.categoryOptions.actinide);
+  setTextById('table-section-heading', translations.tableHeading);
+  setTextById('period-label-corner', translations.period);
+  setTextById('group-label-corner', translations.group);
+  setTextById('lanthanide-label', translations.lanthanides);
+  setTextById('actinide-label', translations.actinides);
+  searchInput.placeholder = translations.searchPlaceholder;
+  languageControls.setAttribute('aria-label', translations.languageGroup);
+  document.getElementById('periodic-controls').setAttribute('aria-label', translations.controlsLabel);
+  document.getElementById('category-legend').setAttribute('aria-label', translations.legendLabel);
+  document.getElementById('table-wrap').setAttribute('aria-label', translations.tableRegion);
+  periodicGrid.setAttribute('aria-label', translations.tableLabel);
+  detailPanel.setAttribute('aria-label', translations.detailsRegion);
+
+  for (const option of categoryFilter.options) {
+    option.textContent = translations.categoryOptions[option.value];
+  }
+
+  languageControls.querySelectorAll('[data-language]').forEach((button) => {
+    const buttonLanguage = button.dataset.language;
+    button.setAttribute('aria-pressed', String(buttonLanguage === currentLanguage));
+    button.setAttribute('aria-label', buttonLanguage === 'vi' ? 'Tiếng Việt' : 'English');
+  });
+
+  if (elements.length) {
+    countInfo.textContent = translations.count(filteredElements.length);
+    updateElementTileLanguage();
+    updateDetailPanel(getDetailTarget());
+  } else if (dataLoadFailed) {
+    countInfo.textContent = translations.loadErrorTitle;
+    detailPanel.innerHTML = `<h2 id="element-details-heading">${escapeHtml(translations.loadErrorTitle)}</h2><p>${escapeHtml(translations.loadErrorBody)}</p>`;
+  } else {
+    countInfo.textContent = translations.loading;
+    detailPanel.innerHTML = `<h2 id="element-details-heading">${escapeHtml(translations.detailsHeading)}</h2><p>${escapeHtml(translations.loading)}</p>`;
+  }
+
+  if (announce) languageStatus.textContent = translations.languageChanged;
+}
+
+function setLanguage(language) {
+  if (!Object.prototype.hasOwnProperty.call(UI_TRANSLATIONS, language) || language === currentLanguage) return;
+
+  const selectedCategory = categoryFilter.value;
+  currentLanguage = language;
+  updateLanguageText({ announce: true });
+  categoryFilter.value = selectedCategory;
+
+  try {
+    window.localStorage.setItem('periodicTableLanguage', currentLanguage);
+  } catch {
+    // Language switching remains available when browser storage is blocked.
+  }
+}
 
 // ===== UTILS =====
 const escapeHtml = (str) =>
@@ -56,19 +273,15 @@ const escapeHtml = (str) =>
     .replaceAll("'", '&#39;');
 
 function formatValue(value, suffix = '') {
-  if (value === null || value === undefined || value === '') return 'Unknown';
+  if (value === null || value === undefined || value === '') return getTranslations().unknown;
   return `${value}${suffix}`;
-}
-
-function capitalizeWords(str) {
-  return String(str || '').replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 function electronConfigToHtml(config = '') {
   return String(config)
     .split('')
     .map((char) => (SUPERSCRIPT_MAP[char] ? `<sup>${SUPERSCRIPT_MAP[char]}</sup>` : escapeHtml(char)))
-    .join('') || 'Unknown';
+    .join('') || escapeHtml(getTranslations().unknown);
 }
 
 function normalizeCategory(value) {
@@ -182,9 +395,16 @@ function getPosition(element) {
 
 // ===== BUILDERS =====
 function buildGridSkeleton(fragment) {
+  const translations = getTranslations();
   const corner = document.createElement('div');
   corner.className = 'corner-cell';
-  corner.innerHTML = '<span>Period</span><span>Group</span>';
+  const periodLabel = document.createElement('span');
+  periodLabel.id = 'period-label-corner';
+  periodLabel.textContent = translations.period;
+  const groupLabel = document.createElement('span');
+  groupLabel.id = 'group-label-corner';
+  groupLabel.textContent = translations.group;
+  corner.append(periodLabel, groupLabel);
   corner.style.gridRow = '1';
   corner.style.gridColumn = '1';
   fragment.appendChild(corner);
@@ -209,16 +429,18 @@ function buildGridSkeleton(fragment) {
 
   const lanthanideLabel = document.createElement('div');
   lanthanideLabel.className = 'f-block-label';
+  lanthanideLabel.id = 'lanthanide-label';
   lanthanideLabel.style.gridRow = '9';
   lanthanideLabel.style.gridColumn = '1';
-  lanthanideLabel.textContent = 'Lanthanides';
+  lanthanideLabel.textContent = translations.lanthanides;
   fragment.appendChild(lanthanideLabel);
 
   const actinideLabel = document.createElement('div');
   actinideLabel.className = 'f-block-label';
+  actinideLabel.id = 'actinide-label';
   actinideLabel.style.gridRow = '10';
   actinideLabel.style.gridColumn = '1';
-  actinideLabel.textContent = 'Actinides';
+  actinideLabel.textContent = translations.actinides;
   fragment.appendChild(actinideLabel);
 }
 
@@ -232,13 +454,15 @@ function buildElementTile(element) {
   tile.style.gridRow = String(position.row);
   tile.style.gridColumn = String(position.col);
   tile.dataset.atomicNumber = String(element.atomicNumber);
-  tile.setAttribute('aria-label', `${element.name} (${element.symbol}), atomic number ${element.atomicNumber}`);
+  tile.setAttribute('aria-labelledby', `element-name-${element.atomicNumber} element-symbol-${element.atomicNumber} element-number-description-${element.atomicNumber}`);
+  tile.setAttribute('aria-pressed', String(lockedAtomicNumber === element.atomicNumber));
 
   tile.innerHTML = `
     <span class="atomic-number">${element.atomicNumber}</span>
-    <strong class="symbol">${escapeHtml(element.symbol)}</strong>
-    <small class="element-name" title="${escapeHtml(element.name)}">${escapeHtml(element.name)}</small>
+    <strong class="symbol" id="element-symbol-${element.atomicNumber}">${escapeHtml(element.symbol)}</strong>
+    <small class="element-name" id="element-name-${element.atomicNumber}" lang="en" title="${escapeHtml(element.name)}">${escapeHtml(element.name)}</small>
     <small class="mass" title="${escapeHtml(String(element.atomicMass))}">${escapeHtml(String(element.atomicMass))}</small>
+    <span class="visually-hidden element-number-description" id="element-number-description-${element.atomicNumber}" lang="${currentLanguage}">${currentLanguage === 'vi' ? 'số hiệu nguyên tử' : 'atomic number'} ${element.atomicNumber}</span>
   `;
 
   return tile;
@@ -246,27 +470,29 @@ function buildElementTile(element) {
 
 // ===== DETAIL PANEL =====
 function updateDetailPanel(element, animate = false) {
+  const translations = getTranslations();
   if (!element) {
-    detailPanel.innerHTML = '<h2>No match</h2><p>Try another search/filter.</p>';
+    detailPanel.innerHTML = `<h2 id="element-details-heading">${escapeHtml(translations.noMatchTitle)}</h2><p>${escapeHtml(translations.noMatchBody)}</p>`;
     return;
   }
 
-  const groupText = element.group ? `${element.group} (${OLD_GROUP_LABELS[element.group]})` : 'N/A';
+  const groupText = element.group ? `${element.group} (${OLD_GROUP_LABELS[element.group]})` : translations.unknown;
+  const categoryText = translations.categoryOptions[element.category] || element.category;
 
   detailPanel.innerHTML = `
-    <h2>${escapeHtml(element.name)} (${escapeHtml(element.symbol)})</h2>
-    <div class="detail-grid">
-      <div class="label">Atomic Number</div><div>${element.atomicNumber}</div>
-      <div class="label">Group</div><div>${groupText}</div>
-      <div class="label">Period</div><div>${element.period}</div>
-      <div class="label">Block</div><div>${escapeHtml(element.block.toUpperCase())}</div>
-      <div class="label">Category</div><div>${escapeHtml(capitalizeWords(element.category))}</div>
-      <div class="label">Atomic Mass</div><div>${escapeHtml(String(element.atomicMass))}</div>
-      <div class="label">Electron</div><div>${electronConfigToHtml(element.electronConfiguration)}</div>
-      <div class="label">Electronegativity</div><div>${formatValue(element.electronegativity)}</div>
-      <div class="label">Melting</div><div>${formatValue(element.meltingPoint, ' °C')}</div>
-      <div class="label">Boiling</div><div>${formatValue(element.boilingPoint, ' °C')}</div>
-    </div>
+    <h2 id="element-details-heading"><span lang="en">${escapeHtml(element.name)}</span> (${escapeHtml(element.symbol)})</h2>
+    <dl class="detail-grid">
+      <dt>${escapeHtml(translations.fields.atomicNumber)}</dt><dd>${element.atomicNumber}</dd>
+      <dt>${escapeHtml(translations.fields.group)}</dt><dd>${escapeHtml(groupText)}</dd>
+      <dt>${escapeHtml(translations.fields.period)}</dt><dd>${element.period}</dd>
+      <dt>${escapeHtml(translations.fields.block)}</dt><dd>${escapeHtml(element.block.toUpperCase())}</dd>
+      <dt>${escapeHtml(translations.fields.category)}</dt><dd>${escapeHtml(categoryText)}</dd>
+      <dt>${escapeHtml(translations.fields.atomicMass)}</dt><dd>${escapeHtml(formatValue(element.atomicMass))}</dd>
+      <dt>${escapeHtml(translations.fields.electronConfiguration)}</dt><dd>${electronConfigToHtml(element.electronConfiguration)}</dd>
+      <dt>${escapeHtml(translations.fields.electronegativity)}</dt><dd>${escapeHtml(formatValue(element.electronegativity))}</dd>
+      <dt>${escapeHtml(translations.fields.meltingPoint)}</dt><dd>${escapeHtml(formatValue(element.meltingPoint, ' °C'))}</dd>
+      <dt>${escapeHtml(translations.fields.boilingPoint)}</dt><dd>${escapeHtml(formatValue(element.boilingPoint, ' °C'))}</dd>
+    </dl>
   `;
 
   if (animate) {
@@ -277,12 +503,18 @@ function updateDetailPanel(element, animate = false) {
 }
 
 function updateActiveTile() {
-  periodicGrid.querySelectorAll('.element.active').forEach((node) => node.classList.remove('active'));
+  periodicGrid.querySelectorAll('.element').forEach((node) => {
+    node.classList.remove('active');
+    node.setAttribute('aria-pressed', 'false');
+  });
 
   if (!lockedAtomicNumber) return;
 
   const tile = periodicGrid.querySelector(`[data-atomic-number="${lockedAtomicNumber}"]`);
-  if (tile) tile.classList.add('active');
+  if (tile) {
+    tile.classList.add('active');
+    tile.setAttribute('aria-pressed', 'true');
+  }
 }
 
 function setHoveredTile(tile) {
@@ -295,7 +527,7 @@ function setHoveredTile(tile) {
 
 // ===== RENDER =====
 function renderTable() {
-  console.log('render check');
+  periodicGrid.setAttribute('aria-busy', 'true');
 
   filteredElements = getFilteredElements();
 
@@ -307,7 +539,8 @@ function renderTable() {
   });
 
   periodicGrid.replaceChildren(fragment);
-  countInfo.textContent = `${filteredElements.length}/118`;
+  periodicGrid.setAttribute('aria-busy', 'false');
+  countInfo.textContent = getTranslations().count(filteredElements.length);
 
   if (lockedAtomicNumber && !filteredElements.some((element) => element.atomicNumber === lockedAtomicNumber)) {
     lockedAtomicNumber = null;
@@ -322,7 +555,6 @@ function renderTable() {
 function handleHover(tile, data) {
   if (!data || lockedAtomicNumber) return;
 
-  console.log('hover event');
   setHoveredTile(tile);
   updateDetailPanel(data, true);
 }
@@ -330,7 +562,6 @@ function handleHover(tile, data) {
 function handleClick(tile, data) {
   if (!data) return;
 
-  console.log('click event');
   if (lockedAtomicNumber === data.atomicNumber) {
     lockedAtomicNumber = null;
     setHoveredTile(null);
@@ -347,6 +578,12 @@ function handleClick(tile, data) {
 }
 
 function bindEvents() {
+  languageControls.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-language]');
+    if (!button || !languageControls.contains(button)) return;
+    setLanguage(button.dataset.language);
+  });
+
   periodicGrid.addEventListener('mouseover', (event) => {
     const tile = event.target.closest('.element');
     if (!tile || !periodicGrid.contains(tile)) return;
@@ -394,17 +631,21 @@ function bindEvents() {
 
 // ===== INIT =====
 async function init() {
+  updateLanguageText();
+  bindEvents();
   try {
     const response = await fetch('periodic-data.json');
+    if (!response.ok) throw new Error(`Unable to load periodic data (${response.status}).`);
     const data = await response.json();
 
     elements = validateAndNormalizeData(data);
     elementByAtomicNumber = new Map(elements.map((element) => [element.atomicNumber, element]));
-
-    bindEvents();
     renderTable();
   } catch (error) {
-    detailPanel.innerHTML = '<h2>Failed to load data</h2><p>Check periodic-data.json structure.</p>';
+    dataLoadFailed = true;
+    periodicGrid.setAttribute('aria-busy', 'false');
+    countInfo.textContent = getTranslations().loadErrorTitle;
+    detailPanel.innerHTML = `<h2 id="element-details-heading">${escapeHtml(getTranslations().loadErrorTitle)}</h2><p>${escapeHtml(getTranslations().loadErrorBody)}</p>`;
     console.error(error);
   }
 }

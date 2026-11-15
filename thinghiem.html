@@ -453,12 +453,13 @@
 
     <main class="container" id="main-content">
         <section class="section-card">
-            <div class="category-search">
+            <div class="category-search" role="search" aria-label="Tìm theo lớp hoặc chủ đề">
                 <label for="searchInput">Tìm theo lớp hoặc chủ đề</label>
                 <div class="nav-search">
                     <input type="text" id="searchInput" placeholder="Tìm theo lớp, chủ đề..." autocomplete="off">
                 </div>
             </div>
+            <p class="visually-hidden" id="searchStatus" role="status" aria-live="polite" aria-atomic="true"></p>
             <div class="card-container" id="cardContainer"></div>
             <p class="hidden-empty" id="emptyMessage">Không tìm thấy nội dung phù hợp. Hãy thử từ khóa khác.</p>
         </section>
@@ -487,6 +488,22 @@
                 link: "lop12.html"
             }
         ];
+
+        const searchStatus = document.getElementById("searchStatus");
+        let searchStatusTimer = 0;
+
+        function announceSearchResults(count, type) {
+            window.clearTimeout(searchStatusTimer);
+            searchStatusTimer = window.setTimeout(() => {
+                if (type === "category") {
+                    searchStatus.textContent = `${count} danh mục lớp học.`;
+                } else if (count === 0) {
+                    searchStatus.textContent = "Không tìm thấy nội dung phù hợp.";
+                } else {
+                    searchStatus.textContent = `${count} kết quả thí nghiệm.`;
+                }
+            }, 250);
+        }
 
         function removeVietnameseTones(str) {
             return (str || "")
@@ -566,6 +583,7 @@
 
             if (!normalizedInput) {
                 renderCards(CATEGORY_DATA, "category");
+                announceSearchResults(CATEGORY_DATA.length, "category");
                 return;
             }
 
@@ -575,8 +593,11 @@
                     return normalizedText.includes(normalizedInput);
                 });
                 renderCards(filtered, "experiment");
+                announceSearchResults(filtered.length, "experiment");
             } else {
                 console.error("Lỗi: Không tìm thấy dữ liệu ALL_EXPERIMENTS. Bạn hãy chắc chắn file data.js đã nằm cùng thư mục.");
+                window.clearTimeout(searchStatusTimer);
+                searchStatus.textContent = "Không tải được dữ liệu thí nghiệm.";
             }
         }
 
@@ -585,6 +606,7 @@
         });
 
         renderCards(CATEGORY_DATA, "category");
+        announceSearchResults(CATEGORY_DATA.length, "category");
     </script>
     <script src="ui-enhance.js"></script>
 </body>

@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Periodic Table - 118 Elements</title>
+  <title>Bảng tuần hoàn các nguyên tố hóa học</title>
   <style>
     :root {
       --bg: #020617;
@@ -13,6 +13,7 @@
       --muted: #94a3b8;
       --line: #1f2937;
       --tile-text: #0f172a;
+      --focus-ring: #f8fafc;
       --radius: 12px;
     }
 
@@ -27,6 +28,8 @@
     }
 
     .page {
+      width: 100%;
+      min-width: 0;
       max-width: 1700px;
       margin: 0 auto;
       padding: clamp(12px, 2vw, 22px);
@@ -38,6 +41,62 @@
       letter-spacing: 0.02em;
     }
 
+    .page-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 6px;
+    }
+
+    .page-heading h1 { min-width: 0; }
+
+    .language-toggle {
+      display: inline-flex;
+      flex: 0 0 auto;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg-soft);
+    }
+
+    .language-toggle button {
+      min-width: 44px;
+      min-height: 44px;
+      padding: 8px 12px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .language-toggle button[aria-pressed="true"] {
+      border-color: #2dd4bf;
+      background: #134e4a;
+      color: #f8fafc;
+    }
+
+    :where(a, button, input, select, [tabindex]):focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 3px;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
     .subtitle {
       margin: 0 0 16px;
       color: var(--muted);
@@ -45,12 +104,14 @@
     }
 
     .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
       margin-bottom: 16px;
     }
+
+    .toolbar-field { display: grid; min-width: 0; gap: 6px; }
+    .toolbar-field label { color: var(--text); font-weight: 650; line-height: 1.35; }
 
     .toolbar input,
     .toolbar select {
@@ -60,7 +121,9 @@
       border-radius: 10px;
       padding: 10px 12px;
       font-size: 0.95rem;
-      min-width: min(100%, 250px);
+      width: 100%;
+      min-width: 0;
+      min-height: 44px;
     }
 
     .legend {
@@ -80,7 +143,9 @@
       background: rgba(15, 23, 42, 0.7);
       color: var(--muted);
       font-size: 0.85rem;
-      white-space: nowrap;
+      min-width: 0;
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
 
     .legend-swatch {
@@ -93,17 +158,20 @@
 
     .layout {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 330px;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 330px);
       gap: 16px;
       align-items: start;
     }
 
     .table-wrap {
+      min-width: 0;
+      max-width: 100%;
       border: 1px solid var(--line);
       border-radius: 14px;
       background: rgba(2, 6, 23, 0.75);
       padding: 12px;
       overflow: auto;
+      overscroll-behavior-inline: contain;
     }
 
     .periodic-grid {
@@ -144,10 +212,15 @@
     .group-label small { font-size: 0.68rem; }
 
     .f-block-label {
-      justify-content: flex-start;
-      padding-left: 12px;
+      justify-content: center;
+      padding: 3px;
       font-weight: 600;
       letter-spacing: 0.02em;
+      font-size: 0.68rem;
+      line-height: 1.15;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      text-overflow: clip;
     }
 
     .element {
@@ -235,13 +308,42 @@
     }
 
     .detail-panel h2 {
-      margin-top: 0;
-@@ -258,50 +261,92 @@
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+      line-height: 1.35;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: minmax(120px, 42%) minmax(0, 1fr);
+      gap: 8px 12px;
+    }
+
+    .detail-grid > dt,
+    .detail-grid > dd {
+      min-width: 0;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--line);
+      overflow-wrap: anywhere;
+    }
+
+    .detail-grid > dt {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .detail-grid > dd { margin: 0; }
 
     .count-info {
       margin-top: 8px;
       color: var(--muted);
       font-size: 0.9rem;
+    }
+
+    .element:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
     }
 
     @media (max-width: 1180px) {
@@ -287,13 +389,17 @@
         padding: 7px 8px;
       }
 
+      .page-heading { flex-direction: column-reverse; }
+      .language-toggle { align-self: flex-end; }
+      .toolbar { grid-template-columns: minmax(0, 1fr); }
+
       .detail-panel {
         min-height: auto;
         padding: 12px;
       }
 
       .detail-grid {
-        grid-template-columns: minmax(92px, 120px) 1fr;
+        grid-template-columns: minmax(104px, 42%) minmax(0, 1fr);
         font-size: 0.82rem;
       }
 
@@ -302,50 +408,85 @@
         grid-template-columns: 56px repeat(18, minmax(40px, 1fr));
         grid-template-rows: 38px repeat(7, 66px) 66px 66px;
       }
+
+      .f-block-label { padding: 2px; font-size: 0.62rem; letter-spacing: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .element.hovered,
+      .element:focus-visible,
+      .element.active { transform: none; }
     }
 
   </style>
 </head>
 <body>
   <main class="page">
-    <h1>Periodic Table (IUPAC + Classical Groups)</h1>
-    <p class="subtitle">118 elements with full detail panel, proper structure, f-block rows, and superscript electron configuration rendering.</p>
-    <section class="toolbar" aria-label="Filter controls">
-      <input id="search" type="search" placeholder="Search by name, symbol, or atomic number">
-      <select id="category-filter">
-        <option value="all">All categories</option>
-        <option value="alkali metal">Alkali metal</option>
-        <option value="alkaline earth metal">Alkaline earth metal</option>
-        <option value="transition metal">Transition metal</option>
-        <option value="post-transition metal">Post-transition metal</option>
-        <option value="metalloid">Metalloid</option>
-        <option value="nonmetal">Nonmetal</option>
-        <option value="halogen">Halogen</option>
-        <option value="noble gas">Noble gas</option>
-        <option value="lanthanide">Lanthanide</option>
-        <option value="actinide">Actinide</option>
-      </select>
+    <div class="page-heading">
+      <div>
+        <h1 id="page-title">Bảng tuần hoàn các nguyên tố hóa học</h1>
+        <p class="subtitle" id="page-subtitle">Khám phá vị trí, phân loại và thông tin khoa học của 118 nguyên tố.</p>
+      </div>
+      <div class="language-toggle" id="language-controls" role="group" aria-label="Ngôn ngữ giao diện">
+        <button type="button" data-language="vi" aria-label="Tiếng Việt" aria-pressed="true">VI</button>
+        <button type="button" data-language="en" aria-label="English" aria-pressed="false">EN</button>
+      </div>
+    </div>
+    <p id="usage-hint" class="subtitle">Chọn một nguyên tố để xem thông tin. Dùng Tab để di chuyển và Enter hoặc Space để chọn.</p>
+    <p id="language-status" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
+    <section class="toolbar" id="periodic-controls" role="search" aria-label="Tìm và lọc nguyên tố">
+      <div class="toolbar-field">
+        <label id="search-label" for="search">Tìm nguyên tố</label>
+        <input id="search" type="search" placeholder="Tên tiếng Anh, ký hiệu hoặc số hiệu nguyên tử">
+      </div>
+      <div class="toolbar-field">
+        <label id="category-label" for="category-filter">Lọc theo phân loại</label>
+        <select id="category-filter">
+          <option value="all">Tất cả phân loại</option>
+          <option value="alkali metal">Kim loại kiềm</option>
+          <option value="alkaline earth metal">Kim loại kiềm thổ</option>
+          <option value="transition metal">Kim loại chuyển tiếp</option>
+          <option value="post-transition metal">Kim loại hậu chuyển tiếp</option>
+          <option value="metalloid">Á kim</option>
+          <option value="nonmetal">Phi kim</option>
+          <option value="halogen">Halogen</option>
+          <option value="noble gas">Khí hiếm</option>
+          <option value="lanthanide">Họ Lantan</option>
+          <option value="actinide">Họ Actini</option>
+        </select>
+      </div>
     </section>
-    <section class="legend" aria-label="Category legend">
-      <div class="legend-item"><span class="legend-swatch alkali-metal"></span>Alkali metal</div>
-      <div class="legend-item"><span class="legend-swatch alkaline-earth-metal"></span>Alkaline earth metal</div>
-      <div class="legend-item"><span class="legend-swatch transition-metal"></span>Transition metal</div>
-      <div class="legend-item"><span class="legend-swatch post-transition-metal"></span>Post-transition metal</div>
-      <div class="legend-item"><span class="legend-swatch metalloid"></span>Metalloid</div>
-      <div class="legend-item"><span class="legend-swatch nonmetal"></span>Nonmetal</div>
-      <div class="legend-item"><span class="legend-swatch halogen"></span>Halogen</div>
-      <div class="legend-item"><span class="legend-swatch noble-gas"></span>Noble gas</div>
-      <div class="legend-item"><span class="legend-swatch lanthanide"></span>Lanthanide</div>
-      <div class="legend-item"><span class="legend-swatch actinide"></span>Actinide</div>
+    <section class="legend" id="category-legend" aria-label="Chú giải phân loại nguyên tố">
+      <div class="legend-item"><span class="legend-swatch alkali-metal" aria-hidden="true"></span><span id="legend-alkali-metal">Kim loại kiềm</span></div>
+      <div class="legend-item"><span class="legend-swatch alkaline-earth-metal" aria-hidden="true"></span><span id="legend-alkaline-earth-metal">Kim loại kiềm thổ</span></div>
+      <div class="legend-item"><span class="legend-swatch transition-metal" aria-hidden="true"></span><span id="legend-transition-metal">Kim loại chuyển tiếp</span></div>
+      <div class="legend-item"><span class="legend-swatch post-transition-metal" aria-hidden="true"></span><span id="legend-post-transition-metal">Kim loại hậu chuyển tiếp</span></div>
+      <div class="legend-item"><span class="legend-swatch metalloid" aria-hidden="true"></span><span id="legend-metalloid">Á kim</span></div>
+      <div class="legend-item"><span class="legend-swatch nonmetal" aria-hidden="true"></span><span id="legend-nonmetal">Phi kim</span></div>
+      <div class="legend-item"><span class="legend-swatch halogen" aria-hidden="true"></span><span id="legend-halogen">Halogen</span></div>
+      <div class="legend-item"><span class="legend-swatch noble-gas" aria-hidden="true"></span><span id="legend-noble-gas">Khí hiếm</span></div>
+      <div class="legend-item"><span class="legend-swatch lanthanide" aria-hidden="true"></span><span id="legend-lanthanide">Họ Lantan</span></div>
+      <div class="legend-item"><span class="legend-swatch actinide" aria-hidden="true"></span><span id="legend-actinide">Họ Actini</span></div>
     </section>
 
     <div class="layout">
-      <section class="table-wrap" aria-label="Periodic table area">
-      <div id="periodic-table" class="periodic-grid"></div>
-        <div id="count-info" class="count-info"></div>
+      <section class="table-wrap" id="table-wrap" tabindex="0" role="region" aria-label="Bảng tuần hoàn, có thể cuộn ngang" aria-describedby="usage-hint">
+        <h2 id="table-section-heading" class="visually-hidden">Bảng tuần hoàn</h2>
+        <div id="periodic-table" class="periodic-grid" role="group" aria-label="Các nguyên tố hóa học" aria-busy="true"></div>
+        <div id="count-info" class="count-info" role="status" aria-live="polite" aria-atomic="true">Đang tải 118 nguyên tố…</div>
       </section>
 
-      <aside id="detail-panel" class="detail-panel" aria-live="polite"></aside>
+      <aside id="detail-panel" class="detail-panel" role="region" aria-label="Thông tin nguyên tố đang chọn" aria-live="polite" aria-atomic="true">
+        <h2 id="element-details-heading">Thông tin nguyên tố</h2>
+        <p>Đang tải dữ liệu…</p>
+      </aside>
     </div>
   </main>
 
